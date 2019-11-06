@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html ng-app="app">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+    		
+		<title>Monolithic Legacy Banking Application</title>
+		
+		<link rel = "stylesheet" type = "text/css" href = "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular-resource.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular-route.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular-animate.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular-touch.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular-cookies.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-auth.js"></script>
+		<script>
+			var config = {
+				apiKey: "AIzaSyBoGLxmX3rJYTjDa_mnCfNI5xjSEH-s_fw",
+				authDomain: "asociate-engineer.firebaseapp.com",
+			};
+			firebase.initializeApp(config);
+		</script>
+		<script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
+		
+		<link rel = "stylesheet" type = "text/css" href = "app.css" />
+		<script src="module.js"></script>
+		<script src="config.js"></script>
+		<script src="component/login/module.js"></script>
+		<script src="component/login/component.js"></script>
+		<script src="component/logout/module.js"></script>
+		<script src="component/logout/component.js"></script>
+		<script src="component/book-table/module.js"></script>
+		<script src="component/book-table/component.js"></script>
+		<script src="component/book-detail/module.js"></script>
+		<script src="component/book-detail/component.js"></script>
+		<script src="service/book/module.js"></script>
+		<script src="service/book/service.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<div ng-view></div>
+		</div>
+	</body>
+</html>

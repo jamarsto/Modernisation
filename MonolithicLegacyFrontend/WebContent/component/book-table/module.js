@@ -1,0 +1,1 @@
+angular.module('component.bookTable', ['ui.bootstrap', 'firebase', 'service.book']);

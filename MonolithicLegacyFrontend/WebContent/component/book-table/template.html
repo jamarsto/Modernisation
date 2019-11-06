@@ -1,0 +1,13 @@
+<form>
+	<table border="1" width="100%">
+		<tr>
+			<th>Name</th>
+			<th>Author</th>
+		</tr>
+		<tr ng-repeat="book in $ctrl.books">
+			<td><a href="#!/books/{{book.id}}" ng-bind="book.name"></a></td>
+			<td ng-bind="book.author"></td>
+		</tr>
+	</table>
+</form>
+

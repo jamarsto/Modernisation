@@ -1,0 +1,1 @@
+angular.module('component.bookDetail', ['ngRoute', 'ui.bootstrap', 'service.book']);
