@@ -12,6 +12,7 @@ public class User implements UserDetails {
 	private final String username;
 	private final String issuer;
 	private final String picture;
+	private final String credentials;
 	private final Collection<? extends GrantedAuthority> authorities;
 
 	public User(final String uid,
@@ -19,12 +20,14 @@ public class User implements UserDetails {
 				final String username,
 				final String issuer,
 				final String picture,
+				final String credentials;
 				final Collection<? extends GrantedAuthority> authorities) {
 		this.uid = uid;
 		this.email = email;
 		this.username = username;
 		this.issuer = issuer;
 		this.picture = picture;
+		this.credentials = credentials;
 		this.authorities = authorities;
 	}
 
@@ -42,6 +45,10 @@ public class User implements UserDetails {
 
 	public String getPicture() {
 		return picture;
+	}
+
+	public String getCredentials() {
+		return credentials;
 	}
 
 	@Override
