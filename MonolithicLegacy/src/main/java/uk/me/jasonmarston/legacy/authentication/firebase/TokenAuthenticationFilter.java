@@ -62,7 +62,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 										token.getIssuer(), 
 										token.getPicture(), 
 										authorities), 
-								null, 
+								jwt, 
 								authorities);
 				authentication
 					.setDetails(
