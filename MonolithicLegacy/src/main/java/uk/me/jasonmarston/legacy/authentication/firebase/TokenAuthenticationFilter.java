@@ -54,13 +54,14 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 				final FirebaseToken token = auth.verifyIdToken(jwt);
 				final List<GrantedAuthority> authorities = Collections
 						.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
-				final UsernamePasswordAuthenticationToken authentication = 
+				final UsernamePasswordAuthenticationToken authentication =
 						new UsernamePasswordAuthenticationToken(
-								new User(token.getUid(), 
-										token.getEmail(), 
-										token.getName(), 
-										token.getIssuer(), 
-										token.getPicture(), 
+								new User(token.getUid(),
+										token.getEmail(),
+										token.getName(),
+										token.getIssuer(),
+										token.getPicture(),
+									 	jwt,
 										authorities), 
 								jwt, 
 								authorities);
