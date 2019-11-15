@@ -20,7 +20,7 @@ public class User implements UserDetails {
 				final String username,
 				final String issuer,
 				final String picture,
-				final String credentials;
+				final String credentials,
 				final Collection<? extends GrantedAuthority> authorities) {
 		this.uid = uid;
 		this.email = email;
