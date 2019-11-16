@@ -1,0 +1,93 @@
+<div ng-if="$ctrl.authenticating == false">
+	<div class="row">
+		<h1>Sign In to Internet Bank</h1>
+	</div>
+	<div class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4">
+			<a type="button" class="btn btn-block btn-social" ng-click="$ctrl.signInWithGoogle()">Sign In with Google</a>
+		</div>
+		<div class="col-md-4"></div>
+	</div>
+	<div class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4">
+			<a type="button" class="btn btn-block btn-social" ng-click="$ctrl.signInWithTwitter()">Sign In with Twitter</a>
+		</div>
+		<div class="col-md-4"></div>
+	</div>
+	<div class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4">
+			<a type="button" class="btn btn-block btn-social" ng-click="$ctrl.signInWithFacebook()">Sign In with Facebook</a>
+		</div>
+		<div class="col-md-4"></div>
+	</div>
+	<div class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4">
+			<a type="button" class="btn btn-block btn-social" ng-click="$ctrl.signInWithMicrosoft()">Sign In with Microsoft</a>
+		</div>
+		<div class="col-md-4"></div>
+	</div>
+	<div class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4">
+			<a type="button" class="btn btn-block btn-social" ng-click="$ctrl.signInWithLinkedin()">Sign In with Linkedin</a>
+		</div>
+		<div class="col-md-4"></div>
+	</div>
+	<div class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4">
+			<a type="button" class="btn btn-block btn-social" ng-click="$ctrl.signInWithYahoo()">Sign In with Yahoo</a>
+		</div>
+		<div class="col-md-4"></div>
+	</div>
+	<div class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4">
+			<a type="button" class="btn btn-block btn-social" ng-click="$ctrl.signInWithGithub()">Sign In with Github</a>
+		</div>
+		<div class="col-md-4"></div>
+	</div>
+	<div class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4" align="center">
+			<hr></hr>
+		</div>
+		<div class="col-md-4"></div>
+	</div>
+	<div class="row">
+		<form >
+			<div class="col-md-4"></div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label for="email">Email Address</label>
+					<input id="email" placeholder="Enter email address" type="email" ng-model="$ctrl.email" class="form-control" required/>
+				</div>
+				<div class="form-group">
+					<label for="password">Password</label>
+					<input id="password" placeholder="Enter password" type="password" ng-model="$ctrl.password" class="form-control" required/>
+				</div>
+				<button type="submit" class="btn btn-primary btn-block" ng-click="$ctrl.signIn()">Sign In</button>
+			</div>
+			<div class="col-md-4"></div>
+		</form>
+	</div>
+	<div class="row">&nbsp;</div>
+	<div class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4 sign-up">
+		New User? Sign up
+		</div>
+		<div class="col-md-4"></div>
+	</div>
+</div>
+<div class="row" ng-if="$ctrl.authenticating == true">
+	<div class="col-md-4"></div>
+	<div class="col-md-4" align="center">
+		<div class="loader"></div>
+	</div>
+	<div class="col-md-4"></div>
+</div>

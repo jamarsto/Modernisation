@@ -1,5 +1,4 @@
-angular.
-	module('app').
+angular.module('app').
 	run(["$rootScope", "$location", function($rootScope, $location) {
 		$rootScope.$on("$routeChangeError", function(event, next, previous, error) {
 			if (error === "AUTH_REQUIRED") {
@@ -9,18 +8,17 @@ angular.
 	}
 ]);
 
-angular.
-	module('app').
+angular.module('app').
 	config(['$routeProvider', function config($routeProvider) {
 		$routeProvider.
 		when('/', {
-			template: '<login></login>'
+			template: '<signin></signin>'
 		}).
 		when('/books', {
-			template: '<book-table></book-table><logout></logout>',
+			template: '<book-table></book-table>',
 			resolve: {
 				"currentAuth": ["Auth", function(Auth) {
-					return Auth.$waitForSignIn();
+					return Auth.$requireSignIn();
 				}]
 			}
 		}).
@@ -28,7 +26,7 @@ angular.
 			template: '<book-detail></book-detail>',
 			resolve: {
 				"currentAuth": ["Auth", function(Auth) {
-					return Auth.$waitForSignIn();
+					return Auth.$requireSignIn();
 				}]
 			}
 		}).

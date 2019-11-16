@@ -1,5 +1,4 @@
-angular.
-	module('service.book').
+angular.module('service.book').
 	service('Book', ['$resource', function($resource) {
 		var token = null;
 		var resource = null;

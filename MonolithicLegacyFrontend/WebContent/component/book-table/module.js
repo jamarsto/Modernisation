@@ -1,1 +1,1 @@
-angular.module('component.bookTable', ['ui.bootstrap', 'firebase', 'service.book']);
+angular.module('component.bookTable', ['service.book']);

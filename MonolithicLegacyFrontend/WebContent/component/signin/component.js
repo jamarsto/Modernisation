@@ -1,13 +1,12 @@
-angular.
-	module('component.login').
-	component('login', {
-	templateUrl: 'component/login/template.html',
-	controller: ['Auth', '$location', '$cookies', function LoginController(Auth, $location, $cookies) {
+angular.module('component.signin').component('signin', {
+	templateUrl: 'component/signin/template.html',
+	controller: ['Auth', '$location', '$cookies', '$timeout', function SigninController(Auth, $location, $cookies, $timeout) {
 		var self = this;
 		self.auth = Auth;
 		
 		if($cookies.get('authenticating')) {
 			self.authenticating = true;
+			$timeout(function() { self.authenticating = false; $cookies.remove('authenticating'); }, 5000);
 		} else {
 			self.authenticating = false;
 		}
@@ -16,18 +15,12 @@ angular.
 			if(firebaseUser) {
 				$cookies.remove('authenticating');
 				$location.path('/books');
-				firebaseUser.getIdToken().then(function(token) { 
-				}).catch(function(error) {
-					self.error = error;
-				});
 			}
 		});
 
 		self.signIn = function() {
-			self.auth.$signInWithEmailAndPassword(self.email, self.password).then(function(firebase) {
-			}).catch(function(error) {
-				self.error = error;
-			});
+			$cookies.put('authenticating', true);
+			self.auth.$signInWithEmailAndPassword(self.email, self.password);
 		}
 		
 		self.signInWithGoogle = function() {

@@ -1,5 +1,17 @@
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 
+h1 {
+	text-align: center;
+}
+.btn-social {
+	border-color: #ccc;
+	margin-bottom: 10px;
+}
+
+.sign-up {
+	text-align: center;
+}
+
 .loader {
   border: 16px solid #f3f3f3; /* Light grey */
   border-top: 16px solid #3498db; /* Blue */

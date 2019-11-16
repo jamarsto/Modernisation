@@ -1,1 +1,0 @@
-angular.module('component.login', ['ngCookies', 'ui.bootstrap', 'firebase']);

@@ -1,5 +1,7 @@
-var app = angular.module('app', ['ngRoute', 'ngCookies', 'ui.bootstrap', 'firebase', 'component.login', 'component.logout', 'component.bookTable', 'component.bookDetail', 'service.book']);
+var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'firebase', 'component.signin', 'component.bookTable', 'component.bookDetail']);
 
-app.factory("Auth", ["$firebaseAuth", function($firebaseAuth) {
-	return $firebaseAuth();
-}]);
+app.factory("Auth", ["$firebaseAuth", 
+	function($firebaseAuth) {
+		return $firebaseAuth();
+	}
+]);

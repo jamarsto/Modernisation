@@ -1,1 +1,0 @@
-angular.module('component.logout', ['ui.bootstrap', 'firebase']);

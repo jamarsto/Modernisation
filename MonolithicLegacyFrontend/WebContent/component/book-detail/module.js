@@ -1,1 +1,1 @@
-angular.module('component.bookDetail', ['ngRoute', 'ui.bootstrap', 'service.book']);
+angular.module('component.bookDetail', ['service.book']);

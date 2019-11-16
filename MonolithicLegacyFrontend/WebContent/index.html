@@ -17,6 +17,8 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-auth.js"></script>
+		<script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
+
 		<script>
 			var config = {
 				apiKey: "AIzaSyA0PepC7p88gqK-zd69-MPgHr-2RFD2R6I",
@@ -24,15 +26,13 @@
 			};
 			firebase.initializeApp(config);
 		</script>
-		<script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
 		
 		<link rel = "stylesheet" type = "text/css" href = "app.css" />
 		<script src="module.js"></script>
 		<script src="config.js"></script>
-		<script src="component/login/module.js"></script>
-		<script src="component/login/component.js"></script>
-		<script src="component/logout/module.js"></script>
-		<script src="component/logout/component.js"></script>
+		<script src="controller/signout/controller.js"></script>
+		<script src="component/signin/module.js"></script>
+		<script src="component/signin/component.js"></script>
 		<script src="component/book-table/module.js"></script>
 		<script src="component/book-table/component.js"></script>
 		<script src="component/book-detail/module.js"></script>
@@ -41,6 +41,19 @@
 		<script src="service/book/service.js"></script>
 	</head>
 	<body>
+		<nav class="navbar navbar-default">
+  			<div class="container-fluid">
+    			<div class="navbar-header">
+      				<a class="navbar-brand" href="#!/books">Internet Bank</a>
+    			</div>
+    			<ul class="nav navbar-nav">
+      				<li class="active"><a href="#!/books">Home</a></li>
+      			</ul>
+      			<ul class="nav navbar-nav pull-right">
+      				<li ng-controller="signout"><a href="#" ng-click="signOut()">Sign Out</a></li>
+    			</ul>
+  			</div>
+		</nav>
 		<div class="container">
 			<div ng-view></div>
 		</div>
