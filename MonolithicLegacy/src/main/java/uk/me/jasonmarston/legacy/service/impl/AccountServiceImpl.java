@@ -1,7 +1,7 @@
 package uk.me.jasonmarston.legacy.service.impl;
 
 import static uk.me.jasonmarston.legacy.repository.specification.impl.TransactionSpecification.DepositHasIdAndAccountId;
-import static uk.me.jasonmarston.legacy.repository.specification.impl.TransactionSpecification.HasIdAndAccountId;
+import static uk.me.jasonmarston.legacy.repository.specification.impl.TransactionSpecification.TransactionHasIdAndAccountId;
 import static uk.me.jasonmarston.legacy.repository.specification.impl.TransactionSpecification.WithdrawalHasIdAndAccountId;
 
 import java.util.List;
@@ -78,7 +78,7 @@ public class AccountServiceImpl implements AccountService {
 			final EntityId accountId,
 			final EntityId id) {
 		return transactionRepository
-			.findOne(new HasIdAndAccountId(id, accountId))
+			.findOne(new TransactionHasIdAndAccountId(id, accountId))
 			.get();
 	}
 

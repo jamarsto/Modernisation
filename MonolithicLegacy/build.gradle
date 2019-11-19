@@ -19,11 +19,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	
-	// used to validate jwt tokens and authorise users
+	// used to authorise authenticated users and validate jwt tokens
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-	// used for saga pattern to compensate (no two phase commit or multi service ACID transactions)
+	// used for saga pattern to compensate (no two phase commit or multi service/aggrigate ACID transactions)
 	implementation 'org.springframework.integration:spring-integration-core:5.1.2.RELEASE'
 	implementation 'org.springframework.cloud:spring-cloud-gcp-starter-pubsub:1.1.2.RELEASE'
 
@@ -34,7 +33,7 @@ dependencies {
 	// used for in memory database.  Replace in a real application with the correct jdbc support
 	implementation 'com.h2database:h2:1.4.200'
 
-	// used for the legacy parts so the application can be deployed in a war file to a container
+	// used for the legacy parts so the application can be deployed in a war file to a servlet container
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 
 	// unit testing for spring applications

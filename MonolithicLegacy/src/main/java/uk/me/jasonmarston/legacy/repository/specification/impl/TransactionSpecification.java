@@ -12,14 +12,14 @@ import uk.me.jasonmarston.legacy.domain.type.impl.EntityId;
 import uk.me.jasonmarston.legacy.domain.type.impl.TransactionType;
 
 public class TransactionSpecification {
-	public static class HasIdAccountIdAndType 
+	public static class TransactionHasIdAccountIdAndType 
 			implements Specification<Transaction> {
 		private static final long serialVersionUID = 1L;
 		private EntityId id;
 		private EntityId accountId;
 		private TransactionType transactionType;
 		
-		public HasIdAccountIdAndType(
+		public TransactionHasIdAccountIdAndType(
 				final EntityId id,
 				final EntityId accountId,
 				final TransactionType transactionType) {
@@ -57,14 +57,14 @@ public class TransactionSpecification {
 		}
 	}
 
-	public static class HasIdAndAccountId 
+	public static class TransactionHasIdAndAccountId 
 			implements Specification<Transaction> {
 
 		private static final long serialVersionUID = 1L;
 		private EntityId id;
 		private EntityId accountId;
 
-		public HasIdAndAccountId(
+		public TransactionHasIdAndAccountId(
 				final EntityId id,
 				final EntityId accountId) {
 			this.id = id;
@@ -109,7 +109,7 @@ public class TransactionSpecification {
 				final CriteriaQuery<?> query,
 				final CriteriaBuilder builder) {
 			return new TransactionSpecification
-					.HasIdAccountIdAndType(id,
+					.TransactionHasIdAccountIdAndType(id,
 							accountId,
 							TransactionType.WITHRAWAL)
 					.toPredicate(root, query, builder);
@@ -135,7 +135,7 @@ public class TransactionSpecification {
 				final CriteriaQuery<?> query,
 				final CriteriaBuilder builder) {
 			return new TransactionSpecification
-					.HasIdAccountIdAndType(id,
+					.TransactionHasIdAccountIdAndType(id,
 							accountId,
 							TransactionType.DEPOSIT)
 					.toPredicate(root, query, builder);

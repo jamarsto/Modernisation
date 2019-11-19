@@ -1,6 +1,8 @@
 package uk.me.jasonmarston.legacy.authentication.firebase.impl;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Collections;
 import java.util.List;
 
@@ -9,6 +11,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,6 +31,7 @@ import com.google.firebase.auth.FirebaseToken;
 import uk.me.jasonmarston.legacy.authentication.impl.User;
 
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
+	private static final Logger LOGGER = LoggerFactory.getLogger(TokenAuthenticationFilter.class);
 	private FirebaseAuth auth = null;
 
 	public TokenAuthenticationFilter() {
@@ -40,7 +45,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 			FirebaseApp.initializeApp(options);
 			auth = FirebaseAuth.getInstance();
 		} catch (final IOException e) {
-			e.printStackTrace();
+			logError(e);
 		}
 	}
 
@@ -78,20 +83,29 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 				try {
 					filterChain.doFilter(request, response);
 				}
-				catch(final NestedServletException e) {
-					e.printStackTrace();
+				/* Should catch everything before the RuntimeException
+				   or Error catch below, but we are belt-and-braces people */
+				catch(final NestedServletException e) { 
+					logError(e);
 					response.sendError(
 							HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
 							"Internal server error");
 				}
 			}
 			else {
-				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, 
+				response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
 					"Please provide credentials");
 			}
         }
+		// this is because I am paranoid
+		catch(final RuntimeException | Error e) {
+			logError(e);
+			response.sendError(
+					HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+					"Internal server error");
+		}
 		catch (final Exception e) {
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, 
+			response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
 					"Please provide valid credentials");
         }
 	}
@@ -104,4 +118,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 		}
 		return null;
     }
+	
+	private void logError(final Throwable e) {
+		final StringWriter stack = new StringWriter();
+	    e.printStackTrace(new PrintWriter(stack));
+		LOGGER.error(stack.toString());
+	}
 }
