@@ -58,7 +58,8 @@ public class AccountControllerImpl implements AccountController {
     	produces = "application/json")
     public ResponseEntity<?> getAccount(@PathVariable("id") final UUID id) {
     	try {
-    		final Account account = accountService.getAccount(new EntityId(id));
+    		final Account account = accountService
+    				.getAccount(new EntityId(id));
     		return ResponseEntity.ok(account);
     	}
     	catch(NoSuchElementException e) {
@@ -88,7 +89,9 @@ public class AccountControllerImpl implements AccountController {
 	@RequestMapping(path = "/accounts/{accountId}/deposits/{id}",
 		method=RequestMethod.GET,
 		produces = "application/json")
-	public ResponseEntity<?> getDeposit(@PathVariable("accountId") final UUID accountId, @PathVariable("id") final UUID id) {
+	public ResponseEntity<?> getDeposit(
+			@PathVariable("accountId") final UUID accountId,
+			@PathVariable("id") final UUID id) {
 		try {
 			return ResponseEntity
 				.ok(accountService.getDeposit(
@@ -123,7 +126,9 @@ public class AccountControllerImpl implements AccountController {
 	@RequestMapping(path = "/accounts/{accountId}/transactions/{id}",
 		method=RequestMethod.GET,
 		produces = "application/json")
-	public ResponseEntity<?> getTransaction(@PathVariable("accountId") final UUID accountId, @PathVariable("id") final UUID id) {
+	public ResponseEntity<?> getTransaction(
+			@PathVariable("accountId") final UUID accountId,
+			@PathVariable("id") final UUID id) {
 		try {
 			return ResponseEntity
 				.ok(accountService.getTransaction(
@@ -159,7 +164,9 @@ public class AccountControllerImpl implements AccountController {
 	@RequestMapping(path = "/accounts/{accountId}/withdrawals/{id}",
 		method=RequestMethod.GET,
 		produces = "application/json")
-	public ResponseEntity<?> getWithdrawal(@PathVariable("accountId") final UUID accountId, @PathVariable("id") final UUID id) {
+	public ResponseEntity<?> getWithdrawal(
+			@PathVariable("accountId") final UUID accountId,
+			@PathVariable("id") final UUID id) {
 		try {
 			return ResponseEntity
 				.ok(accountService.getWithdrawal(
@@ -177,7 +184,8 @@ public class AccountControllerImpl implements AccountController {
 	@RequestMapping(path = "/accounts/{id}/withdrawals",
 		method=RequestMethod.GET,
 		produces = "application/json")
-	public ResponseEntity<?> getWithdrawals(@PathVariable("id") final UUID id) {
+	public ResponseEntity<?> getWithdrawals(
+			@PathVariable("id") final UUID id) {
 		try {
 			return ResponseEntity
 				.ok(accountService

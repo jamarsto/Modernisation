@@ -12,12 +12,12 @@ public class BeanUtil implements ApplicationContextAware {
     private static ApplicationContext context;
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(ApplicationContext applicationContext) 
+    		throws BeansException {
         context = applicationContext;
     }
 
     public static AutowireCapableBeanFactory getAutowireCapableBeanFactory() {
         return context.getAutowireCapableBeanFactory();
     }
-
 }

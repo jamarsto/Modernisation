@@ -13,11 +13,13 @@ import uk.me.jasonmarston.legacy.domain.aggregate.impl.Account;
 import uk.me.jasonmarston.legacy.domain.entity.impl.Transaction;
 import uk.me.jasonmarston.legacy.domain.type.impl.Amount;
 import uk.me.jasonmarston.legacy.domain.type.impl.EntityId;
-import uk.me.jasonmarston.legacy.domain.type.impl.TransactionType;
 import uk.me.jasonmarston.legacy.repository.AccountRepository;
 import uk.me.jasonmarston.legacy.repository.TransactionRepository;
-import uk.me.jasonmarston.legacy.repository.specification.TransactionSpecifications;
 import uk.me.jasonmarston.legacy.service.AccountService;
+
+import static uk.me.jasonmarston.legacy.repository.specification.TransactionSpecification.DepositHasIdAndAccountId;
+import static uk.me.jasonmarston.legacy.repository.specification.TransactionSpecification.HasIdAndAccountId;
+import static uk.me.jasonmarston.legacy.repository.specification.TransactionSpecification.WithdrawalHasIdAndAccountId;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED, 
@@ -62,11 +64,7 @@ public class AccountServiceImpl implements AccountService {
 			final EntityId accountId,
 			final EntityId id) {
 		return transactionRepository
-			.findOne(new TransactionSpecifications
-				.AccountIdAndTypeAndIdSpec(
-					accountId,
-					TransactionType.DEPOSIT,
-					id))
+			.findOne(new DepositHasIdAndAccountId(id, accountId))
 			.get();
 	}
 
@@ -80,10 +78,7 @@ public class AccountServiceImpl implements AccountService {
 			final EntityId accountId,
 			final EntityId id) {
 		return transactionRepository
-			.findOne(new TransactionSpecifications
-				.AccountIdAndIdSpec(
-					accountId,
-					id))
+			.findOne(new HasIdAndAccountId(id, accountId))
 			.get();
 	}
 
@@ -97,11 +92,7 @@ public class AccountServiceImpl implements AccountService {
 			final EntityId accountId,
 			final EntityId id) {
 		return transactionRepository
-			.findOne(new TransactionSpecifications
-				.AccountIdAndTypeAndIdSpec(
-					accountId,
-					TransactionType.WITHRAWAL,
-					id))
+			.findOne(new WithdrawalHasIdAndAccountId(id, accountId))
 			.get();
 	}
 
@@ -123,3 +114,4 @@ public class AccountServiceImpl implements AccountService {
 		return transaction;
 	}
 }
+

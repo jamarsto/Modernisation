@@ -7,5 +7,8 @@ import uk.me.jasonmarston.legacy.domain.type.impl.EntityId;
 import uk.me.jasonmarston.legacy.domain.type.impl.TransactionType;
 
 public interface TransactionFactory {
-	Transaction create(final TransactionType type, final Account account, final Amount amount, final EntityId referenceAccountId);
+	Transaction create(final TransactionType type,
+			final Account account,
+			final Amount amount,
+			final EntityId referenceAccountId);
 }

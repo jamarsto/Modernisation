@@ -27,7 +27,8 @@ public class TransferControllerImpl implements TransferController {
 		method=RequestMethod.POST, 
 		consumes = "application/json", 
 		produces = "application/json")
-	public ResponseEntity<?> transferFunds(@PathVariable("fromId") final UUID fromId,
+	public ResponseEntity<?> transferFunds(
+			@PathVariable("fromId") final UUID fromId,
 			@PathVariable("toId") final UUID toId,
 			@RequestBody Amount amount) {
 		try {

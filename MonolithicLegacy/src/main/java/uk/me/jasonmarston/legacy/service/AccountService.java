@@ -13,10 +13,13 @@ public interface AccountService {
 	Transaction depositFunds(final EntityId id, final Amount amount);
 	Transaction withdrawFunds(final EntityId id, final Amount amount);
 	Amount getBalance(final EntityId id);
-	Transaction getDeposit(final EntityId accountId, final EntityId transactionId);
+	Transaction getDeposit(final EntityId accountId,
+			final EntityId transactionId);
 	List<Transaction> getDeposits(final EntityId accountId);
-	Transaction getTransaction(final EntityId accountId, final EntityId transactionId);
+	Transaction getTransaction(final EntityId accountId,
+			final EntityId transactionId);
 	List<Transaction> getTransactions(final EntityId accountId);
-	Transaction getWithdrawal(final EntityId accountId, final EntityId transactionId);
+	Transaction getWithdrawal(final EntityId accountId,
+			final EntityId transactionId);
 	List<Transaction> getWithdrawals(final EntityId accountId);
 }

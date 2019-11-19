@@ -34,7 +34,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 			final FirebaseOptions options = 
 					new FirebaseOptions
 						.Builder()
-							.setCredentials(GoogleCredentials.getApplicationDefault())
+							.setCredentials(GoogleCredentials
+									.getApplicationDefault())
 							.build();
 			FirebaseApp.initializeApp(options);
 			auth = FirebaseAuth.getInstance();
@@ -53,7 +54,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 			if (StringUtils.hasText(jwt)) {
 				final FirebaseToken token = auth.verifyIdToken(jwt);
 				final List<GrantedAuthority> authorities = Collections
-						.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+						.singletonList(
+								new SimpleGrantedAuthority("ROLE_USER"));
 				final UsernamePasswordAuthenticationToken authentication =
 						new UsernamePasswordAuthenticationToken(
 								new User(token.getUid(),
@@ -67,16 +69,19 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 								authorities);
 				authentication
 					.setDetails(
-							new WebAuthenticationDetailsSource().buildDetails(request)
+							new WebAuthenticationDetailsSource()
+								.buildDetails(request)
 					);
 
-				SecurityContextHolder.getContext().setAuthentication(authentication);
+				SecurityContextHolder.getContext()
+						.setAuthentication(authentication);
 				try {
 					filterChain.doFilter(request, response);
 				}
 				catch(final NestedServletException e) {
 					e.printStackTrace();
-					response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
+					response.sendError(
+							HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
 							"Internal server error");
 				}
 			}
@@ -93,7 +98,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
 	private String getJwtFromRequest(final HttpServletRequest request) {
 		String bearerToken = request.getHeader("Authorization");
-		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+		if (StringUtils.hasText(bearerToken) 
+				&& bearerToken.startsWith("Bearer ")) {
 			return bearerToken.substring(7, bearerToken.length());
 		}
 		return null;

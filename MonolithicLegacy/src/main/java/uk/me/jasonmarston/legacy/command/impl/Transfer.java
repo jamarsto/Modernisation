@@ -14,7 +14,9 @@ public class Transfer implements Serializable {
 	public Transfer() {
 	}
 
-	public Transfer(EntityId fromAccount, EntityId toAccount, Amount amount) {
+	public Transfer(final EntityId fromAccount,
+			final EntityId toAccount,
+			final Amount amount) {
 		this.fromAccount = fromAccount;
 		this.toAccount = toAccount;
 		this.amount = amount;

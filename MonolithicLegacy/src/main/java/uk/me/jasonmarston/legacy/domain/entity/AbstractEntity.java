@@ -10,7 +10,8 @@ import uk.me.jasonmarston.legacy.domain.IdentifiableDomainObject;
 import uk.me.jasonmarston.legacy.domain.type.impl.EntityId;
 
 @MappedSuperclass
-public abstract class AbstractEntity  extends AbstractDomainObject implements IdentifiableDomainObject {
+public abstract class AbstractEntity extends AbstractDomainObject 
+		implements IdentifiableDomainObject {
 	private static final long serialVersionUID = 1L;
 
 	@Id
