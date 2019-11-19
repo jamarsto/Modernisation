@@ -1,4 +1,4 @@
-package uk.me.jasonmarston.legacy.controler;
+package uk.me.jasonmarston.legacy.controller;
 
 import java.util.UUID;
 

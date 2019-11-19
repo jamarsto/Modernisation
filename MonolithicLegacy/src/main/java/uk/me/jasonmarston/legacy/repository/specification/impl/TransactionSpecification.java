@@ -1,4 +1,4 @@
-package uk.me.jasonmarston.legacy.repository.specification;
+package uk.me.jasonmarston.legacy.repository.specification.impl;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;

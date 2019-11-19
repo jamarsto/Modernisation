@@ -1,4 +1,4 @@
-package uk.me.jasonmarston.legacy.util;
+package uk.me.jasonmarston.legacy.util.impl;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;

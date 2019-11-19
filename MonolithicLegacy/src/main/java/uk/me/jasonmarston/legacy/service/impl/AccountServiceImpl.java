@@ -1,5 +1,9 @@
 package uk.me.jasonmarston.legacy.service.impl;
 
+import static uk.me.jasonmarston.legacy.repository.specification.impl.TransactionSpecification.DepositHasIdAndAccountId;
+import static uk.me.jasonmarston.legacy.repository.specification.impl.TransactionSpecification.HasIdAndAccountId;
+import static uk.me.jasonmarston.legacy.repository.specification.impl.TransactionSpecification.WithdrawalHasIdAndAccountId;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +20,6 @@ import uk.me.jasonmarston.legacy.domain.type.impl.EntityId;
 import uk.me.jasonmarston.legacy.repository.AccountRepository;
 import uk.me.jasonmarston.legacy.repository.TransactionRepository;
 import uk.me.jasonmarston.legacy.service.AccountService;
-
-import static uk.me.jasonmarston.legacy.repository.specification.TransactionSpecification.DepositHasIdAndAccountId;
-import static uk.me.jasonmarston.legacy.repository.specification.TransactionSpecification.HasIdAndAccountId;
-import static uk.me.jasonmarston.legacy.repository.specification.TransactionSpecification.WithdrawalHasIdAndAccountId;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED, 

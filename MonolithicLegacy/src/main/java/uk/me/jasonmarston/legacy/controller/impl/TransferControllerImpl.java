@@ -1,4 +1,4 @@
-package uk.me.jasonmarston.legacy.controler.impl;
+package uk.me.jasonmarston.legacy.controller.impl;
 
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import uk.me.jasonmarston.legacy.controler.TransferController;
+import uk.me.jasonmarston.legacy.controller.TransferController;
+import uk.me.jasonmarston.legacy.controller.message.impl.Message;
 import uk.me.jasonmarston.legacy.domain.type.impl.Amount;
 import uk.me.jasonmarston.legacy.domain.type.impl.EntityId;
-import uk.me.jasonmarston.legacy.message.impl.Message;
 import uk.me.jasonmarston.legacy.service.TransferService;
 
 @RestController

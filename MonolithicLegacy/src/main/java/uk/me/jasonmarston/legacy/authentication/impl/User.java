@@ -1,4 +1,4 @@
-package uk.me.jasonmarston.legacy.authentication;
+package uk.me.jasonmarston.legacy.authentication.impl;
 
 import java.util.Collection;
 

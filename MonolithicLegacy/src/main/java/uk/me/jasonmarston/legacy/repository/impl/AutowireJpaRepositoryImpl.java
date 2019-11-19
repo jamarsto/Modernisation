@@ -16,7 +16,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
-import uk.me.jasonmarston.legacy.util.BeanUtil;
+import uk.me.jasonmarston.legacy.util.impl.BeanUtil;
 
 public class AutowireJpaRepositoryImpl<E, ID extends Serializable>
 			extends SimpleJpaRepository<E, ID> {

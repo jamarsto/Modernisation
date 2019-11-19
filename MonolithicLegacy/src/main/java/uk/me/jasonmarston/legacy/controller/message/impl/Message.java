@@ -1,4 +1,4 @@
-package uk.me.jasonmarston.legacy.message.impl;
+package uk.me.jasonmarston.legacy.controller.message.impl;
 
 import java.io.Serializable;
 

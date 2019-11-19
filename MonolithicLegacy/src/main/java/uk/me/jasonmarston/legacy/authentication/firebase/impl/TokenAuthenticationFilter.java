@@ -1,4 +1,4 @@
-package uk.me.jasonmarston.legacy.authentication.firebase;
+package uk.me.jasonmarston.legacy.authentication.firebase.impl;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -24,7 +24,7 @@ import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 
-import uk.me.jasonmarston.legacy.authentication.User;
+import uk.me.jasonmarston.legacy.authentication.impl.User;
 
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 	private FirebaseAuth auth = null;

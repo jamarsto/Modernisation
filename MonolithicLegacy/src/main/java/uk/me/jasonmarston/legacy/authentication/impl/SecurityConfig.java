@@ -1,4 +1,4 @@
-package uk.me.jasonmarston.legacy.authentication;
+package uk.me.jasonmarston.legacy.authentication.impl;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import uk.me.jasonmarston.legacy.authentication.firebase.TokenAuthenticationFilter;
+import uk.me.jasonmarston.legacy.authentication.firebase.impl.TokenAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
