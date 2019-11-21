@@ -9,7 +9,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 
 public class JwtValidation {
-	private static final Object mutex = new Object();
+	private static final Object MUTEX = new Object();
 	private static volatile JwtValidation INSTANCE;
 	private final FirebaseAuth auth;
 	
@@ -23,11 +23,11 @@ public class JwtValidation {
 		FirebaseApp.initializeApp(options);
 		auth = FirebaseAuth.getInstance();
 	}
-	
+
 	public static JwtValidation getInstance() throws IOException {
 		JwtValidation result = INSTANCE;
 		if(result == null) {
-			synchronized(mutex) {
+			synchronized(MUTEX) {
 				result = INSTANCE;
 				if(result == null) {
 					INSTANCE = result = new JwtValidation();

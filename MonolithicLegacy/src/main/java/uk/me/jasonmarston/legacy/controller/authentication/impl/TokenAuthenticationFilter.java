@@ -71,8 +71,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 				try {
 					filterChain.doFilter(request, response);
 				}
-				/* Should catch everything before the RuntimeException
-				   or Error catch below, but we are belt-and-braces people */
 				catch(final NestedServletException e) { 
 					logError(e);
 					response.sendError(
@@ -85,7 +83,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 					"Please provide credentials");
 			}
         }
-		// this is because I am paranoid
+		// Catches the runtime exception from our token authenticator
+		// either as it is null from failed configuration, 
+		// or if we get an invalid token,
+		// and anything else missed by the chain
 		catch(final RuntimeException | Error e) {
 			logError(e);
 			response.sendError(
