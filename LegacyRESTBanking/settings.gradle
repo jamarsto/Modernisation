@@ -1,4 +1,4 @@
-rootProject.name = 'MonolithicLegacy'
+rootProject.name = 'LegacyRESTBanking'
 
 include 'FirebaseWrapper'
 project(':FirebaseWrapper').projectDir = new File(settingsDir, "../FirebaseWrapper");
