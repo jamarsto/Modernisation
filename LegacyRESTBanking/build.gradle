@@ -33,9 +33,9 @@ dependencies {
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	
 	// Our Framework jars
-	implementation project(':FirebaseWrapper')
-	implementation project(':DDDFramework')
-	implementation project(':RepositoryFramework')
+	implementation project(':FrameworkFirebase')
+	implementation project(':FrameworkDDD')
+	implementation project(':FrameworkRepository')
 	implementation project(':LegacyBankingDomain')
 
 	// unit testing for spring applications

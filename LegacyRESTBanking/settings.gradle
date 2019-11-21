@@ -1,13 +1,13 @@
 rootProject.name = 'LegacyRESTBanking'
 
-include 'FirebaseWrapper'
-project(':FirebaseWrapper').projectDir = new File(settingsDir, "../FirebaseWrapper");
+include 'FrameworkFirebase'
+project(':FrameworkFirebase').projectDir = new File(settingsDir, "../FrameworkFirebase");
 
-include 'RepositoryFramework'
-project(':RepositoryFramework').projectDir = new File(settingsDir, "../RepositoryFramework");
+include 'FrameworkRepository'
+project(':FrameworkRepository').projectDir = new File(settingsDir, "../FrameworkRepository");
 
-include 'DDDFramework'
-project(':DDDFramework').projectDir = new File(settingsDir, "../DDDFramework");
+include 'FrameworkDDD'
+project(':FrameworkDDD').projectDir = new File(settingsDir, "../FrameworkDDD");
 
 include 'LegacyBankingDomain'
 project(':LegacyBankingDomain').projectDir = new File(settingsDir, "../LegacyBankingDomain");
