@@ -1,0 +1,15 @@
+plugins {
+    id 'java-library'
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+	implementation 'org.springframework.data:spring-data-jpa:2.0.5.RELEASE'
+	implementation project(':DDDFramework')
+}

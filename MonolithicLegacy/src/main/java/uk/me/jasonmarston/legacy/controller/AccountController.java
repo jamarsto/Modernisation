@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 
-import uk.me.jasonmarston.legacy.authentication.impl.User;
+import uk.me.jasonmarston.legacy.controller.authentication.impl.User;
 import uk.me.jasonmarston.legacy.domain.type.impl.Amount;
 
 public interface AccountController {

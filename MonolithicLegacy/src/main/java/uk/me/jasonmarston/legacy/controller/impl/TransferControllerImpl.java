@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 import uk.me.jasonmarston.legacy.controller.TransferController;
 import uk.me.jasonmarston.legacy.controller.message.impl.Message;
+import uk.me.jasonmarston.legacy.domain.service.TransferService;
 import uk.me.jasonmarston.legacy.domain.type.impl.Amount;
-import uk.me.jasonmarston.legacy.domain.type.impl.EntityId;
-import uk.me.jasonmarston.legacy.service.TransferService;
 
 @RestController
 public class TransferControllerImpl implements TransferController {
@@ -23,7 +23,7 @@ public class TransferControllerImpl implements TransferController {
     private TransferService transferService;
 
 	@Override
-	@RequestMapping(path = "/account/{fromId}/transfer/account{toId}",
+	@RequestMapping(path = "/accounts/{fromId}/transfer/account{toId}",
 		method=RequestMethod.POST, 
 		consumes = "application/json", 
 		produces = "application/json")

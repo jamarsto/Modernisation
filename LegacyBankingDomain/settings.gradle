@@ -1,0 +1,4 @@
+rootProject.name = 'LegacyBankingDomain'
+
+include 'DDDFramework'
+project(':DDDFramework').projectDir = new File(settingsDir, "../DDDFramework");

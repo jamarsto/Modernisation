@@ -1,0 +1,17 @@
+plugins {
+    id 'java-library'
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+
+	// used to validate jwt tokens issued by the Google Identity Platform
+	// (Explicit code dependency on GCP isolated to the authentication filter)
+	implementation 'com.google.firebase:firebase-admin:6.11.0'
+}

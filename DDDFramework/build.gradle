@@ -1,0 +1,16 @@
+plugins {
+    id 'java-library'
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+	implementation 'org.apache.commons:commons-lang3:3.0'
+	implementation 'javax.persistence:javax.persistence-api:2.2'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
+}
