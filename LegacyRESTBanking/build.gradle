@@ -17,7 +17,7 @@ repositories {
 dependencies {
 	// used for main spring functionality with web applications and databases
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	//	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	// implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	
 	// used to authorise authenticated users and validate jwt tokens
 	implementation 'org.springframework.boot:spring-boot-starter-security'
