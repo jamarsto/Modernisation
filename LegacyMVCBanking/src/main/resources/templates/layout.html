@@ -21,13 +21,11 @@
     			<ul class="nav navbar-nav">
       				<li class="active"><a href="/">Home</a></li>
       			</ul>
-      			<div sec:authorize="isAuthenticated()">
-	      			<form name="logout" th:action="@{/logout}" method="post">
-    	  				<ul class="nav navbar-nav pull-right">
-      						<li><a href="#" onclick="document.forms['logout'].submit(); return false;">Sign Out</a></li>
-    					</ul>
-    				</form>
-    			</div>
+      			<form name="logout" th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+   	  				<ul class="nav navbar-nav pull-right">
+     						<li><a href="#" onclick="document.forms['logout'].submit(); return false;">Sign Out</a></li>
+   					</ul>
+   				</form>
   			</div>
 		</nav>
 		<div th:replace="${content}"></div>
