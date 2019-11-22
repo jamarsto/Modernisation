@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.apache.commons:commons-lang3:3.0'
-	implementation 'javax.persistence:javax.persistence-api:2.2'
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
+	api 'org.apache.commons:commons-lang3:3.0'
+	api 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final'
+	api 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
 }

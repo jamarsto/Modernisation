@@ -1,4 +1,4 @@
-package uk.me.jasonmarston.legacy.controller.configuration.impl;
+package uk.me.jasonmarston.legacy;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;

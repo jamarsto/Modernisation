@@ -1,4 +1,4 @@
-package uk.me.jasonmarston.legacy.controller.configuration.impl;
+package uk.me.jasonmarston.mvc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

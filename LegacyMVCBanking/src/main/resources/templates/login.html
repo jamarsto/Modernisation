@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html th:replace="~{layout.html :: layout(~{::title}, ~{::div})}" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Internet Bank - Login</title>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<h1>Internet Bank - Login</h1>
+			</div>
+			<div class="row">
+				<div class="col-md-4"></div>
+				<div class="col-md-4">
+					<div th:if="${param.error}" class="alert alert-danger text-center" role="alert">
+						Invalid email and password.
+					</div>
+				</div>
+				<div class="col-md-4"></div>
+			</div>
+			<div class="row">
+				<div class="col-md-4"></div>
+				<div class="col-md-4">
+					<div th:if="${param.logout}" class="alert alert-info text-center" role="alert">
+						You have been logged out.
+					</div>
+				</div>
+				<div class="col-md-4"></div>
+			</div>
+        	<div class="row">
+				<form action="#" th:action="@{/login}" method="post">
+					<div class="col-md-4"></div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label for="email">Email Address</label>
+							<input name="username" id="email" placeholder="Enter email address" type="email" class="form-control" required/>
+						</div>
+						<div class="form-group">
+							<label for="password">Password</label>
+							<input name="password" id="password" placeholder="Enter password" type="password" class="form-control" required/>
+						</div>
+						<button type="submit" class="btn btn-primary btn-block">Sign In</button>
+					</div>
+					<div class="col-md-4"></div>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>
