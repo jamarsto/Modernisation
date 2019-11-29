@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import uk.me.jasonmarston.domain.aggregate.impl.Account;
+import uk.me.jasonmarston.domain.aggregate.impl.User;
 import uk.me.jasonmarston.domain.entity.impl.Transaction;
 import uk.me.jasonmarston.domain.service.AccountService;
 import uk.me.jasonmarston.domain.type.impl.Amount;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 import uk.me.jasonmarston.rest.controller.AccountController;
-import uk.me.jasonmarston.rest.controller.authentication.impl.User;
 import uk.me.jasonmarston.rest.controller.message.impl.Message;
 
 @RestController

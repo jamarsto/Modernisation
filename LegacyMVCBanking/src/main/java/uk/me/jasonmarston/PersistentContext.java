@@ -1,4 +1,4 @@
-package uk.me.jasonmarston.mvc;
+package uk.me.jasonmarston;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -9,7 +9,7 @@ import uk.me.jasonmarston.framework.repository.impl.AutowireJpaRepositoryImpl;
 
 @Configuration
 @EnableJpaRepositories(
-		basePackages = {"uk.me.jasonmarston.framework.repository.impl"},
+		basePackages = {"uk.me.jasonmarston.domain"},
 		repositoryFactoryBeanClass = AutowireCrudRepositoryFactoryBean.class,
 		repositoryBaseClass = AutowireJpaRepositoryImpl.class)
 @EnableTransactionManagement

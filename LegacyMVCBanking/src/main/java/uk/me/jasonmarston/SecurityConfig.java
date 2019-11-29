@@ -1,19 +1,25 @@
-package uk.me.jasonmarston.mvc;
+package uk.me.jasonmarston;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
+
+import uk.me.jasonmarston.mvc.service.impl.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+	@Autowired
+	private CustomUserDetailsService customUserDetailsService;
+
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
 		http
@@ -29,6 +35,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 				.antMatchers(
 					"/error",
+					"/signup",
+					"/confirm",
+					"/reset",
 					"/favicon.ico",
 					"/**/*.png",
 					"/**/*.gif",
@@ -39,29 +48,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					"/**/*.js").permitAll()
 				.anyRequest().authenticated();
     }
-	
-	@SuppressWarnings("deprecation")
+
+	@Override
+	protected void configure(
+			AuthenticationManagerBuilder authenticationManagerBuilder)
+					throws Exception {
+		authenticationManagerBuilder
+			.userDetailsService(customUserDetailsService)
+			.passwordEncoder(passwordEncoder());
+	}
+
 	@Bean
-    @Override
-    public UserDetailsService userDetailsService() {
-		final InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-		UserDetails user = null;
-
-		user = User.withDefaultPasswordEncoder()
-				.username("jason@jasonmarston.me.uk")
-				.password("password")
-				.roles("USER")
-				.build();
-        manager.createUser(user);
-
-        user = User.withDefaultPasswordEncoder()
-        		.username("jason.marston@cloudsolutions.co.uk")
-	            .password("password")
-	            .roles("USER")
-	            .build();
-        manager.createUser(user);
-
-        return manager;
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 	@Bean

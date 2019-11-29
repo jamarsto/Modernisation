@@ -3,8 +3,6 @@ package uk.me.jasonmarston.rest.controller.authentication.impl;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Collections;
-import java.util.List;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -13,21 +11,27 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.NestedServletException;
 
+import uk.me.jasonmarston.domain.aggregate.impl.User;
+import uk.me.jasonmarston.domain.service.UserService;
 import uk.me.jasonmarston.framework.authentication.impl.JwtValidation;
 import uk.me.jasonmarston.framework.authentication.impl.Token;
 
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
-	private static final Logger LOGGER = LoggerFactory.getLogger(TokenAuthenticationFilter.class);
-	JwtValidation auth = null;
+	private static final Logger LOGGER = 
+			LoggerFactory.getLogger(TokenAuthenticationFilter.class);
+	
+	@Autowired
+	private UserService userService;
+	
+	private JwtValidation auth = null;
 
 	public TokenAuthenticationFilter() {
 		try {
@@ -45,21 +49,12 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 		try {
 			final String jwt = getJwtFromRequest(request);
 			if (StringUtils.hasText(jwt)) {
-				final Token token = auth.verifyIdToken(jwt);
-				final List<GrantedAuthority> authorities = Collections
-						.singletonList(
-								new SimpleGrantedAuthority("ROLE_USER"));
-				final UsernamePasswordAuthenticationToken authentication =
-						new UsernamePasswordAuthenticationToken(
-								new User(token.getUid(),
-										token.getEmail(),
-										token.getName(),
-										token.getIssuer(),
-										token.getPicture(),
-									 	jwt,
-										authorities), 
-								jwt, 
-								authorities);
+				final User user = findOrCreateUser(auth.verifyIdToken(jwt));
+				user.setCredentials(jwt);
+
+				final UsernamePasswordAuthenticationToken authentication = 
+						createAuthenticationToken(user);
+
 				authentication
 					.setDetails(
 							new WebAuthenticationDetailsSource()
@@ -68,6 +63,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
 				SecurityContextHolder.getContext()
 						.setAuthentication(authentication);
+
 				try {
 					filterChain.doFilter(request, response);
 				}
@@ -83,10 +79,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 					"Please provide credentials");
 			}
         }
-		// Catches the runtime exception from our token authenticator
-		// either as it is null from failed configuration, 
-		// or if we get an invalid token,
-		// and anything else missed by the chain
 		catch(final RuntimeException | Error e) {
 			logError(e);
 			response.sendError(
@@ -99,15 +91,42 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         }
 	}
 
+	private UsernamePasswordAuthenticationToken createAuthenticationToken(
+			final User user) {
+		return new UsernamePasswordAuthenticationToken(
+				user,
+				user.getCredentials(), 
+				user.getAuthorities());
+	}
+
+	private User findOrCreateUser(final Token token) {
+		User user = userService.findByEmail(token.getEmail());
+		if(user == null) {
+			user = userService.create(
+					token.getUid(),
+					token.getEmail(),
+					token.getName(),
+					token.getPicture());
+		} else {
+			user.setUid(token.getUid());
+			user.setUsername(token.getName());
+			user.setPicture(token.getPicture());
+			user.setPassword(null);
+			user = userService.update(user);
+		}
+		user.setIssuer(token.getIssuer());
+		return user;
+	}
+
 	private String getJwtFromRequest(final HttpServletRequest request) {
 		String bearerToken = request.getHeader("Authorization");
-		if (StringUtils.hasText(bearerToken) 
+		if (StringUtils.hasText(bearerToken)
 				&& bearerToken.startsWith("Bearer ")) {
 			return bearerToken.substring(7, bearerToken.length());
 		}
 		return null;
     }
-	
+
 	private void logError(final Throwable e) {
 		final StringWriter stack = new StringWriter();
 	    e.printStackTrace(new PrintWriter(stack));

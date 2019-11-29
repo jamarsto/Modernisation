@@ -1,5 +1,6 @@
 package uk.me.jasonmarston.rest.controller.authentication.impl;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -40,7 +41,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					"/**/*.js").permitAll()
 				.anyRequest().authenticated();
 
-        http.addFilterBefore(new TokenAuthenticationFilter(),
+        http.addFilterBefore(tokenAuthenticationFilter(),
         	UsernamePasswordAuthenticationFilter.class);
     }
+
+	@Bean
+	public TokenAuthenticationFilter tokenAuthenticationFilter() {
+		return new TokenAuthenticationFilter();
+	}
 }

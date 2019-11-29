@@ -8,19 +8,19 @@
 			<div class="row">
 				<h1>Internet Bank - Login</h1>
 			</div>
-			<div class="row">
+			<div th:if="${param.error}" class="row">
 				<div class="col-md-4"></div>
 				<div class="col-md-4">
-					<div th:if="${param.error}" class="alert alert-danger text-center" role="alert">
+					<div class="alert alert-danger text-center" role="alert">
 						Invalid email and password.
 					</div>
 				</div>
 				<div class="col-md-4"></div>
 			</div>
-			<div class="row">
+			<div th:if="${param.logout}" class="row">
 				<div class="col-md-4"></div>
 				<div class="col-md-4">
-					<div th:if="${param.logout}" class="alert alert-info text-center" role="alert">
+					<div class="alert alert-info text-center" role="alert">
 						You have been logged out.
 					</div>
 				</div>
@@ -31,8 +31,8 @@
 					<div class="col-md-4"></div>
 					<div class="col-md-4">
 						<div class="form-group">
-							<label for="email">Email Address</label>
-							<input name="username" id="email" placeholder="Enter email address" type="email" class="form-control" required/>
+							<label for="username">Email Address</label>
+							<input name="username" id="username" placeholder="Enter email address" type="email" class="form-control" required/>
 						</div>
 						<div class="form-group">
 							<label for="password">Password</label>
@@ -42,6 +42,14 @@
 					</div>
 					<div class="col-md-4"></div>
 				</form>
+			</div>
+			<div class="row">&nbsp;</div>
+			<div class="row">
+					<div class="col-md-4"></div>
+					<div class="col-md-4 text-center">
+						<a th:href="@{/signup}">Register</a>
+					</div>
+					<div class="col-md-4"></div>
 			</div>
 		</div>
 	</body>

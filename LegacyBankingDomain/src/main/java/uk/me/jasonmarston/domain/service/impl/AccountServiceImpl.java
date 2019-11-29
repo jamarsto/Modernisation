@@ -1,6 +1,8 @@
 package uk.me.jasonmarston.domain.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,7 @@ import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED, 
-		isolation = Isolation.REPEATABLE_READ, 
+		isolation = Isolation.READ_COMMITTED, 
 		readOnly = false)
 public class AccountServiceImpl implements AccountService {
 
@@ -38,15 +40,23 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public Transaction depositFunds(final EntityId id,
 			final Amount amount) {
-		final Account account = accountRepository.findById(id).get();
-		final Transaction transaction = account.depositFunds(amount);
-		accountRepository.save(account);
-		return transaction;
+		final Optional<Account> optional = accountRepository.findById(id);
+		if(optional.isPresent()) {
+			final Account account = optional.get();
+			final Transaction transaction = account.depositFunds(amount);
+			accountRepository.save(account);
+			return transaction;
+		}
+		return null;
 	}
 
 	@Override
 	public Account getAccount(final EntityId id) {
-		return accountRepository.findById(id).get();
+		final Optional<Account> optional = accountRepository.findById(id);
+		if(optional.isPresent()) {
+			return optional.get();
+		}
+		return null;
 	}
 
 	@Override
@@ -54,50 +64,75 @@ public class AccountServiceImpl implements AccountService {
 			isolation = Isolation.REPEATABLE_READ,
 			readOnly = true)
 	public Amount getBalance(final EntityId id) {
-		final Account account = accountRepository.findById(id).get();
-		return account.getBalance();
+		final Optional<Account> optional = accountRepository.findById(id);
+		if(optional.isPresent()) {
+			final Account account = optional.get();
+			return account.getBalance();
+		}
+		return null;
 	}
 
 	@Override
 	public Transaction getDeposit(
 			final EntityId accountId,
 			final EntityId id) {
-		return transactionRepository
-			.findOne(new DepositHasIdAndAccountId(id, accountId))
-			.get();
+		final Optional<Transaction> optional = transactionRepository
+				.findOne(new DepositHasIdAndAccountId(id, accountId));
+		if(optional.isPresent()) {
+			return optional.get();
+		}
+		return null;
 	}
 
 	@Override
 	public List<Transaction> getDeposits(final EntityId accountId) {
-		return accountRepository.findById(accountId).get().getDeposits();
+		final Optional<Account> optional = accountRepository.findById(accountId);
+		if(optional.isPresent()) {
+			return optional.get().getDeposits();
+		}
+		return new ArrayList<Transaction>();
 	}
 
 	@Override
 	public Transaction getTransaction(
 			final EntityId accountId,
 			final EntityId id) {
-		return transactionRepository
-			.findOne(new TransactionHasIdAndAccountId(id, accountId))
-			.get();
+		final Optional<Transaction> optional = transactionRepository
+				.findOne(new TransactionHasIdAndAccountId(id, accountId));
+		if(optional.isPresent()) {
+			return optional.get();
+		}
+		return null;
 	}
 
 	@Override
 	public List<Transaction> getTransactions(final EntityId accountId) {
-		return accountRepository.findById(accountId).get().getTransactions();
+		final Optional<Account> optional = accountRepository.findById(accountId);
+		if(optional.isPresent()) {
+			return optional.get().getTransactions();
+		}
+		return null;
 	}
 
 	@Override
 	public Transaction getWithdrawal(
 			final EntityId accountId,
 			final EntityId id) {
-		return transactionRepository
-			.findOne(new WithdrawalHasIdAndAccountId(id, accountId))
-			.get();
+		final Optional<Transaction> optional = transactionRepository
+				.findOne(new WithdrawalHasIdAndAccountId(id, accountId));
+		if(optional.isPresent()) {
+			return optional.get();
+		}
+		return null;
 	}
 
 	@Override
 	public List<Transaction> getWithdrawals(final EntityId accountId) {
-		return accountRepository.findById(accountId).get().getWithdrawals();
+		final Optional<Account> optional = accountRepository.findById(accountId);
+		if(optional.isPresent()) {
+			return optional.get().getWithdrawals();
+		}
+		return new ArrayList<Transaction>();
 	}
 
 	@Override
@@ -107,10 +142,13 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public Transaction withdrawFunds(final EntityId id, final Amount amount) {
-		final Account account = accountRepository.findById(id).get();
-		final Transaction transaction = account.withdrawFunds(amount);
-		accountRepository.save(account);
-		return transaction;
+		final Optional<Account> optional = accountRepository.findById(id);
+		if(optional.isPresent()) {
+			final Account account = optional.get();
+			final Transaction transaction = account.withdrawFunds(amount);
+			accountRepository.save(account);
+			return transaction;
+		}
+		return null;
 	}
 }
-
