@@ -1,5 +1,6 @@
 package uk.me.jasonmarston.domain.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import uk.me.jasonmarston.domain.aggregate.impl.VerificationToken;
 import uk.me.jasonmarston.domain.repository.VerificationTokenRepository;
+import uk.me.jasonmarston.domain.repository.specification.impl.VerificationTokenSpecification;
 import uk.me.jasonmarston.domain.service.VerificationTokenService;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
@@ -34,5 +36,18 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
 	public VerificationToken create(EntityId id) {
 		final VerificationToken token = new VerificationToken(id);
 		return verificationTokenRepository.save(token);
+	}
+
+	@Override
+	public void delete(VerificationToken verificationToken) {
+		verificationTokenRepository.delete(verificationToken);
+	}
+
+	@Override
+	public List<VerificationToken> findExpiredTokens() {
+		return verificationTokenRepository
+				.findAll(
+						new VerificationTokenSpecification
+								.VerificationTokenIsExpired());
 	}
 }

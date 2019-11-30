@@ -80,4 +80,9 @@ public class UserServiceImpl implements UserService {
 	public User update(User user) {
 		return userRepository.save(user);
 	}
+
+	@Override
+	public void delete(User user) {
+		userRepository.delete(user);
+	}
 }

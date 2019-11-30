@@ -45,11 +45,11 @@ public class AuthenticationController {
 	@GetMapping("/confirm")
 	public String confirm(
 			final WebRequest request, 
-			@RequestParam("token") final String token) {
+			@RequestParam(value = "token", required = false) final String token) {
 		final VerificationToken verificationToken = 
 				verificationTokenService.findByToken(token);
 		if(verificationToken == null) {
-			return "redirect:/signup?missing";
+			return "redirect:/signup?expired";
 		}
 
 		final User user = userService.getUser(verificationToken.getUserId());
@@ -57,12 +57,16 @@ public class AuthenticationController {
 		final long expiry = verificationToken.getExpiryDate().getTime();
 		final Calendar cal = Calendar.getInstance();
 		final long now = cal.getTime().getTime();
-		if(expiry - now <= 0) {
+		final long timeRemaining = expiry - now;
+		if(timeRemaining <= 0) {
+			verificationTokenService.delete(verificationToken);
 			return "redirect:/signup?expired";
 		}
 
 		user.setEnabled(true);
 		userService.update(user);
+		
+		verificationTokenService.delete(verificationToken);
 		
 		final Authentication authentication = 
 				new UsernamePasswordAuthenticationToken(

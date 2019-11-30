@@ -14,4 +14,5 @@ public interface UserService {
 				final String username,
 				final String picture);
 	User update(final User user);
+	void delete(final User user);
 }

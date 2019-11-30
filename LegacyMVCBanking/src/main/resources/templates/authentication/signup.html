@@ -35,15 +35,6 @@
 				</div>
 				<div class="col-md-4"></div>
 			</div>
-			<div class="row" th:if="${param.missing}">
-				<div class="col-md-4"></div>
-				<div class="col-md-4">
-					<div class="alert alert-danger text-center" role="alert">
-						You have not provided a validation token.
-					</div>
-				</div>
-				<div class="col-md-4"></div>
-			</div>
         	<div class="row">
 				<form action="#" th:action="@{/signup}" method="post">
 					<div class="col-md-4"></div>

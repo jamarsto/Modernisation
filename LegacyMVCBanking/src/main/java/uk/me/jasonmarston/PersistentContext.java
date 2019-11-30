@@ -9,7 +9,7 @@ import uk.me.jasonmarston.framework.repository.impl.AutowireJpaRepositoryImpl;
 
 @Configuration
 @EnableJpaRepositories(
-		basePackages = {"uk.me.jasonmarston.domain"},
+		basePackages = {"uk.me.jasonmarston.domain.repository"},
 		repositoryFactoryBeanClass = AutowireCrudRepositoryFactoryBean.class,
 		repositoryBaseClass = AutowireJpaRepositoryImpl.class)
 @EnableTransactionManagement
