@@ -13,5 +13,5 @@ import uk.me.jasonmarston.framework.repository.impl.AutowireJpaRepositoryImpl;
 		repositoryFactoryBeanClass = AutowireCrudRepositoryFactoryBean.class,
 		repositoryBaseClass = AutowireJpaRepositoryImpl.class)
 @EnableTransactionManagement
-public class PersistentContext {
+public class PersistenceConfig {
 }
