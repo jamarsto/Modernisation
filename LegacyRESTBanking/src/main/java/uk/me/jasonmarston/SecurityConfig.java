@@ -1,4 +1,4 @@
-package uk.me.jasonmarston.rest.controller.authentication.impl;
+package uk.me.jasonmarston;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import uk.me.jasonmarston.rest.controller.authentication.impl.TokenAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
