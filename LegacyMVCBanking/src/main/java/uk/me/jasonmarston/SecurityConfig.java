@@ -24,20 +24,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(final HttpSecurity http) throws Exception {
 		http
 			.formLogin()
-				.loginPage("/login")
-				.permitAll()
+				.loginPage("/login").permitAll()
 				.and()
 			.logout()
-				.logoutUrl("/logout")
-				.permitAll()
+				.logoutUrl("/logout").permitAll()
 				.and()
 			.httpBasic().disable()
 			.authorizeRequests()
 				.antMatchers(
 					"/error",
-					"/signup",
-					"/confirm",
-					"/reset",
+					"/registration",
+					"/registration/confirmation",
+					"/forgotten",
+					"/forgotten/confirmation",
 					"/favicon.ico",
 					"/**/*.png",
 					"/**/*.gif",

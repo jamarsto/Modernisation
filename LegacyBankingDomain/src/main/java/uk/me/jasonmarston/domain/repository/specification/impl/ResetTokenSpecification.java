@@ -11,16 +11,16 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import uk.me.jasonmarston.domain.aggregate.impl.VerificationToken;
+import uk.me.jasonmarston.domain.aggregate.impl.ResetToken;
 
-public class VerificationTokenSpecification {
-	public static class VerificationTokenIsExpired 
-			implements Specification<VerificationToken> {
+public class ResetTokenSpecification {
+	public static class ResetTokenIsExpired 
+			implements Specification<ResetToken> {
 		private static final long serialVersionUID = 1L;
 		
 		@Override
 		public Predicate toPredicate(
-				final Root<VerificationToken> root, 
+				final Root<ResetToken> root, 
 				final CriteriaQuery<?> query, 
 				final CriteriaBuilder builder) {
 

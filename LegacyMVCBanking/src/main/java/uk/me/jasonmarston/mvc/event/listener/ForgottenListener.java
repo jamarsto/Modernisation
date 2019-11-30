@@ -13,18 +13,17 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import uk.me.jasonmarston.domain.aggregate.impl.User;
-import uk.me.jasonmarston.domain.aggregate.impl.VerificationToken;
-import uk.me.jasonmarston.domain.service.VerificationTokenService;
-import uk.me.jasonmarston.mvc.event.OnRegistrationCompleteEvent;
+import uk.me.jasonmarston.domain.aggregate.impl.ResetToken;
+import uk.me.jasonmarston.domain.service.ResetTokenService;
+import uk.me.jasonmarston.mvc.event.OnForgottenPasswordEvent;
 
 @Component
-public class RegistrationListener implements
-		ApplicationListener<OnRegistrationCompleteEvent> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationListener.class);
+public class ForgottenListener implements
+		ApplicationListener<OnForgottenPasswordEvent> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ForgottenListener.class);
 
 	@Autowired
-	private VerificationTokenService verificationTokenService;
+	private ResetTokenService resetTokenService;
 	
 	@Autowired
 	private JavaMailSender sender;
@@ -34,21 +33,24 @@ public class RegistrationListener implements
 	
 	@Async
 	@Override
-	public void onApplicationEvent(final OnRegistrationCompleteEvent event) {
-		final User user = event.getUser();
-		final VerificationToken token = verificationTokenService
-				.create(user.getId());
+	public void onApplicationEvent(final OnForgottenPasswordEvent event) {
+		final ResetToken token = resetTokenService
+				.create(event.getEmail());
+		if(token == null) {
+			LOGGER.error("Email: " + event.getEmail() + " does not match with a user.");
+			return;
+		}
 		final MimeMessage message = sender.createMimeMessage();
 		final MimeMessageHelper helper = new MimeMessageHelper(message);
 		try {
-			helper.setTo(user.getEmail());
+			helper.setTo(event.getEmail());
 			helper.setFrom(from);
-			helper.setSubject("Registration Confirmation");
+			helper.setSubject("Password Reset Confirmation");
 			helper.setText("<a href=\"http://localhost:8080" 
 					+ event.getUrl() 
-					+ "/registration/confirmation?token=" 
+					+ "/forgotten/confirmation?token=" 
 					+ token.getToken()
-					+ "\">Confirm Email Address</a>", true);
+					+ "\">Confirm Password Reset</a>", true);
 			sender.send(message);
 		} catch (RuntimeException e ) {
 			LOGGER.error("Failed to send confirmation email: " + e.getMessage());

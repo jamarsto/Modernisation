@@ -38,16 +38,17 @@
 							<label for="password">Password</label>
 							<input name="password" id="password" placeholder="Enter password" type="password" class="form-control" required/>
 						</div>
-						<button type="submit" class="btn btn-primary btn-block">Sign In</button>
+						<div class="top-buffer-bg">
+							<button type="submit" class="btn btn-primary btn-block">Sign In</button>
+						</div>
 					</div>
 					<div class="col-md-4"></div>
 				</form>
 			</div>
-			<div class="row">&nbsp;</div>
-			<div class="row">
+			<div class="row top-buffer">
 					<div class="col-md-4"></div>
 					<div class="col-md-4 text-center">
-						<a th:href="@{/signup}">Register</a>
+						<a th:href="@{/forgotten}">Forgotten Password</a> | <a th:href="@{/registration}">Register</a>
 					</div>
 					<div class="col-md-4"></div>
 			</div>

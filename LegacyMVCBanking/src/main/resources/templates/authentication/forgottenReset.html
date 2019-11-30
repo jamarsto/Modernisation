@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html th:replace="~{layout.html :: layout(~{::title}, ~{::div})}" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Internet Bank - Reset Password</title>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<h1>Internet Bank - Reset Password</h1>
+			</div>
+        	<div class="row">
+				<form action="#" th:action="@{/forgotten/reset}" method="post">
+					<div class="col-md-4"></div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label for="password">Password</label>
+							<input name="password" id="password" placeholder="Enter password" type="password" class="form-control" required/>
+						</div>
+						<div class="form-group">
+							<label for="passwordConfirmation">Confirm Password</label>
+							<input name="passwordConfirmation" id="passwordConfirmation" placeholder="Enter password" type="password" class="form-control" required/>
+						</div>
+						<div class="top-buffer-bg">
+							<button type="submit" class="btn btn-primary btn-block">Confirm</button>
+						</div>
+					</div>
+					<div class="col-md-4"></div>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>

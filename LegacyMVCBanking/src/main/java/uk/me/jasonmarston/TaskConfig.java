@@ -6,10 +6,9 @@ import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @Configuration
-public class TaskConfig extends WebSecurityConfigurerAdapter {
+public class TaskConfig {
 	@Bean
 	public TaskExecutor getAsyncExecutor() {
 		return new SimpleAsyncTaskExecutor();

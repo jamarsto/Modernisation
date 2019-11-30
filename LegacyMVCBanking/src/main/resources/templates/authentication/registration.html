@@ -17,15 +17,6 @@
 				</div>
 				<div class="col-md-4"></div>
 			</div>
-			<div class="row" th:if="${param.email}">
-				<div class="col-md-4"></div>
-				<div class="col-md-4">
-					<div class="alert alert-danger text-center" role="alert">
-						Error sending confirmation email.
-					</div>
-				</div>
-				<div class="col-md-4"></div>
-			</div>
 			<div class="row" th:if="${param.expired}">
 				<div class="col-md-4"></div>
 				<div class="col-md-4">
@@ -36,7 +27,7 @@
 				<div class="col-md-4"></div>
 			</div>
         	<div class="row">
-				<form action="#" th:action="@{/signup}" method="post">
+				<form action="#" th:action="@{/registration}" method="post">
 					<div class="col-md-4"></div>
 					<div class="col-md-4">
 						<div class="form-group">
@@ -51,7 +42,9 @@
 							<label for="passwordConfirmation">Confirm Password</label>
 							<input name="passwordConfirmation" id="passwordConfirmation" placeholder="Enter password" type="password" class="form-control" required/>
 						</div>
-						<button type="submit" class="btn btn-primary btn-block">Confirm</button>
+						<div class="top-buffer-bg">
+							<button type="submit" class="btn btn-primary btn-block">Confirm</button>
+						</div>
 					</div>
 					<div class="col-md-4"></div>
 				</form>

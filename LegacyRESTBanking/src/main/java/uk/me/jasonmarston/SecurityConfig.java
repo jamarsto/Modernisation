@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
-			.csrf().disable()
+			.csrf().disable() // Is this actually needed?
 			.formLogin().disable()
 			.httpBasic().disable()
 			.authorizeRequests()
