@@ -3,6 +3,10 @@ package uk.me.jasonmarston;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -66,5 +70,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public SpringSecurityDialect springSecurityDialect(){
 		return new SpringSecurityDialect();
+	}
+	
+	@Bean
+	public TaskExecutor getAsyncExecutor() {
+		return new SimpleAsyncTaskExecutor();
+	}
+
+	@Bean
+	public TaskScheduler taskScheduler() {
+		final ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
+		scheduler.setPoolSize(20);
+		scheduler.setThreadNamePrefix("scheduler-");
+		scheduler.setWaitForTasksToCompleteOnShutdown(true);
+		return scheduler;
 	}
 }

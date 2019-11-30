@@ -95,15 +95,10 @@ public class AuthenticationController {
 					email,
 					password,
 					passwordConfirmation);
-			try {
-				applicationEventPublisher
+			applicationEventPublisher
 				.publishEvent(new OnRegistrationCompleteEvent(
-							user, 
-							request.getContextPath()));
-			}
-			catch(Exception e) {
-				return "redirect:/signup?email";
-			}
+						user, 
+						request.getContextPath()));
 		}
 		catch(InvalidParameterException e) {
 			return "redirect:/signup?registration";
