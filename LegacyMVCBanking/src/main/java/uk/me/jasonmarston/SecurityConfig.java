@@ -3,6 +3,7 @@ package uk.me.jasonmarston;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,7 +19,17 @@ import uk.me.jasonmarston.mvc.service.impl.CustomUserDetailsService;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
+	@Lazy
 	private CustomUserDetailsService customUserDetailsService;
+
+	@Override
+	protected void configure(
+			AuthenticationManagerBuilder authenticationManagerBuilder)
+					throws Exception {
+		authenticationManagerBuilder
+			.userDetailsService(customUserDetailsService)
+			.passwordEncoder(passwordEncoder());
+	}
 
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
@@ -33,10 +44,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 				.antMatchers(
 					"/error",
-					"/registration",
-					"/registration/confirmation",
-					"/forgotten",
-					"/forgotten/confirmation",
+					"/user/registration",
+					"/user/registration/verification",
+					"/user/forgotten",
+					"/user/forgotten/verification",
 					"/favicon.ico",
 					"/**/*.png",
 					"/**/*.gif",
@@ -47,15 +58,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					"/**/*.js").permitAll()
 				.anyRequest().authenticated();
     }
-
-	@Override
-	protected void configure(
-			AuthenticationManagerBuilder authenticationManagerBuilder)
-					throws Exception {
-		authenticationManagerBuilder
-			.userDetailsService(customUserDetailsService)
-			.passwordEncoder(passwordEncoder());
-	}
 
 	@Bean
     public PasswordEncoder passwordEncoder() {

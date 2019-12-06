@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import uk.me.jasonmarston.domain.service.TransferService;
-import uk.me.jasonmarston.domain.type.impl.Amount;
+import uk.me.jasonmarston.domain.value.Amount;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 import uk.me.jasonmarston.rest.controller.TransferController;
 import uk.me.jasonmarston.rest.controller.message.impl.Message;

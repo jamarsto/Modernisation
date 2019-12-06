@@ -1,0 +1,156 @@
+package uk.me.jasonmarston.domain.aggregate;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+
+import uk.me.jasonmarston.domain.entity.Transaction;
+import uk.me.jasonmarston.domain.factory.aggregate.AccountBuilderFactory;
+import uk.me.jasonmarston.domain.factory.entity.TransactionBuilderFactory;
+import uk.me.jasonmarston.domain.value.Amount;
+import uk.me.jasonmarston.domain.value.Balance;
+import uk.me.jasonmarston.domain.value.TransactionType;
+import uk.me.jasonmarston.framework.domain.aggregate.AbstractAggregate;
+import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
+
+@Configurable(preConstruction = true, autowire = Autowire.BY_TYPE, dependencyCheck = false)
+@Entity
+@Table(name = "ACCOUNTS")
+public class Account extends AbstractAggregate {
+	public static class Builder {
+		private Balance balance;
+		
+		private Builder() {
+		}
+
+		public Account build() {
+			if(balance == null) {
+				throw new RuntimeException("An opening balance is required");
+			}
+			final Account account = new Account(balance);
+			return account;
+		}
+		
+		public Builder withOpeningBalance(Balance balance) {
+			this.balance = balance;
+			return this;
+		}
+	}
+
+	@Service
+	public static class FactoryImpl implements AccountBuilderFactory {
+		@Override
+		public Builder create() {
+			return new Builder();
+		}
+	}
+
+	private static final long serialVersionUID = 1L;
+	
+	@Autowired
+	@Lazy
+	@Transient
+	private TransactionBuilderFactory transactionBuilderFactory;
+	
+	@JsonUnwrapped
+	@NotNull
+	private Balance balance;
+
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.ALL)
+	@NotNull
+	private List<@NotNull Transaction> transactions = 
+			new ArrayList<Transaction>();
+	
+	private Account() {
+	}
+
+	private Account(Balance balance) {
+		this.balance = balance;
+		this.setId(new EntityId());
+	}
+	
+	public Transaction depositFunds(final Amount amount) {
+		return depositFunds(amount, null);
+	}
+	
+	public Transaction depositFunds(final Amount amount, 
+			final EntityId referenceAccountId) {
+		this.balance = this.balance.add(amount);
+
+		final Transaction.Builder builder = transactionBuilderFactory.create();
+		final Transaction transaction = builder
+				.againstAccount(this)
+				.ofType(TransactionType.DEPOSIT)
+				.forAmount(amount)
+				.withReferenceAccountId(referenceAccountId)
+				.build();
+				
+		transactions.add(transaction);
+
+		return transaction;
+	}
+
+	public Balance getBalance() {
+		return balance;
+	}
+
+	@JsonIgnore
+	public List<Transaction> getDeposits() {
+		return transactions
+			.stream()
+			.filter(transaction -> 
+				TransactionType.DEPOSIT.equals(transaction.getType()))
+			.collect(Collectors.toList());
+	}
+
+	public List<Transaction> getTransactions() {
+		return transactions;
+	}
+
+	@JsonIgnore
+	public List<Transaction> getWithdrawals() {
+		return transactions
+			.stream()
+			.filter(transaction -> 
+				TransactionType.WITHDRAWAL.equals(transaction.getType()))
+			.collect(Collectors.toList());
+	}
+
+	public Transaction withdrawFunds(final Amount amount) {
+		return withdrawFunds(amount, null);
+	}
+
+	public Transaction withdrawFunds(final Amount amount,
+			final EntityId referenceAccountId) {
+		this.balance = this.balance.subtract(amount);
+
+		final Transaction.Builder builder = transactionBuilderFactory.create();
+		final Transaction transaction = builder
+				.againstAccount(this)
+				.ofType(TransactionType.WITHDRAWAL)
+				.forAmount(amount)
+				.withReferenceAccountId(referenceAccountId)
+				.build();
+
+		transactions.add(transaction);
+
+		return transaction;
+	}
+}

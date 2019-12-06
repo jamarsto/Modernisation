@@ -19,7 +19,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.NestedServletException;
 
-import uk.me.jasonmarston.domain.aggregate.impl.User;
+import uk.me.jasonmarston.domain.aggregate.User;
+import uk.me.jasonmarston.domain.details.EmailDetails;
 import uk.me.jasonmarston.domain.service.UserService;
 import uk.me.jasonmarston.framework.authentication.impl.JwtValidation;
 import uk.me.jasonmarston.framework.authentication.impl.Token;
@@ -100,7 +101,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 	}
 
 	private User findOrCreateUser(final Token token) {
-		User user = userService.findByEmail(token.getEmail());
+		User user = userService.findByEmail(new EmailDetails(token.getEmail()));
 		if(user == null) {
 			user = userService.create(
 					token.getUid(),

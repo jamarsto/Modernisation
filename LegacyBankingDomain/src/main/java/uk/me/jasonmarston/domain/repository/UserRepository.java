@@ -2,13 +2,15 @@ package uk.me.jasonmarston.domain.repository;
 
 import java.util.Optional;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.validation.annotation.Validated;
 
-import uk.me.jasonmarston.domain.aggregate.impl.User;
+import uk.me.jasonmarston.domain.aggregate.User;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, EntityId> {
+@Validated
+public interface UserRepository extends JpaRepository<User, EntityId> {
 	Optional<User> findByEmail(final String email);
 }

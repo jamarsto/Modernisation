@@ -1,18 +1,18 @@
 package uk.me.jasonmarston.domain.service;
 
-import uk.me.jasonmarston.domain.aggregate.impl.User;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import uk.me.jasonmarston.domain.aggregate.User;
+import uk.me.jasonmarston.domain.details.EmailDetails;
+import uk.me.jasonmarston.domain.details.RegistrationDetails;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 public interface UserService {
-	User findByEmail(final String email);
-	User getUser(final EntityId id);
-	User signUp(final String email,
-			final String password,
-			final String passwordConfirmation);
-	User create(final String uid,
-				final String email,
-				final String username,
-				final String picture);
-	User update(final User user);
-	void delete(final User user);
+	void delete(@NotNull @Valid final User user);
+	User findByEmail(@NotNull @Valid final EmailDetails emailDetails);
+	User getUser(@NotNull @Valid final EntityId id);
+	User register(
+			@NotNull @Valid final RegistrationDetails registrationDetails);
+	User update(@NotNull @Valid final User user);
 }

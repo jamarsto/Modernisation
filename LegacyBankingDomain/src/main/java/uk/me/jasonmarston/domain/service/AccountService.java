@@ -2,24 +2,35 @@ package uk.me.jasonmarston.domain.service;
 
 import java.util.List;
 
-import uk.me.jasonmarston.domain.aggregate.impl.Account;
-import uk.me.jasonmarston.domain.entity.impl.Transaction;
-import uk.me.jasonmarston.domain.type.impl.Amount;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import uk.me.jasonmarston.domain.aggregate.Account;
+import uk.me.jasonmarston.domain.details.TransactionDetails;
+import uk.me.jasonmarston.domain.details.TransactionIdentifierDetails;
+import uk.me.jasonmarston.domain.entity.Transaction;
+import uk.me.jasonmarston.domain.value.Balance;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 public interface AccountService {
+	Transaction depositFunds(
+			@Valid final TransactionDetails transactionDetails);
+	Account getAccount(@NotNull @Valid final EntityId id);
+	Balance getBalance(@NotNull @Valid final EntityId id);
+	Transaction getDeposit(
+			@NotNull @Valid final TransactionIdentifierDetails 
+					transactionIdentifierDetails);
+	List<Transaction> getDeposits(@NotNull @Valid final EntityId accountId);
+	Transaction getTransaction(
+			@NotNull @Valid final TransactionIdentifierDetails
+					transactionIdentifierDetails);
+	List<Transaction> getTransactions(
+			@NotNull @Valid final EntityId accountId);
+	Transaction getWithdrawal(
+			@NotNull @Valid final TransactionIdentifierDetails
+					transactionIdentifierDetails);
+	List<Transaction> getWithdrawals(@NotNull @Valid final EntityId accountId);
 	Account openAccount();
-	Account getAccount(final EntityId id);
-	Transaction depositFunds(final EntityId id, final Amount amount);
-	Transaction withdrawFunds(final EntityId id, final Amount amount);
-	Amount getBalance(final EntityId id);
-	Transaction getDeposit(final EntityId accountId,
-			final EntityId transactionId);
-	List<Transaction> getDeposits(final EntityId accountId);
-	Transaction getTransaction(final EntityId accountId,
-			final EntityId transactionId);
-	List<Transaction> getTransactions(final EntityId accountId);
-	Transaction getWithdrawal(final EntityId accountId,
-			final EntityId transactionId);
-	List<Transaction> getWithdrawals(final EntityId accountId);
+	Transaction withdrawFunds(@NotNull @Valid final TransactionDetails
+			transactionDetails);
 }

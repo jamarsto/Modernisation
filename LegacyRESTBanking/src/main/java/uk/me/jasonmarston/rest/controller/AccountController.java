@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 
-import uk.me.jasonmarston.domain.aggregate.impl.User;
-import uk.me.jasonmarston.domain.type.impl.Amount;
+import uk.me.jasonmarston.domain.aggregate.User;
+import uk.me.jasonmarston.domain.value.Amount;
 
 public interface AccountController {
 	ResponseEntity<?> depositFunds(final UUID id, final Amount amount);

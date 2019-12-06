@@ -1,6 +1,7 @@
 package uk.me.jasonmarston.mvc.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -9,7 +10,8 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import uk.me.jasonmarston.domain.aggregate.impl.User;
+import uk.me.jasonmarston.domain.aggregate.User;
+import uk.me.jasonmarston.domain.details.EmailDetails;
 import uk.me.jasonmarston.domain.service.UserService;
 
 @Service
@@ -18,16 +20,22 @@ import uk.me.jasonmarston.domain.service.UserService;
 		readOnly = false)
 public class CustomUserDetailsService implements UserDetailsService {
 	@Autowired
+	@Lazy
 	private UserService userService;
 
 	@Override
 	public UserDetails loadUserByUsername(final String email)
 			throws UsernameNotFoundException {
-		final User user = userService.findByEmail(email);
+		if(email == null) {
+			throw new UsernameNotFoundException("No Email Provided");
+		}
+
+		final User user = userService.findByEmail(new EmailDetails(email));
 		if(user == null) {
 			throw new UsernameNotFoundException(
 					"User not found with email: " + email);
 		}
+
         return user;
 	}
 }

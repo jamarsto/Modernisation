@@ -24,7 +24,6 @@ dependencies {
 	
 	// bespoke application dependencies
 	implementation project(':FrameworkFirebase')
-	implementation project(':FrameworkRepository')
 	implementation project(':LegacyBankingDomain')
 }
 

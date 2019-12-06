@@ -2,6 +2,7 @@ package uk.me.jasonmarston.framework.domain.entity;
 
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
@@ -16,6 +17,7 @@ public abstract class AbstractEntity extends AbstractDomainObject
 
 	@Id
 	@JsonUnwrapped
+	@NotNull
 	private EntityId id;
 
 	@Override

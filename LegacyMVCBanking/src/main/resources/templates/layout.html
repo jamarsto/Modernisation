@@ -1,16 +1,19 @@
 <!DOCTYPE html>
-<html th:fragment="layout (title, content)" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html th:fragment="layout (content)" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
     		
-		<title th:replace="${title}"></title>
+		<title>Internet Bank</title>
 		
 		<link rel = "stylesheet" type = "text/css" href = "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
 
-		<link rel = "stylesheet" type = "text/css" href = "app.css" />
+		<link rel = "stylesheet" type = "text/css" th:href="@{/app.css}"/>
 
+		<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
 	</head>
 	<body>
 		<nav class="navbar navbar-default">

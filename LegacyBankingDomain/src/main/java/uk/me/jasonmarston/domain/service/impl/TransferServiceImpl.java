@@ -1,31 +1,44 @@
 package uk.me.jasonmarston.domain.service.impl;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+import uk.me.jasonmarston.domain.details.TransactionDetails;
+import uk.me.jasonmarston.domain.details.TransferDetails;
 import uk.me.jasonmarston.domain.service.AccountService;
 import uk.me.jasonmarston.domain.service.TransferService;
-import uk.me.jasonmarston.domain.type.impl.Amount;
-import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 @Service
+@Validated
 @Transactional(propagation = Propagation.REQUIRED,
-		isolation = Isolation.REPEATABLE_READ,
+		isolation = Isolation.READ_COMMITTED,
 		readOnly = false)
 public class TransferServiceImpl implements TransferService {
 
 	@Autowired
+	@Lazy
 	private AccountService accountService;
 
 	@Override
-	public void transferFunds(EntityId fromAccount,
-			EntityId toAccount,
-			Amount amount) {
-		accountService.withdrawFunds(fromAccount, amount);
-		accountService.depositFunds(toAccount, amount);
-	}
+	public void transferFunds(
+			@NotNull @Valid final TransferDetails transferDetails) {
+		final TransactionDetails withdrawal = new TransactionDetails(
+				transferDetails.getFromAccountId(),
+				transferDetails.getAmount());
 
+		final TransactionDetails deposit = new TransactionDetails(
+				transferDetails.getToAccountId(),
+				transferDetails.getAmount());
+
+		accountService.withdrawFunds(withdrawal);
+		accountService.depositFunds(deposit);
+	}
 }

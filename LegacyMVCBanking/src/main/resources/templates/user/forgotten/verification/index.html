@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html th:replace="~{layout.html :: layout(~{::div})}" xmlns:th="http://www.thymeleaf.org">
+	<body>
+		<div class="container">
+			<script type="text/javascript">
+				$(document).ready(function() {
+					$('#myForm').validator({
+						custom: {
+							password: function($el) {
+								var pat = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\!\'\"\@\#\$\%\^\&\*\(\)\-\=\_\+\\[\]\{\}\\,\.\/\|\<\>\?\`\¬\¦])(?=.{8,})/
+								return $el.val().match(pat) == null;
+							}
+						},
+						errors: {
+							password: "Weak Password"
+						}
+					});
+				});
+			</script>
+			<div class="row">
+				<h1>Reset Password</h1>
+			</div>
+			<form name="myForm" id="myForm" action="#" th:action="@{/user/forgotten/verification}" th:object="${resetBean}" method="post">
+		       	<div class="row">
+					<div class="col-md-4"></div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label for="password">Password</label>
+							<input data-password data-password-error="Must include at least 1 upper case letter, 1 lower case letter, 1 special character, and be at least 8 characters long" required th:field="*{password}" name="password" id="password" placeholder="Enter password" type="password" class="form-control"/>
+							<div class="help-block with-errors"></div>
+						</div>
+						<div class="form-group">
+							<label for="passwordConfirmation">Confirm Password</label>
+							<input data-match="#password" data-match-error="Passwords do not match" required th:field="*{passwordConfirmation}" name="passwordConfirmation" id="passwordConfirmation" placeholder="Enter password" type="password" class="form-control"/>
+							<div class="help-block with-errors"></div>
+						</div>
+						<div class="top-buffer-bg">
+							<button type="submit" class="btn btn-primary btn-block">Confirm</button>
+						</div>
+					</div>
+					<div class="col-md-4"></div>
+				</div>
+			</form>
+		</div>
+	</body>
+</html>

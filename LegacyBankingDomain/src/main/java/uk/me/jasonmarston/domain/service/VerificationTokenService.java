@@ -2,12 +2,17 @@ package uk.me.jasonmarston.domain.service;
 
 import java.util.List;
 
-import uk.me.jasonmarston.domain.aggregate.impl.VerificationToken;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import uk.me.jasonmarston.domain.aggregate.VerificationToken;
+import uk.me.jasonmarston.domain.details.TokenDetails;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 public interface VerificationTokenService {
-	VerificationToken findByToken(final String token);
-	VerificationToken create(final EntityId id);
-	void delete(final VerificationToken verificationToken);
+	VerificationToken create(@NotNull @Valid final EntityId id);
+	void delete(@NotNull @Valid final VerificationToken verificationToken);
+	VerificationToken findByToken(
+			@NotNull @Valid final TokenDetails tokenDetails);
 	List<VerificationToken> findExpiredTokens();
 }

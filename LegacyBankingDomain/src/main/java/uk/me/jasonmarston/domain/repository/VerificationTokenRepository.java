@@ -2,16 +2,18 @@ package uk.me.jasonmarston.domain.repository;
 
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.validation.annotation.Validated;
 
-import uk.me.jasonmarston.domain.aggregate.impl.VerificationToken;
+import uk.me.jasonmarston.domain.aggregate.VerificationToken;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 @Repository
+@Validated
 public interface VerificationTokenRepository extends 
-		CrudRepository<VerificationToken, EntityId>,
+		JpaRepository<VerificationToken, EntityId>,
 		JpaSpecificationExecutor<VerificationToken> {
 	Optional<VerificationToken> findByToken(final String token);
 }

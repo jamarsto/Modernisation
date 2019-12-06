@@ -2,16 +2,18 @@ package uk.me.jasonmarston.domain.repository;
 
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.validation.annotation.Validated;
 
-import uk.me.jasonmarston.domain.aggregate.impl.ResetToken;
+import uk.me.jasonmarston.domain.aggregate.ResetToken;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 @Repository
+@Validated
 public interface ResetTokenRepository extends 
-		CrudRepository<ResetToken, EntityId>,
+		JpaRepository<ResetToken, EntityId>,
 		JpaSpecificationExecutor<ResetToken> {
 	Optional<ResetToken> findByToken(final String token);
 }

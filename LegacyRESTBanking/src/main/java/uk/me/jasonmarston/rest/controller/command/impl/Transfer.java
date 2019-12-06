@@ -2,7 +2,7 @@ package uk.me.jasonmarston.rest.controller.command.impl;
 
 import java.io.Serializable;
 
-import uk.me.jasonmarston.domain.type.impl.Amount;
+import uk.me.jasonmarston.domain.value.Amount;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 public class Transfer implements Serializable {

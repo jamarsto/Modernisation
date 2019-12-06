@@ -8,13 +8,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import uk.me.jasonmarston.domain.aggregate.impl.User;
-import uk.me.jasonmarston.domain.aggregate.impl.VerificationToken;
+import uk.me.jasonmarston.domain.aggregate.User;
+import uk.me.jasonmarston.domain.aggregate.VerificationToken;
 import uk.me.jasonmarston.domain.service.VerificationTokenService;
 import uk.me.jasonmarston.mvc.event.OnRegistrationCompleteEvent;
 
@@ -24,9 +25,11 @@ public class RegistrationListener implements
 	private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationListener.class);
 
 	@Autowired
+	@Lazy
 	private VerificationTokenService verificationTokenService;
 	
 	@Autowired
+	@Lazy
 	private JavaMailSender sender;
 	
 	@Value("${SPRING_MAIL_FROM}")
@@ -46,7 +49,7 @@ public class RegistrationListener implements
 			helper.setSubject("Registration Confirmation");
 			helper.setText("<a href=\"http://localhost:8080" 
 					+ event.getUrl() 
-					+ "/registration/confirmation?token=" 
+					+ "/user/registration/verification?token=" 
 					+ token.getToken()
 					+ "\">Confirm Email Address</a>", true);
 			sender.send(message);

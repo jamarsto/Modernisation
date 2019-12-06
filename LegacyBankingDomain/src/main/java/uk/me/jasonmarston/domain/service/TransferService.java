@@ -1,10 +1,10 @@
 package uk.me.jasonmarston.domain.service;
 
-import uk.me.jasonmarston.domain.type.impl.Amount;
-import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import uk.me.jasonmarston.domain.details.TransferDetails;
 
 public interface TransferService {
-	void transferFunds(final EntityId fromAccount,
-			final EntityId toAccount,
-			final Amount amount);
+	void transferFunds(@NotNull @Valid final TransferDetails transferDetails);
 }

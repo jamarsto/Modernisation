@@ -9,31 +9,48 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import uk.me.jasonmarston.domain.aggregate.impl.User;
-import uk.me.jasonmarston.domain.aggregate.impl.VerificationToken;
+import uk.me.jasonmarston.domain.aggregate.ResetToken;
+import uk.me.jasonmarston.domain.aggregate.User;
+import uk.me.jasonmarston.domain.aggregate.VerificationToken;
+import uk.me.jasonmarston.domain.service.ResetTokenService;
 import uk.me.jasonmarston.domain.service.UserService;
 import uk.me.jasonmarston.domain.service.VerificationTokenService;
 
 @Component
 @Transactional(propagation = Propagation.REQUIRED, 
-		isolation = Isolation.REPEATABLE_READ, 
+		isolation = Isolation.READ_COMMITTED, 
 		readOnly = false)
 public class Cleanup {
+	private static final int ONE_MINUTE = 60000;
+	private static final int THIRTY_SECONDS = 30000;
+
 	@Autowired
 	private VerificationTokenService verificationTokenService;
+
+	@Autowired
+	private ResetTokenService resetTokenService;
 	
 	@Autowired
 	private UserService userService;
 	
-	@Scheduled(fixedDelay = 60000)
+	@Scheduled(fixedDelay = ONE_MINUTE)
 	public void cleanupVerificationTokens() {
-		List<VerificationToken> list = verificationTokenService.findExpiredTokens();
+		final List<VerificationToken> list = verificationTokenService
+				.findExpiredTokens();
 		for(VerificationToken token: list) {
 			verificationTokenService.delete(token);
 			final User user = userService.getUser(token.getUserId());
 			if(!user.isEnabled()) {
 				userService.delete(user);
 			}
+		}
+	}
+	
+	@Scheduled(initialDelay = THIRTY_SECONDS, fixedDelay = ONE_MINUTE)
+	public void cleanupResetTokens() {
+		final List<ResetToken> list = resetTokenService.findExpiredTokens();
+		for(ResetToken token: list) {
+			resetTokenService.delete(token);
 		}
 	}
 }
