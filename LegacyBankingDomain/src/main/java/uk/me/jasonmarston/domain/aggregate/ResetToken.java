@@ -1,5 +1,6 @@
 package uk.me.jasonmarston.domain.aggregate;
 
+import java.security.InvalidParameterException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
+import uk.me.jasonmarston.domain.builder.IBuilder;
 import uk.me.jasonmarston.domain.factory.aggregate.ResetTokenBuilderFactory;
+import uk.me.jasonmarston.domain.value.Token;
 import uk.me.jasonmarston.framework.domain.aggregate.AbstractAggregate;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
@@ -23,17 +26,19 @@ import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 @Entity
 @Table(name = "RESET_TOKEN")
 public class ResetToken extends AbstractAggregate {
-	public static class Builder {
+	public static class Builder implements IBuilder<ResetToken> {
 		private EntityId userId;
 
 		private Builder() {
 		}
-		
+
+		@Override
 		public ResetToken build() {
 			if(userId == null) {
-				throw new RuntimeException("A User ID is required");
+				throw new InvalidParameterException("A User ID is required");
 			}
-			final ResetToken resetToken = new ResetToken(userId);
+			final ResetToken resetToken = new ResetToken();
+			resetToken.userId = userId;
 			return resetToken;
 		}
 
@@ -44,7 +49,7 @@ public class ResetToken extends AbstractAggregate {
 	}
 
 	@Service
-	public static class FactoryImpl implements ResetTokenBuilderFactory {
+	public static class Factory implements ResetTokenBuilderFactory {
 		@Override
 		public Builder create() {
 			return new Builder();
@@ -54,7 +59,7 @@ public class ResetToken extends AbstractAggregate {
 	private static final long serialVersionUID = 1L;
 
 	@NotNull
-	private String token;
+	private Token token;
 
 	@AttributeOverride(name="id", column=@Column(name="userId"))
 	@NotNull
@@ -64,12 +69,8 @@ public class ResetToken extends AbstractAggregate {
 	private Date expiryDate;
 	
 	private ResetToken() {
-	}
-	
-	private ResetToken(final EntityId userId) {
-		this.setId(new EntityId());
-		this.userId = userId;
-		this.token = UUID.randomUUID().toString();
+		super();
+		this.token = new Token(UUID.randomUUID().toString());
 		this.expiryDate = calculateExpiryDate();
 	}
 
@@ -84,7 +85,7 @@ public class ResetToken extends AbstractAggregate {
 		return expiryDate;
 	}
 
-	public String getToken() {
+	public Token getToken() {
 		return token;
 	}
 
@@ -97,17 +98,5 @@ public class ResetToken extends AbstractAggregate {
 		final long now = cal.getTime().getTime();
 		final long timeRemaining = expiryDate.getTime() - now;
 		return timeRemaining <= 0;
-	}
-
-	public void setExpiryDate(Date expiryDate) {
-		this.expiryDate = expiryDate;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
-	
-	public void setUserId(EntityId userId) {
-		this.userId = userId;
 	}
 }

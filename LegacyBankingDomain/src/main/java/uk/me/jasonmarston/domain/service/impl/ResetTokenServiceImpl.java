@@ -16,13 +16,13 @@ import org.springframework.validation.annotation.Validated;
 
 import uk.me.jasonmarston.domain.aggregate.ResetToken;
 import uk.me.jasonmarston.domain.aggregate.User;
-import uk.me.jasonmarston.domain.details.EmailDetails;
-import uk.me.jasonmarston.domain.details.TokenDetails;
 import uk.me.jasonmarston.domain.factory.aggregate.ResetTokenBuilderFactory;
 import uk.me.jasonmarston.domain.repository.ResetTokenRepository;
 import uk.me.jasonmarston.domain.repository.UserRepository;
 import uk.me.jasonmarston.domain.repository.specification.ResetTokenSpecification;
 import uk.me.jasonmarston.domain.service.ResetTokenService;
+import uk.me.jasonmarston.domain.value.EmailAddress;
+import uk.me.jasonmarston.domain.value.Token;
 
 @Service
 @Validated
@@ -44,9 +44,9 @@ public class ResetTokenServiceImpl implements ResetTokenService {
 	private UserRepository userRepository;
 
 	@Override
-	public ResetToken create(@NotNull @Valid final EmailDetails emailDetails) {
+	public ResetToken create(@NotNull @Valid final EmailAddress email) {
 		final Optional<User> optional = userRepository
-				.findByEmail(emailDetails.getEmail());
+				.findByEmail(email);
 		if(optional.isPresent()) {
 			final User user = optional.get();
 
@@ -69,9 +69,9 @@ public class ResetTokenServiceImpl implements ResetTokenService {
 
 	@Override
 	public ResetToken findByToken(
-			@NotNull @Valid final TokenDetails tokenDetails) {
+			@NotNull @Valid final Token token) {
 		final Optional<ResetToken> optional = resetTokenRepository
-				.findByToken(tokenDetails.getToken());
+				.findByToken(token);
 		if(optional.isPresent()) {
 			return optional.get();
 		}

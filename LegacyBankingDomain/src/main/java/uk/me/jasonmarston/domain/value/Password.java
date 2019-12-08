@@ -1,0 +1,33 @@
+package uk.me.jasonmarston.domain.value;
+
+import javax.persistence.Embeddable;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import uk.me.jasonmarston.framework.domain.type.AbstractValueObject;
+
+@Embeddable
+public class Password extends AbstractValueObject {
+	private static final long serialVersionUID = 1L;
+
+	@NotNull(message = "Password is required")
+	@NotEmpty(message = "Password is required")
+	private String password;
+
+	private Password() {
+	}
+
+	public Password(final String password) {
+		this();
+		this.password = password;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+	
+	@Override
+	public String toString() {
+		return password;
+	}
+}

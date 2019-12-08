@@ -1,10 +1,16 @@
 package uk.me.jasonmarston.domain.details;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
+import java.security.InvalidParameterException;
+
 import javax.validation.constraints.NotNull;
 
+import org.springframework.stereotype.Service;
+
+import uk.me.jasonmarston.domain.builder.IBuilder;
+import uk.me.jasonmarston.domain.factory.details.RegistrationDetailsBuilderFactory;
 import uk.me.jasonmarston.domain.validator.FieldsValueMatch;
+import uk.me.jasonmarston.domain.value.EmailAddress;
+import uk.me.jasonmarston.domain.value.Password;
 import uk.me.jasonmarston.framework.domain.type.AbstractValueObject;
 
 @FieldsValueMatch(
@@ -13,45 +19,78 @@ import uk.me.jasonmarston.framework.domain.type.AbstractValueObject;
 		message = "Passwords must match"
 )
 public class RegistrationDetails extends AbstractValueObject {
+	public static class Builder implements IBuilder<RegistrationDetails> {
+		private EmailAddress email;
+		private Password password;
+		private Password passwordConfirmation;
+
+		private Builder() {
+		}
+
+		public Builder andPasswordConfirmation(final Password passwordConfirmation) {
+			this.passwordConfirmation = passwordConfirmation;
+			return this;
+		}
+
+		@Override
+		public RegistrationDetails build() {
+			if(email == null || password == null || passwordConfirmation == null) {
+				throw new InvalidParameterException("Invalid registration details");
+			}
+			if(!password.equals(passwordConfirmation)) {
+				throw new InvalidParameterException("Passwords must match");
+			}
+			
+			final RegistrationDetails registrationDetails = new RegistrationDetails();
+			registrationDetails.email = email;
+			registrationDetails.password = password;
+			registrationDetails.passwordConfirmation = passwordConfirmation;
+
+			return registrationDetails;
+		}
+
+		public Builder forEmail(final EmailAddress email) {
+			this.email = email;
+			return this;
+		}
+
+		public Builder withPassword(final Password password) {
+			this.password = password;
+			return this;
+		}
+	}
+	
+	@Service
+	public static class Factory implements RegistrationDetailsBuilderFactory {
+		@Override
+		public Builder create() {
+			return new Builder();
+		}
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	@NotNull(message = "Email is required")
-	@NotEmpty(message = "Email is required")
-	@Email(message = "Must be a valid email address")
-	private String email;
+	private EmailAddress email;
 
 	@NotNull(message = "Password is required")
-	@NotEmpty(message = "Password is required")
-	private String password;
+	private Password password;
 	
 	@NotNull(message = "Password confirmation is required")
-	@NotEmpty(message = "Password confirmation is required")
-	private String passwordConfirmation;
+	private Password passwordConfirmation;
 	
-	public RegistrationDetails() {
+	private RegistrationDetails() {
 	}
 
-	public String getEmail() {
+	public EmailAddress getEmail() {
 		return email;
 	}
 
-	public String getPassword() {
+	public Password getPassword() {
 		return password;
 	}
 
-	public String getPasswordConfirmation() {
+	public Password getPasswordConfirmation() {
 		return passwordConfirmation;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public void setPasswordConfirmation(String passwordConfirmation) {
-		this.passwordConfirmation = passwordConfirmation;
 	}
 }

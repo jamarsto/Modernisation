@@ -5,7 +5,6 @@ import javax.persistence.OptimisticLockException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
@@ -20,9 +19,13 @@ import org.springframework.web.context.request.WebRequest;
 
 import uk.me.jasonmarston.domain.aggregate.User;
 import uk.me.jasonmarston.domain.aggregate.VerificationToken;
-import uk.me.jasonmarston.domain.details.TokenDetails;
+import uk.me.jasonmarston.domain.details.RegistrationDetails;
+import uk.me.jasonmarston.domain.factory.details.DetailsBuilderFactory;
 import uk.me.jasonmarston.domain.service.UserService;
 import uk.me.jasonmarston.domain.service.VerificationTokenService;
+import uk.me.jasonmarston.domain.value.EmailAddress;
+import uk.me.jasonmarston.domain.value.Password;
+import uk.me.jasonmarston.domain.value.Token;
 import uk.me.jasonmarston.mvc.controller.bean.RegistrationBean;
 import uk.me.jasonmarston.mvc.event.OnRegistrationCompleteEvent;
 
@@ -40,6 +43,10 @@ public class RegistrationController {
 	@Autowired
 	@Lazy
 	private ApplicationEventPublisher applicationEventPublisher;
+	
+	@Autowired
+	@Lazy
+	private DetailsBuilderFactory factory;
 
 	@GetMapping("/user/registration")
 	public String registration(final ModelMap model) {
@@ -52,8 +59,22 @@ public class RegistrationController {
 			@ModelAttribute("registrationBean") 
 					@NotNull @Valid final RegistrationBean registrationBean,
 			final WebRequest request) {
+
 		try {
-			final User user = userService.register(registrationBean);
+			final RegistrationDetails.Builder builder = 
+					factory.create(RegistrationDetails.Builder.class);
+
+			final RegistrationDetails registrationDetails = builder
+					.forEmail(new EmailAddress(registrationBean.getEmail()))
+					.withPassword(new Password(registrationBean.getPassword()))
+					.andPasswordConfirmation(
+							new Password(
+									registrationBean.getPasswordConfirmation()
+							)
+					)
+					.build();
+
+			final User user = userService.register(registrationDetails);
 
 			applicationEventPublisher
 					.publishEvent(new OnRegistrationCompleteEvent(
@@ -68,39 +89,32 @@ public class RegistrationController {
 	}
 
 	@GetMapping("/user/registration/verification")
-	public String confirmation(
-			@RequestParam(value = "token") final String token) {
-		if(StringUtils.isBlank(token)) {
-			return "redirect:/user/registration?expired";
-		}
-
+	public String verification(
+			@RequestParam(value = "token") final String tokenString) {
+		final Token token = new Token(tokenString);
 		final VerificationToken verificationToken = 
-				verificationTokenService.findByToken(new TokenDetails(token));
-
+				verificationTokenService.findByToken(token);
 		if(verificationToken == null) {
 			return "redirect:/user/registration?expired";
 		}
 
-		final User user = userService.getUser(verificationToken.getUserId());
+		verificationTokenService.delete(verificationToken);
+
+		if(verificationToken.isExpired()) {
+			return "redirect:/user/registration?expired";
+		}
+
+		User user = userService.findById(verificationToken.getUserId());
 		if(user == null) {
 			return "redirect:/user/registration?expired";
 		}
 
-		if(verificationToken.isExpired()) {
-			verificationTokenService.delete(verificationToken);
-			return "redirect:/user/registration?expired";
-		}
-
-		user.setEnabled(true);
-
 		try {
-			userService.update(user);
+			user = userService.enable(user);
 		}
 		catch(OptimisticLockException e) {
 			return "redirect:/user/registration?expired";
 		}
-
-		verificationTokenService.delete(verificationToken);
 
 		AuthenticationHelper.loginUser(user);
 	    

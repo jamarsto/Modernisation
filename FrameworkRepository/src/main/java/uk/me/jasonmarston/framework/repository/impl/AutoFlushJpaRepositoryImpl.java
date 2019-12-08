@@ -27,7 +27,18 @@ public class AutoFlushJpaRepositoryImpl<E, ID extends Serializable>
 
 	@Override
 	public <S extends E> S save(final S entity) {
-		return this.saveAndFlush(entity);
+		try {
+			final S localEntity = super.save(entity);
+			this.flush();
+			return localEntity;
+		}
+		catch(final DataIntegrityViolationException e) {
+			throw new EntityExistsException(e.getMessage());
+		}
+		catch(final ObjectOptimisticLockingFailureException e) {
+			throw new OptimisticLockException(e.getMessage());
+		}
+			
 	}
 
 	@Override

@@ -15,11 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import uk.me.jasonmarston.domain.aggregate.VerificationToken;
-import uk.me.jasonmarston.domain.details.TokenDetails;
 import uk.me.jasonmarston.domain.factory.aggregate.VerificationTokenBuilderFactory;
 import uk.me.jasonmarston.domain.repository.VerificationTokenRepository;
 import uk.me.jasonmarston.domain.repository.specification.VerificationTokenSpecification;
 import uk.me.jasonmarston.domain.service.VerificationTokenService;
+import uk.me.jasonmarston.domain.value.Token;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 @Service
@@ -55,10 +55,10 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
 
 	@Override
 	public VerificationToken findByToken(
-			@NotNull @Valid TokenDetails tokenDetails) {
+			@NotNull @Valid Token token) {
 		final Optional<VerificationToken> optional = 
 				verificationTokenRepository
-						.findByToken(tokenDetails.getToken());
+						.findByToken(token);
 		if(optional.isPresent()) {
 			return optional.get();
 		}

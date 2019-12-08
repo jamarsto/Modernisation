@@ -1,29 +1,33 @@
-package uk.me.jasonmarston.domain.details;
+package uk.me.jasonmarston.domain.value;
 
+import javax.persistence.Embeddable;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 import uk.me.jasonmarston.framework.domain.type.AbstractValueObject;
 
-public class EmailDetails extends AbstractValueObject {
+@Embeddable
+public class EmailAddress extends AbstractValueObject {
 	private static final long serialVersionUID = 1L;
 
 	@NotNull(message = "Email is required")
 	@Email(message = "Must be a valid email address")
 	private String email;
 	
-	public EmailDetails() {
+	private EmailAddress() {
 	}
-	
-	public EmailDetails(final String email) {
+
+	public EmailAddress(final String email) {
+		this();
 		this.email = email;
 	}
 
 	public String getEmail() {
 		return email;
 	}
-
-	public void setEmail(String email) {
-		this.email = email;
+	
+	@Override
+	public String toString() {
+		return email;
 	}
 }

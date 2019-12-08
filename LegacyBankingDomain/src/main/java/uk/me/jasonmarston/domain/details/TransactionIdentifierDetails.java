@@ -1,11 +1,54 @@
 package uk.me.jasonmarston.domain.details;
 
+import java.security.InvalidParameterException;
+
 import javax.validation.constraints.NotNull;
 
+import uk.me.jasonmarston.domain.builder.IBuilder;
+import uk.me.jasonmarston.domain.factory.details.TransactionIdentifierDetailsBuilderFactory;
 import uk.me.jasonmarston.framework.domain.type.AbstractValueObject;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 public class TransactionIdentifierDetails extends AbstractValueObject {
+	public static class Builder implements IBuilder<TransactionIdentifierDetails> {
+		private EntityId accountId;
+		private EntityId transactionId;
+
+		private Builder() {
+		}
+		
+		public Builder forAccountId(final EntityId accountId) {
+			this.accountId = accountId;
+			return this;
+		}
+		
+		public Builder withTransactionId(final EntityId transactionId) {
+			this.transactionId = transactionId;
+			return this;
+		}
+
+		@Override
+		public TransactionIdentifierDetails build() {
+			if(accountId == null || transactionId == null) {
+				throw new InvalidParameterException("Invalid transaction identifier details");
+			}
+
+			final TransactionIdentifierDetails transactionIdentifierDetails = 
+					new TransactionIdentifierDetails();
+			transactionIdentifierDetails.accountId = accountId;
+			transactionIdentifierDetails.transactionId = transactionId;
+			
+			return transactionIdentifierDetails;
+		}
+	}
+	
+	public static class Factory implements TransactionIdentifierDetailsBuilderFactory {
+		@Override
+		public Builder create() {
+			return new Builder();
+		}
+	}
+	
 	private static final long serialVersionUID = 1L;
 
 	@NotNull(message = "Account Id is required")
@@ -14,11 +57,7 @@ public class TransactionIdentifierDetails extends AbstractValueObject {
 	@NotNull(message = "Transaction Id is required")
 	private EntityId transactionId;
 
-	public TransactionIdentifierDetails(
-			final EntityId accountId,
-			final EntityId transactionId) {
-		this.accountId = accountId;
-		this.transactionId = transactionId;
+	private TransactionIdentifierDetails() {
 	}
 
 	public EntityId getAccountId() {

@@ -1,12 +1,65 @@
 package uk.me.jasonmarston.domain.details;
 
+import java.security.InvalidParameterException;
+
 import javax.validation.constraints.NotNull;
 
+import org.springframework.stereotype.Service;
+
+import uk.me.jasonmarston.domain.builder.IBuilder;
+import uk.me.jasonmarston.domain.factory.details.TransferDetailsBuilderFactory;
 import uk.me.jasonmarston.domain.value.Amount;
 import uk.me.jasonmarston.framework.domain.type.AbstractValueObject;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 public class TransferDetails extends AbstractValueObject {
+	public static class Builder implements IBuilder<TransferDetails> {
+		private EntityId fromAccountId;
+		private EntityId toAccountId;
+		private Amount amount;
+		
+		private Builder() {
+		}
+		
+		public Builder fromAccountId(final EntityId fromAccountId) {
+			this.fromAccountId = fromAccountId;
+			return this;
+		}
+		
+		public Builder toAccountId(final EntityId toAccountId) {
+			this.toAccountId = toAccountId;
+			return this;
+		}
+		
+		public Builder forAmount(final Amount amount) {
+			this.amount = amount;
+			return this;
+		}
+
+		@Override
+		public TransferDetails build() {
+			if(fromAccountId == null || toAccountId == null || amount == null) {
+				throw new InvalidParameterException("Invalid transfer details");
+			}
+
+			final TransferDetails transferDetails = new TransferDetails();
+			transferDetails.fromAccountId = fromAccountId;
+			transferDetails.toAccountId = toAccountId;
+			transferDetails.amount = amount;
+			
+			return transferDetails;
+		}
+	}
+
+	@Service
+	public static class Factory implements TransferDetailsBuilderFactory {
+		@Override
+		public Builder create() {
+			return new Builder();
+		}
+		
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	@NotNull(message = "From Account Id is required")
@@ -18,13 +71,7 @@ public class TransferDetails extends AbstractValueObject {
 	@NotNull(message = "Amount is required")
 	private Amount amount;
 
-	public TransferDetails(
-			final EntityId fromAccountId,
-			final EntityId toAccountId,
-			final Amount amount) {
-		this.fromAccountId = fromAccountId;
-		this.toAccountId = toAccountId;
-		this.amount = amount;
+	private TransferDetails() {
 	}
 
 	public Amount getAmount() {

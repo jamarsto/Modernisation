@@ -1,6 +1,5 @@
 package uk.me.jasonmarston.mvc.controller.bean;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -9,13 +8,13 @@ import uk.me.jasonmarston.domain.validator.FieldsValueMatch;
 @FieldsValueMatch(
 		field = "password", 
 		fieldMatch = "passwordConfirmation", 
-		message = "Passwords must match"
+		message = "Passwords do not match!"
 )
-public class RegistrationBean extends AbstractBean {
-	@NotNull(message = "Email is required")
-	@NotEmpty(message = "Email is required")
-	@Email(message = "Must be a valid email address")
-	private String email;
+public class ChangePasswordBean extends AbstractBean {
+
+	@NotNull(message = "Current password is required")
+	@NotEmpty(message = "Current password is required")
+	private String currentPassword;
 
 	@NotNull(message = "Password is required")
 	@NotEmpty(message = "Password is required")
@@ -24,9 +23,9 @@ public class RegistrationBean extends AbstractBean {
 	@NotNull(message = "Password confirmation is required")
 	@NotEmpty(message = "Password confirmation is required")
 	private String passwordConfirmation;
-
-	public String getEmail() {
-		return email;
+	
+	public String getCurrentPassword() {
+		return currentPassword;
 	}
 
 	public String getPassword() {
@@ -37,8 +36,8 @@ public class RegistrationBean extends AbstractBean {
 		return passwordConfirmation;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setCurrentPassword(String currentPassword) {
+		this.currentPassword = currentPassword;
 	}
 
 	public void setPassword(String password) {

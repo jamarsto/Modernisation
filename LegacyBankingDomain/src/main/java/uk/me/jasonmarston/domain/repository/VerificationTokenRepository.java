@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.validation.annotation.Validated;
 
 import uk.me.jasonmarston.domain.aggregate.VerificationToken;
+import uk.me.jasonmarston.domain.value.Token;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 @Repository
@@ -15,5 +16,5 @@ import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 public interface VerificationTokenRepository extends 
 		JpaRepository<VerificationToken, EntityId>,
 		JpaSpecificationExecutor<VerificationToken> {
-	Optional<VerificationToken> findByToken(final String token);
+	Optional<VerificationToken> findByToken(final Token token);
 }

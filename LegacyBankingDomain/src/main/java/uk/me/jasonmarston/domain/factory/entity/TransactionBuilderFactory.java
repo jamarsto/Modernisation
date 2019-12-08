@@ -1,7 +1,7 @@
 package uk.me.jasonmarston.domain.factory.entity;
 
 import uk.me.jasonmarston.domain.entity.Transaction;
+import uk.me.jasonmarston.domain.factory.Factory;
 
-public interface TransactionBuilderFactory {
-	Transaction.Builder create();
+public interface TransactionBuilderFactory extends Factory<Transaction.Builder> {
 }

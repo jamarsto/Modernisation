@@ -1,19 +1,24 @@
-package uk.me.jasonmarston.domain.details;
+package uk.me.jasonmarston.domain.value;
 
+import javax.persistence.Embeddable;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import uk.me.jasonmarston.framework.domain.type.AbstractValueObject;
 
-public class TokenDetails extends AbstractValueObject {
+@Embeddable
+public class Token extends AbstractValueObject {
 	private static final long serialVersionUID = 1L;
 
 	@NotNull(message = "Token is required")
+	@NotEmpty(message = "Token is required")
 	private String token;
-	
-	public TokenDetails() {
+
+	private Token() {
 	}
-	
-	public TokenDetails(final String token) {
+
+	public Token(final String token) {
+		this();
 		this.token = token;
 	}
 
@@ -23,5 +28,10 @@ public class TokenDetails extends AbstractValueObject {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+	
+	@Override
+	public String toString() {
+		return token;
 	}
 }

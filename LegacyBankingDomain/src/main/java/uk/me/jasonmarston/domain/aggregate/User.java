@@ -1,5 +1,6 @@
 package uk.me.jasonmarston.domain.aggregate;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
@@ -10,53 +11,61 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import uk.me.jasonmarston.domain.builder.IBuilder;
 import uk.me.jasonmarston.domain.factory.aggregate.UserBuilderFactory;
+import uk.me.jasonmarston.domain.value.EmailAddress;
+import uk.me.jasonmarston.domain.value.Password;
 import uk.me.jasonmarston.framework.domain.aggregate.AbstractAggregate;
-import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 @Configurable(preConstruction = true, autowire = Autowire.BY_TYPE, dependencyCheck = false)
 @Entity
 @Table(name = "USERS")
 public class User extends AbstractAggregate implements UserDetails {
-	public static class Builder {
+	public static class Builder implements IBuilder<User> {
 		
-		private String email;
-		private String password;
+		private EmailAddress email;
+		private Password password;
 
 		private Builder() {
 		}
-		
+
+		@Override
 		public User build() {
 			if(email == null || password == null) {
-				throw new RuntimeException("Invalid registration details");
+				throw new InvalidParameterException("Invalid registration details");
 			}
-			final User user = new User(email, password);
+			final User user = new User();
+			user.email = email;
+			user.password = new Password(user.passwordEncoder.encode(password.getPassword()));
+			user.username = user.email.getEmail();
 			return user;
 		}
 
-		public Builder forEmail(String email) {
+		public Builder forEmail(EmailAddress email) {
 			this.email = email;
 			return this;
 		}
 		
-		public Builder withPassword(String password) {
+		public Builder withPassword(Password password) {
 			this.password = password;
 			return this;
 		}
 	}
 
 	@Service
-	public static class FactoryImpl implements UserBuilderFactory {
+	public static class Factory implements UserBuilderFactory {
 		@Override
 		public Builder create() {
 			return new Builder();
@@ -64,24 +73,29 @@ public class User extends AbstractAggregate implements UserDetails {
 	}
 	
 	private static final long serialVersionUID = 1L;
-	private String uid;
+	
+	@Autowired
+	@Lazy
+	@Transient
+	private PasswordEncoder passwordEncoder;
+
+	private String uid = UUID.randomUUID().toString();
 	
 	@NotNull
-	@Email
 	@Column(unique = true)
-	private String email;
+	private EmailAddress email;
 
 	private String username;
 
 	@Transient
-	private String issuer;
+	private String issuer = null;
 
-	private String picture;
+	private String picture = null;
 	
 	@Transient
-	private String credentials;
+	private String credentials = null;
 
-	private String password;
+	private Password password;
 	
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Collection<GrantedAuthority> authorities = 
@@ -93,18 +107,16 @@ public class User extends AbstractAggregate implements UserDetails {
 	private boolean enabled = false;
 
 	private User() {
-	}
-	
-	private User(final String email, final String password) {
-		this.setId(new EntityId());
-		this.uid = UUID.randomUUID().toString();
-		this.email = email;
-		this.username = email;
-		this.picture = null;
+		super();
 		this.authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-		this.password = password;
-		this.issuer = null;
-		this.credentials = null;
+	}
+
+	public void changePassword(final Password password) {
+		this.password = new Password(passwordEncoder.encode(password.getPassword()));
+	}
+
+	public void enable() {
+		enabled = true;
 	}
 
 	@Override
@@ -117,7 +129,7 @@ public class User extends AbstractAggregate implements UserDetails {
 	}
 
 	public String getEmail() {
-		return email;
+		return email.getEmail();
 	}
 
 	public String getIssuer() {
@@ -126,9 +138,9 @@ public class User extends AbstractAggregate implements UserDetails {
 
 	@Override
 	public String getPassword() {
-		return password;
+		return password.getPassword();
 	}
-
+	
 	public String getPicture() {
 		return picture;
 	}
@@ -136,7 +148,7 @@ public class User extends AbstractAggregate implements UserDetails {
 	public String getUid() {
 		return uid;
 	}
-	
+
 	@Override
 	public String getUsername() {
 		return username;
@@ -151,64 +163,14 @@ public class User extends AbstractAggregate implements UserDetails {
 	public boolean isAccountNonLocked() {
 		return accountNonLocked;
 	}
-
+	
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return credentialsNonExpired;
 	}
-
+	
 	@Override
 	public boolean isEnabled() {
 		return enabled;
-	}
-
-	public void setAccountNonExpired(final boolean accountNonExpired) {
-		this.accountNonExpired = accountNonExpired;
-	}
-
-	public void setAccountNonLocked(final boolean accountNonLocked) {
-		this.accountNonLocked = accountNonLocked;
-	}
-
-	public void setAuthorities(
-			final Collection<GrantedAuthority> authorities) {
-		this.authorities = authorities;
-	}
-
-	public void setCredentials(final String credentials) {
-		this.credentials = credentials;
-	}
-
-	public void setCredentialsNonExpired(
-			final boolean credentialsNonExpired) {
-		this.credentialsNonExpired = credentialsNonExpired;
-	}
-
-	public void setEmail(final String email) {
-		this.email = email;
-	}
-
-	public void setEnabled(final boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public void setIssuer(final String issuer) {
-		this.issuer = issuer;
-	}
-
-	public void setPassword(final String password) {
-		this.password = password;
-	}
-
-	public void setPicture(final String picture) {
-		this.picture = picture;
-	}
-
-	public void setUid(final String uid) {
-		this.uid = uid;
-	}
-
-	public void setUsername(final String username) {
-		this.username = username;
 	}
 }

@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import uk.me.jasonmarston.domain.aggregate.User;
-import uk.me.jasonmarston.domain.details.EmailDetails;
 import uk.me.jasonmarston.domain.service.UserService;
+import uk.me.jasonmarston.domain.value.EmailAddress;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED, 
@@ -30,7 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 			throw new UsernameNotFoundException("No Email Provided");
 		}
 
-		final User user = userService.findByEmail(new EmailDetails(email));
+		final User user = userService.findByEmail(new EmailAddress(email));
 		if(user == null) {
 			throw new UsernameNotFoundException(
 					"User not found with email: " + email);

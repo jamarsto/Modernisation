@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -16,11 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import uk.me.jasonmarston.domain.aggregate.User;
-import uk.me.jasonmarston.domain.details.EmailDetails;
 import uk.me.jasonmarston.domain.details.RegistrationDetails;
 import uk.me.jasonmarston.domain.factory.aggregate.UserBuilderFactory;
 import uk.me.jasonmarston.domain.repository.UserRepository;
 import uk.me.jasonmarston.domain.service.UserService;
+import uk.me.jasonmarston.domain.value.EmailAddress;
+import uk.me.jasonmarston.domain.value.Password;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 @Service
@@ -36,10 +36,12 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	@Lazy
 	private UserRepository userRepository;
-	
-	@Autowired
-	@Lazy
-	private PasswordEncoder passwordEncoder;
+
+	@Override
+	public User changePassword(@NotNull @Valid User user, @NotNull @Valid Password password) {
+		user.changePassword(password);
+		return userRepository.save(user);
+	}
 
 	@Override
 	public void delete(@NotNull @Valid User user) {
@@ -47,9 +49,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User findByEmail(@NotNull @Valid final EmailDetails emailDetails) {
-		final Optional<User> optional = userRepository
-				.findByEmail(emailDetails.getEmail());
+	public User enable(@NotNull @Valid User user) {
+		user.enable();
+		return userRepository.save(user);
+	}
+
+	@Override
+	public User findByEmail(@NotNull @Valid final EmailAddress email) {
+		final Optional<User> optional = userRepository.findByEmail(email);
 		if(optional.isPresent()) {
 			return optional.get();
 		}
@@ -58,7 +65,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User getUser(@NotNull @Valid final EntityId id) {
+	public User findById(@NotNull @Valid final EntityId id) {
 		final Optional<User> optional = userRepository.findById(id); 
 		if(optional.isPresent()) {
 			return optional.get();
@@ -69,9 +76,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User register(
 			@NotNull @Valid final RegistrationDetails registrationDetails) {
-		if(userRepository.findByEmail(registrationDetails
-				.getEmail())
-				.isPresent()) {
+		if(userRepository.findByEmail(registrationDetails.getEmail())
+						.isPresent()) {
 			throw new EntityExistsException("Already registered.");
 		}
 
@@ -79,15 +85,9 @@ public class UserServiceImpl implements UserService {
 
 		final User user = builder
 				.forEmail(registrationDetails.getEmail())
-				.withPassword(passwordEncoder
-						.encode(registrationDetails.getPassword()))
+				.withPassword(registrationDetails.getPassword())
 				.build();
 
-		return userRepository.save(user);
-	}
-
-	@Override
-	public User update(@NotNull @Valid final User user) {
 		return userRepository.save(user);
 	}
 }

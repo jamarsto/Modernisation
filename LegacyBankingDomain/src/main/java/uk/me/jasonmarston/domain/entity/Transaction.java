@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 import uk.me.jasonmarston.domain.aggregate.Account;
+import uk.me.jasonmarston.domain.builder.IBuilder;
 import uk.me.jasonmarston.domain.factory.entity.TransactionBuilderFactory;
 import uk.me.jasonmarston.domain.value.Amount;
 import uk.me.jasonmarston.domain.value.TransactionType;
@@ -29,7 +30,7 @@ import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 @Configurable(autowire = Autowire.BY_TYPE)
 @Entity(name = "TRANSACTIONS")
 public class Transaction extends AbstractEntity {
-	public static class Builder {
+	public static class Builder implements IBuilder<Transaction> {
 		private TransactionType type;
 		private Account account;
 		private Amount amount;
@@ -42,7 +43,8 @@ public class Transaction extends AbstractEntity {
 			this.account = account;
 			return this;
 		}
-		
+
+		@Override
 		public Transaction build() {
 			if(type == null || account == null || amount == null) {
 				throw new RuntimeException("Invalid transaction.");

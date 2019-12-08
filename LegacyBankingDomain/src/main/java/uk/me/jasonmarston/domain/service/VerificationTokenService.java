@@ -6,13 +6,13 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import uk.me.jasonmarston.domain.aggregate.VerificationToken;
-import uk.me.jasonmarston.domain.details.TokenDetails;
+import uk.me.jasonmarston.domain.value.Token;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 public interface VerificationTokenService {
 	VerificationToken create(@NotNull @Valid final EntityId id);
 	void delete(@NotNull @Valid final VerificationToken verificationToken);
 	VerificationToken findByToken(
-			@NotNull @Valid final TokenDetails tokenDetails);
+			@NotNull @Valid final Token token);
 	List<VerificationToken> findExpiredTokens();
 }

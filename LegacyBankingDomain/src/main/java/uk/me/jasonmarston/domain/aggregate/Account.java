@@ -1,5 +1,6 @@
 package uk.me.jasonmarston.domain.aggregate;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
+import uk.me.jasonmarston.domain.builder.IBuilder;
 import uk.me.jasonmarston.domain.entity.Transaction;
 import uk.me.jasonmarston.domain.factory.aggregate.AccountBuilderFactory;
 import uk.me.jasonmarston.domain.factory.entity.TransactionBuilderFactory;
@@ -33,17 +35,19 @@ import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 @Entity
 @Table(name = "ACCOUNTS")
 public class Account extends AbstractAggregate {
-	public static class Builder {
+	public static class Builder implements IBuilder<Account> {
 		private Balance balance;
 		
 		private Builder() {
 		}
 
+		@Override
 		public Account build() {
 			if(balance == null) {
-				throw new RuntimeException("An opening balance is required");
+				throw new InvalidParameterException("An opening balance is required");
 			}
-			final Account account = new Account(balance);
+			final Account account = new Account();
+			account.balance = balance;
 			return account;
 		}
 		
@@ -54,7 +58,7 @@ public class Account extends AbstractAggregate {
 	}
 
 	@Service
-	public static class FactoryImpl implements AccountBuilderFactory {
+	public static class Factory implements AccountBuilderFactory {
 		@Override
 		public Builder create() {
 			return new Builder();
@@ -79,11 +83,7 @@ public class Account extends AbstractAggregate {
 			new ArrayList<Transaction>();
 	
 	private Account() {
-	}
-
-	private Account(Balance balance) {
-		this.balance = balance;
-		this.setId(new EntityId());
+		super();
 	}
 	
 	public Transaction depositFunds(final Amount amount) {
@@ -92,7 +92,7 @@ public class Account extends AbstractAggregate {
 	
 	public Transaction depositFunds(final Amount amount, 
 			final EntityId referenceAccountId) {
-		this.balance = this.balance.add(amount);
+		balance = balance.add(amount);
 
 		final Transaction.Builder builder = transactionBuilderFactory.create();
 		final Transaction transaction = builder
@@ -139,7 +139,7 @@ public class Account extends AbstractAggregate {
 
 	public Transaction withdrawFunds(final Amount amount,
 			final EntityId referenceAccountId) {
-		this.balance = this.balance.subtract(amount);
+		balance = balance.subtract(amount);
 
 		final Transaction.Builder builder = transactionBuilderFactory.create();
 		final Transaction transaction = builder

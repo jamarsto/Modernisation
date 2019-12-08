@@ -39,7 +39,7 @@ public class Cleanup {
 				.findExpiredTokens();
 		for(VerificationToken token: list) {
 			verificationTokenService.delete(token);
-			final User user = userService.getUser(token.getUserId());
+			final User user = userService.findById(token.getUserId());
 			if(!user.isEnabled()) {
 				userService.delete(user);
 			}

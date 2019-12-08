@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
+import uk.me.jasonmarston.domain.builder.IBuilder;
 import uk.me.jasonmarston.domain.factory.aggregate.VerificationTokenBuilderFactory;
+import uk.me.jasonmarston.domain.value.Token;
 import uk.me.jasonmarston.framework.domain.aggregate.AbstractAggregate;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
@@ -23,17 +25,19 @@ import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 @Entity
 @Table(name = "VERIFICATION_TOKEN")
 public class VerificationToken extends AbstractAggregate {
-	public static class Builder {
+	public static class Builder implements IBuilder<VerificationToken> {
 		private EntityId userId;
 
 		private Builder() {
 		}
-		
+
+		@Override
 		public VerificationToken build() {
 			if(userId == null) {
 				throw new RuntimeException("A User ID is required");
 			}
-			final VerificationToken verificationToken = new VerificationToken(userId);
+			final VerificationToken verificationToken = new VerificationToken();
+			verificationToken.userId = userId;
 			return verificationToken;
 		}
 
@@ -43,7 +47,7 @@ public class VerificationToken extends AbstractAggregate {
 		}
 	}
 	@Service
-	public static class FactoryImpl implements VerificationTokenBuilderFactory {
+	public static class Factory implements VerificationTokenBuilderFactory {
 		@Override
 		public Builder create() {
 			return new Builder();
@@ -53,7 +57,7 @@ public class VerificationToken extends AbstractAggregate {
 	private static final long serialVersionUID = 1L;
 
 	@NotNull
-	private String token;
+	private Token token;
 
 	@AttributeOverride(name="id", column=@Column(name="userId"))
 	@NotNull
@@ -63,21 +67,24 @@ public class VerificationToken extends AbstractAggregate {
 	private Date expiryDate;
 	
 	private VerificationToken() {
-	}
-	
-	private VerificationToken(final EntityId userId) {
-		this.setId(new EntityId());
-		this.userId = userId;
-		this.token = UUID.randomUUID().toString();
+		super();
+		this.token = new Token(UUID.randomUUID().toString());
 		this.expiryDate = calculateExpiryDate();
 	}
 	
-	public String getToken() {
-		return token;
+	private Date calculateExpiryDate() {
+		final Calendar cal = Calendar.getInstance();
+		cal.setTime(new Timestamp(cal.getTime().getTime()));
+		cal.add(Calendar.MINUTE, 60);
+		return new Date(cal.getTime().getTime());
+    }
+
+	public Date getExpiryDate() {
+		return expiryDate;
 	}
 
-	public void setToken(String token) {
-		this.token = token;
+	public Token getToken() {
+		return token;
 	}
 
 	public EntityId getUserId() {
@@ -90,23 +97,4 @@ public class VerificationToken extends AbstractAggregate {
 		final long timeRemaining = expiryDate.getTime() - now;
 		return timeRemaining <= 0;
 	}
-
-	public void setUserId(EntityId userId) {
-		this.userId = userId;
-	}
-
-	public Date getExpiryDate() {
-		return expiryDate;
-	}
-
-	public void setExpiryDate(Date expiryDate) {
-		this.expiryDate = expiryDate;
-	}
-
-	private Date calculateExpiryDate() {
-		final Calendar cal = Calendar.getInstance();
-		cal.setTime(new Timestamp(cal.getTime().getTime()));
-		cal.add(Calendar.MINUTE, 60);
-		return new Date(cal.getTime().getTime());
-    }
 }

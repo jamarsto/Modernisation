@@ -22,16 +22,20 @@ public class Balance extends AbstractValueObject {
 	@Column(nullable = false, precision = 7, scale = 2)
 	private BigDecimal balance;
 
-	public Balance( ) {
+	private Balance() {
 	}
 
+	public Balance(final BigDecimal balance) {
+		this();
+		this.balance = balance;
+	}
+	
 	public Balance(final String amountString) {
 		this.balance = new BigDecimal(amountString);
 	}
 
 	public Balance add(final Amount amount) {
-		this.balance = this.balance.add(amount.getAmount());
-		return this;
+		return new Balance(balance.add(amount.getAmount()));
 	}
 
 	public BigDecimal getBalance() {
@@ -39,7 +43,11 @@ public class Balance extends AbstractValueObject {
 	}
 
 	public Balance subtract(final Amount amount) {
-		this.balance = this.balance.subtract(amount.getAmount());
-		return this;
+		return new Balance(balance.subtract(amount.getAmount()));
+	}
+	
+	@Override
+	public String toString() {
+		return balance.toString();
 	}
 }

@@ -13,15 +13,15 @@ import uk.me.jasonmarston.domain.validator.impl.FieldsValueMatchValidator;
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FieldsValueMatch {
-	String message() default "Fields values don't match!";
-	Class<?>[] groups() default {};
-	Class<?>[] payload() default {};
-	String field();
-	String fieldMatch();
-
 	@Target({ ElementType.TYPE })
 	@Retention(RetentionPolicy.RUNTIME)
 	@interface List {
 		FieldsValueMatch[] value();
 	}
+	String field();
+	String fieldMatch();
+	Class<?>[] groups() default {};
+	String message() default "Fields values don't match!";
+
+	Class<?>[] payload() default {};
 }

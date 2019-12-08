@@ -38,17 +38,17 @@ public class ForgottenListener implements
 	@Override
 	public void onApplicationEvent(final OnForgottenPasswordEvent event) {
 		final ResetToken token = resetTokenService
-				.create(event.getEmailDetails());
+				.create(event.getEmail());
 		if(token == null) {
 			LOGGER.warn("Email: "
-					+ event.getEmailDetails().getEmail() 
+					+ event.getEmail() 
 					+ " does not match with a user.");
 			return;
 		}
 		final MimeMessage message = sender.createMimeMessage();
 		final MimeMessageHelper helper = new MimeMessageHelper(message);
 		try {
-			helper.setTo(event.getEmailDetails().getEmail());
+			helper.setTo(event.getEmail().toString());
 			helper.setFrom(from);
 			helper.setSubject("Password Reset Confirmation");
 			helper.setText("<a href=\"http://localhost:8080" 

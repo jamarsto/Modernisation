@@ -1,12 +1,58 @@
 package uk.me.jasonmarston.domain.details;
 
+import java.security.InvalidParameterException;
+
 import javax.validation.constraints.NotNull;
 
+import org.springframework.stereotype.Service;
+
+import uk.me.jasonmarston.domain.builder.IBuilder;
+import uk.me.jasonmarston.domain.factory.details.TransactionDetailsBuilderFactory;
 import uk.me.jasonmarston.domain.value.Amount;
 import uk.me.jasonmarston.framework.domain.type.AbstractValueObject;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 public class TransactionDetails extends AbstractValueObject {
+	public static class Builder implements IBuilder<TransactionDetails> {
+		private EntityId accountId;
+		private Amount amount;
+
+		private Builder() {
+		}
+		
+		public Builder forAccountId(final EntityId accountId) {
+			this.accountId = accountId;
+			return this;
+		}
+		
+		public Builder withAmount(final Amount amount) {
+			this.amount = amount;
+			return this;
+		}
+
+		@Override
+		public TransactionDetails build() {
+			if(accountId == null || amount == null) {
+				throw new InvalidParameterException("Invalid transaction details");
+			}
+
+			final TransactionDetails transactionDetails = 
+					new TransactionDetails();
+			transactionDetails.accountId = accountId;
+			transactionDetails.amount = amount;
+			
+			return transactionDetails;
+		}
+	}
+
+	@Service
+	public static class Factory implements TransactionDetailsBuilderFactory {
+		@Override
+		public Builder create() {
+			return new Builder();
+		}
+	}
+	
 	private static final long serialVersionUID = 1L;
 
 	@NotNull(message = "Account Id is required")
@@ -15,7 +61,7 @@ public class TransactionDetails extends AbstractValueObject {
 	@NotNull(message = "Amount is required")
 	private Amount amount;
 	
-	public TransactionDetails() {
+	private TransactionDetails() {
 	}
 
 	public TransactionDetails(final EntityId accountId, final Amount amount) {

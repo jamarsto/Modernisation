@@ -1,5 +1,7 @@
 package uk.me.jasonmarston.mvc.event;
 
+import java.security.InvalidParameterException;
+
 import org.springframework.context.ApplicationEvent;
 
 import uk.me.jasonmarston.domain.aggregate.User;
@@ -13,7 +15,7 @@ public class OnRegistrationCompleteEvent extends ApplicationEvent {
 	public OnRegistrationCompleteEvent(final User user, final String url) {
 		super(user);
 		if(user == null || url == null) {
-			throw new RuntimeException("user and url are required");
+			throw new InvalidParameterException("user and url are required");
 		}
 		this.user = user;
 		this.url = url;
