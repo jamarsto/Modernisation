@@ -1,7 +1,7 @@
 package uk.me.jasonmarston.domain.factory.details;
 
 import uk.me.jasonmarston.domain.details.TransferDetails;
-import uk.me.jasonmarston.domain.factory.Factory;
+import uk.me.jasonmarston.framework.domain.factory.IFactory;
 
-public interface TransferDetailsBuilderFactory extends Factory<TransferDetails.Builder> {
+public interface TransferDetailsBuilderFactory extends IFactory<TransferDetails.Builder> {
 }

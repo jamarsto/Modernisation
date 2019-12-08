@@ -6,13 +6,14 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 
-import uk.me.jasonmarston.domain.builder.IBuilder;
 import uk.me.jasonmarston.domain.factory.details.TransactionDetailsBuilderFactory;
 import uk.me.jasonmarston.domain.value.Amount;
+import uk.me.jasonmarston.framework.domain.builder.IBuilder;
+import uk.me.jasonmarston.framework.domain.details.DetailsObject;
 import uk.me.jasonmarston.framework.domain.type.AbstractValueObject;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
-public class TransactionDetails extends AbstractValueObject {
+public class TransactionDetails extends AbstractValueObject implements DetailsObject {
 	public static class Builder implements IBuilder<TransactionDetails> {
 		private EntityId accountId;
 		private Amount amount;
@@ -20,16 +21,6 @@ public class TransactionDetails extends AbstractValueObject {
 		private Builder() {
 		}
 		
-		public Builder forAccountId(final EntityId accountId) {
-			this.accountId = accountId;
-			return this;
-		}
-		
-		public Builder withAmount(final Amount amount) {
-			this.amount = amount;
-			return this;
-		}
-
 		@Override
 		public TransactionDetails build() {
 			if(accountId == null || amount == null) {
@@ -42,6 +33,16 @@ public class TransactionDetails extends AbstractValueObject {
 			transactionDetails.amount = amount;
 			
 			return transactionDetails;
+		}
+		
+		public Builder forAccountId(final EntityId accountId) {
+			this.accountId = accountId;
+			return this;
+		}
+
+		public Builder withAmount(final Amount amount) {
+			this.amount = amount;
+			return this;
 		}
 	}
 

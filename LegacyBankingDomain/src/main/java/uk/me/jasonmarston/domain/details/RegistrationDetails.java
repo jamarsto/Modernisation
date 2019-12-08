@@ -6,11 +6,12 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 
-import uk.me.jasonmarston.domain.builder.IBuilder;
 import uk.me.jasonmarston.domain.factory.details.RegistrationDetailsBuilderFactory;
 import uk.me.jasonmarston.domain.validator.FieldsValueMatch;
 import uk.me.jasonmarston.domain.value.EmailAddress;
 import uk.me.jasonmarston.domain.value.Password;
+import uk.me.jasonmarston.framework.domain.builder.IBuilder;
+import uk.me.jasonmarston.framework.domain.details.DetailsObject;
 import uk.me.jasonmarston.framework.domain.type.AbstractValueObject;
 
 @FieldsValueMatch(
@@ -18,7 +19,7 @@ import uk.me.jasonmarston.framework.domain.type.AbstractValueObject;
 		fieldMatch = "passwordConfirmation", 
 		message = "Passwords must match"
 )
-public class RegistrationDetails extends AbstractValueObject {
+public class RegistrationDetails extends AbstractValueObject implements DetailsObject {
 	public static class Builder implements IBuilder<RegistrationDetails> {
 		private EmailAddress email;
 		private Password password;

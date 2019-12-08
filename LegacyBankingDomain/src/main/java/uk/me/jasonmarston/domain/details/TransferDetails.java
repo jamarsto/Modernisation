@@ -6,13 +6,14 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 
-import uk.me.jasonmarston.domain.builder.IBuilder;
 import uk.me.jasonmarston.domain.factory.details.TransferDetailsBuilderFactory;
 import uk.me.jasonmarston.domain.value.Amount;
+import uk.me.jasonmarston.framework.domain.builder.IBuilder;
+import uk.me.jasonmarston.framework.domain.details.DetailsObject;
 import uk.me.jasonmarston.framework.domain.type.AbstractValueObject;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
-public class TransferDetails extends AbstractValueObject {
+public class TransferDetails extends AbstractValueObject implements DetailsObject {
 	public static class Builder implements IBuilder<TransferDetails> {
 		private EntityId fromAccountId;
 		private EntityId toAccountId;
@@ -21,21 +22,6 @@ public class TransferDetails extends AbstractValueObject {
 		private Builder() {
 		}
 		
-		public Builder fromAccountId(final EntityId fromAccountId) {
-			this.fromAccountId = fromAccountId;
-			return this;
-		}
-		
-		public Builder toAccountId(final EntityId toAccountId) {
-			this.toAccountId = toAccountId;
-			return this;
-		}
-		
-		public Builder forAmount(final Amount amount) {
-			this.amount = amount;
-			return this;
-		}
-
 		@Override
 		public TransferDetails build() {
 			if(fromAccountId == null || toAccountId == null || amount == null) {
@@ -48,6 +34,21 @@ public class TransferDetails extends AbstractValueObject {
 			transferDetails.amount = amount;
 			
 			return transferDetails;
+		}
+		
+		public Builder forAmount(final Amount amount) {
+			this.amount = amount;
+			return this;
+		}
+		
+		public Builder fromAccountId(final EntityId fromAccountId) {
+			this.fromAccountId = fromAccountId;
+			return this;
+		}
+
+		public Builder toAccountId(final EntityId toAccountId) {
+			this.toAccountId = toAccountId;
+			return this;
 		}
 	}
 

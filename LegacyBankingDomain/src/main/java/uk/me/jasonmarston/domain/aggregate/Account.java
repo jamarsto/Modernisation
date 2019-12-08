@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
-import uk.me.jasonmarston.domain.builder.IBuilder;
 import uk.me.jasonmarston.domain.entity.Transaction;
 import uk.me.jasonmarston.domain.factory.aggregate.AccountBuilderFactory;
 import uk.me.jasonmarston.domain.factory.entity.TransactionBuilderFactory;
@@ -29,6 +28,7 @@ import uk.me.jasonmarston.domain.value.Amount;
 import uk.me.jasonmarston.domain.value.Balance;
 import uk.me.jasonmarston.domain.value.TransactionType;
 import uk.me.jasonmarston.framework.domain.aggregate.AbstractAggregate;
+import uk.me.jasonmarston.framework.domain.builder.IBuilder;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 @Configurable(preConstruction = true, autowire = Autowire.BY_TYPE, dependencyCheck = false)

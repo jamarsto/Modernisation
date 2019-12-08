@@ -20,7 +20,7 @@ import org.springframework.web.context.request.WebRequest;
 import uk.me.jasonmarston.domain.aggregate.User;
 import uk.me.jasonmarston.domain.aggregate.VerificationToken;
 import uk.me.jasonmarston.domain.details.RegistrationDetails;
-import uk.me.jasonmarston.domain.factory.details.DetailsBuilderFactory;
+import uk.me.jasonmarston.domain.factory.details.RegistrationDetailsBuilderFactory;
 import uk.me.jasonmarston.domain.service.UserService;
 import uk.me.jasonmarston.domain.service.VerificationTokenService;
 import uk.me.jasonmarston.domain.value.EmailAddress;
@@ -46,7 +46,8 @@ public class RegistrationController {
 	
 	@Autowired
 	@Lazy
-	private DetailsBuilderFactory factory;
+	private RegistrationDetailsBuilderFactory 
+			registrationDetailsBuilderfactory;
 
 	@GetMapping("/user/registration")
 	public String registration(final ModelMap model) {
@@ -62,7 +63,7 @@ public class RegistrationController {
 
 		try {
 			final RegistrationDetails.Builder builder = 
-					factory.create(RegistrationDetails.Builder.class);
+					registrationDetailsBuilderfactory.create();
 
 			final RegistrationDetails registrationDetails = builder
 					.forEmail(new EmailAddress(registrationBean.getEmail()))

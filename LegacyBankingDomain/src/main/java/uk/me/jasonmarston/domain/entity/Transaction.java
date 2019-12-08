@@ -20,10 +20,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 import uk.me.jasonmarston.domain.aggregate.Account;
-import uk.me.jasonmarston.domain.builder.IBuilder;
 import uk.me.jasonmarston.domain.factory.entity.TransactionBuilderFactory;
 import uk.me.jasonmarston.domain.value.Amount;
 import uk.me.jasonmarston.domain.value.TransactionType;
+import uk.me.jasonmarston.framework.domain.builder.IBuilder;
 import uk.me.jasonmarston.framework.domain.entity.AbstractEntity;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 

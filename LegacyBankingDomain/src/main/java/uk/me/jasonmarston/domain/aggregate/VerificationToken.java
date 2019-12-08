@@ -15,10 +15,10 @@ import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
-import uk.me.jasonmarston.domain.builder.IBuilder;
 import uk.me.jasonmarston.domain.factory.aggregate.VerificationTokenBuilderFactory;
 import uk.me.jasonmarston.domain.value.Token;
 import uk.me.jasonmarston.framework.domain.aggregate.AbstractAggregate;
+import uk.me.jasonmarston.framework.domain.builder.IBuilder;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 @Configurable(preConstruction = true, autowire = Autowire.BY_TYPE, dependencyCheck = false)

@@ -4,12 +4,13 @@ import java.security.InvalidParameterException;
 
 import javax.validation.constraints.NotNull;
 
-import uk.me.jasonmarston.domain.builder.IBuilder;
 import uk.me.jasonmarston.domain.factory.details.TransactionIdentifierDetailsBuilderFactory;
+import uk.me.jasonmarston.framework.domain.builder.IBuilder;
+import uk.me.jasonmarston.framework.domain.details.DetailsObject;
 import uk.me.jasonmarston.framework.domain.type.AbstractValueObject;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
-public class TransactionIdentifierDetails extends AbstractValueObject {
+public class TransactionIdentifierDetails extends AbstractValueObject implements DetailsObject {
 	public static class Builder implements IBuilder<TransactionIdentifierDetails> {
 		private EntityId accountId;
 		private EntityId transactionId;
@@ -17,16 +18,6 @@ public class TransactionIdentifierDetails extends AbstractValueObject {
 		private Builder() {
 		}
 		
-		public Builder forAccountId(final EntityId accountId) {
-			this.accountId = accountId;
-			return this;
-		}
-		
-		public Builder withTransactionId(final EntityId transactionId) {
-			this.transactionId = transactionId;
-			return this;
-		}
-
 		@Override
 		public TransactionIdentifierDetails build() {
 			if(accountId == null || transactionId == null) {
@@ -39,6 +30,16 @@ public class TransactionIdentifierDetails extends AbstractValueObject {
 			transactionIdentifierDetails.transactionId = transactionId;
 			
 			return transactionIdentifierDetails;
+		}
+		
+		public Builder forAccountId(final EntityId accountId) {
+			this.accountId = accountId;
+			return this;
+		}
+
+		public Builder withTransactionId(final EntityId transactionId) {
+			this.transactionId = transactionId;
+			return this;
 		}
 	}
 	

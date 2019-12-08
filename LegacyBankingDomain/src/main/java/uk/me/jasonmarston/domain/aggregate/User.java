@@ -23,11 +23,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import uk.me.jasonmarston.domain.builder.IBuilder;
 import uk.me.jasonmarston.domain.factory.aggregate.UserBuilderFactory;
 import uk.me.jasonmarston.domain.value.EmailAddress;
 import uk.me.jasonmarston.domain.value.Password;
 import uk.me.jasonmarston.framework.domain.aggregate.AbstractAggregate;
+import uk.me.jasonmarston.framework.domain.builder.IBuilder;
 
 @Configurable(preConstruction = true, autowire = Autowire.BY_TYPE, dependencyCheck = false)
 @Entity

@@ -1,4 +1,4 @@
-package uk.me.jasonmarston.domain.builder;
+package uk.me.jasonmarston.framework.domain.builder;
 
 import uk.me.jasonmarston.framework.domain.DomainObject;
 
