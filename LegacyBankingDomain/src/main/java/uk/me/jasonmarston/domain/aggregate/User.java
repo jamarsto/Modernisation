@@ -4,6 +4,7 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -88,7 +89,7 @@ public class User extends AbstractAggregate implements UserDetails {
 	@Transient
 	private PasswordEncoder passwordEncoder;
 
-	@Column(unique = true)
+	@AttributeOverride(name="id", column=@Column(name="uid", unique = true))
 	private EntityId uid;
 	
 	@NotNull
