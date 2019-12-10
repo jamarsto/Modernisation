@@ -44,10 +44,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 				.antMatchers(
 					"/error",
+					"/login",
 					"/user/registration",
 					"/user/registration/verification",
-					"/user/forgotten",
-					"/user/forgotten/verification",
+					"/user/password/reset",
+					"/user/password/reset/verification",
 					"/favicon.ico",
 					"/**/*.png",
 					"/**/*.gif",

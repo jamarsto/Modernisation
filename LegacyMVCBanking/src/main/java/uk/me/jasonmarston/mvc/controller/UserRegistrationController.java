@@ -1,5 +1,7 @@
 package uk.me.jasonmarston.mvc.controller;
 
+import static uk.me.jasonmarston.domain.Constants.STRONG_PASSWORD;
+
 import javax.persistence.EntityExistsException;
 import javax.persistence.OptimisticLockException;
 import javax.validation.Valid;
@@ -27,11 +29,11 @@ import uk.me.jasonmarston.domain.value.EmailAddress;
 import uk.me.jasonmarston.domain.value.Password;
 import uk.me.jasonmarston.domain.value.Token;
 import uk.me.jasonmarston.mvc.controller.bean.RegistrationBean;
-import uk.me.jasonmarston.mvc.event.OnRegistrationCompleteEvent;
+import uk.me.jasonmarston.mvc.event.OnRegistrationEvent;
 
 @Controller
 @Validated
-public class RegistrationController {
+public class UserRegistrationController {
 	@Autowired
 	@Lazy
 	private VerificationTokenService verificationTokenService;
@@ -51,6 +53,7 @@ public class RegistrationController {
 
 	@GetMapping("/user/registration")
 	public String registration(final ModelMap model) {
+		model.addAttribute("strongPassword", STRONG_PASSWORD);
 		model.addAttribute("registrationBean", new RegistrationBean());
 		return "user/registration/index";
 	}
@@ -78,9 +81,10 @@ public class RegistrationController {
 			final User user = userService.register(registrationDetails);
 
 			applicationEventPublisher
-					.publishEvent(new OnRegistrationCompleteEvent(
+					.publishEvent(new OnRegistrationEvent(
 							user, 
-							request.getContextPath()));
+							request.getContextPath(),
+							request.getLocale()));
 		}
 		catch(final EntityExistsException e) {
 			return "redirect:/user/registration?registration";

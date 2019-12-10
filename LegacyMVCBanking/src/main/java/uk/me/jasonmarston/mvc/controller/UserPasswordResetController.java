@@ -1,5 +1,7 @@
 package uk.me.jasonmarston.mvc.controller;
 
+import static uk.me.jasonmarston.domain.Constants.STRONG_PASSWORD;
+
 import javax.persistence.OptimisticLockException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -26,12 +28,12 @@ import uk.me.jasonmarston.domain.value.Password;
 import uk.me.jasonmarston.domain.value.Token;
 import uk.me.jasonmarston.mvc.controller.bean.ForgottenPasswordBean;
 import uk.me.jasonmarston.mvc.controller.bean.ResetPasswordBean;
-import uk.me.jasonmarston.mvc.event.OnForgottenPasswordEvent;
+import uk.me.jasonmarston.mvc.event.OnPasswordResetEvent;
 
 @Controller
 @Validated
 @SessionAttributes("token")
-public class ForgottenPasswordController {
+public class UserPasswordResetController {
 	
 	@Autowired
 	@Lazy
@@ -45,65 +47,68 @@ public class ForgottenPasswordController {
 	@Lazy
 	private ApplicationEventPublisher applicationEventPublisher;
 
-	@PostMapping("/user/forgotten")
+	@PostMapping("/user/password/reset")
 	public String forgotten(
-			@ModelAttribute("forgottenBean") 
-					@NotNull @Valid final ForgottenPasswordBean forgottenBean,
+			@ModelAttribute("forgottenPasswordBean") 
+					@NotNull @Valid final ForgottenPasswordBean 
+							forgottenPasswordBean,
 			final WebRequest request,
 			final ModelMap model) {
 		applicationEventPublisher
-				.publishEvent(new OnForgottenPasswordEvent(
-						new EmailAddress(forgottenBean.getEmail()), 
-						request.getContextPath()));
+				.publishEvent(new OnPasswordResetEvent(
+						new EmailAddress(forgottenPasswordBean.getEmail()),
+						request.getContextPath(),
+						request.getLocale()));
 
-		return "user/forgotten/confirmation";
+		return "user/password/reset/confirmation";
 	}
-	
-	@GetMapping("/user/forgotten")
+
+	@GetMapping("/user/password/reset")
 	public String forgotten(final ModelMap model) {
-		model.addAttribute("forgottenBean", new ForgottenPasswordBean());
-		return "user/forgotten/index";
+		model.addAttribute("forgottenPasswordBean", 
+				new ForgottenPasswordBean());
+		return "user/password/reset/index";
 	}
 
-	@PostMapping("/user/forgotten/verification")
+	@PostMapping("/user/password/reset/verification")
 	public String verification(
 			@ModelAttribute("token") @NotNull @Valid final Token token,
-			@ModelAttribute("resetBean") 
-					@NotNull @Valid final ResetPasswordBean resetBean,
+			@ModelAttribute("resetPasswordBean") 
+					@NotNull @Valid final ResetPasswordBean resetPasswordBean,
 			final ModelMap model) {
 		model.remove("token");
 
 		final ResetToken resetToken = resetTokenService
 				.findByToken(token);
 		if(resetToken == null) {
-			return "redirect:/user/forgotten?expired";
+			return "redirect:/user/password/reset?expired";
 		}
 
 		resetTokenService.delete(resetToken);
 
 		if(resetToken.isExpired()) {
-			return "redirect:/user/forgotten?expired";
+			return "redirect:/user/password/reset?expired";
 		}
 
 		User user = userService.findById(resetToken.getUserId());
 		if(user == null) {
-			return "redirect:/user/forgotten?expired";
+			return "redirect:/user/password/reset?expired";
 		}
 
 		try {
 			user = userService.changePassword(user, 
-					new Password(resetBean.getPassword()));
+					new Password(resetPasswordBean.getPassword()));
 		}
 		catch(OptimisticLockException e) {
-			return "redirect:/user/forgotten?expired";
+			return "redirect:/user/password/reset?expired";
 		}
 
 		AuthenticationHelper.loginUser(user);
 
-	    return "user/forgotten/verification/confirmation";
+	    return "user/password/reset/verification/confirmation";
 	}
 
-	@GetMapping("/user/forgotten/verification")
+	@GetMapping("/user/password/reset/verification")
 	public String verification(
 			final WebRequest request, 
 			@RequestParam(value = "token") final String tokenString,
@@ -112,17 +117,18 @@ public class ForgottenPasswordController {
 		final ResetToken resetToken = 
 				resetTokenService.findByToken(token);
 		if(resetToken == null || resetToken.isExpired()) {
-			return "redirect:/user/forgotten?expired";
+			return "redirect:/user/password/reset?expired";
 		}
 
 		final User user = userService.findById(resetToken.getUserId());
 		if(user == null) {
-			return "redirect:/user/forgotten?expired";
+			return "redirect:/user/password/reset?expired";
 		}
 
 		model.addAttribute("token", token);
-		model.addAttribute("resetBean", new ResetPasswordBean());
+		model.addAttribute("strongPassword", STRONG_PASSWORD);
+		model.addAttribute("resetPasswordBean", new ResetPasswordBean());
 
-	    return "user/forgotten/verification/index";
+	    return "user/password/reset/verification/index";
 	}
 }

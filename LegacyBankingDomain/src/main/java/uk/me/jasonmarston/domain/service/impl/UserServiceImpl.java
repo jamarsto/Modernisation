@@ -90,4 +90,9 @@ public class UserServiceImpl implements UserService {
 
 		return userRepository.save(user);
 	}
+
+	@Override
+	public boolean isCurrentPassword(@NotNull @Valid User user, @NotNull Password password) {
+		return user.isCurrentPassword(password);
+	}
 }

@@ -3,19 +3,19 @@
 	<body>
 		<div class="container">
 			<div class="row">
-				<h1>Internet Bank</h1>
+				<h1 th:text=#{error.heading}></h1>
 			</div>
 			<div class="row">
 				<div class="col-md-4"></div>
 				<div class="col-md-4">
 					<div th:switch="${status}">
 						<div class="alert alert-danger text-center" role="alert">
-							<span th:case="400">It's not you, it's us. There was a validation failure.</span>
-							<span th:case="403">You are not authorised to perform this action.</span>
-							<span th:case="404">This is not the page you are looking for.</span>
-							<span th:case="500">It's not you, it's us. Something went wrong at our end.</span>
-							<span th:case="999" >Why are you here? There are no errors.</span>
-							<span th:case="*" ><span th:text="${error}"></span> : <span th:text="${message}"></span></span>
+							<span th:case="400" th:text="#{error.validation}"></span>
+							<span th:case="403" th:text="#{error.authorisation}"></span>
+							<span th:case="404" th:text="#{error.notFound}"></span>
+							<span th:case="500" th:text="#{error.internal}"></span>
+							<span th:case="999" th:text="#{error.noError}"></span>
+							<span th:case="*" ><!-- This should not be reached --><span th:text="${error}"></span> : <span th:text="${message}"></span></span>
 						</div>
 					</div>
 				</div>

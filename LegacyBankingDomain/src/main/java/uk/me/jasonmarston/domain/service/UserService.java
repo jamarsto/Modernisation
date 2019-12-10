@@ -17,6 +17,8 @@ public interface UserService {
 	User enable(@NotNull @Valid final User user);
 	User findByEmail(@NotNull @Valid final EmailAddress email);
 	User findById(@NotNull @Valid final EntityId id);
+	boolean isCurrentPassword(@NotNull @Valid final User user,
+			@NotNull final Password password);
 	User register(
 			@NotNull @Valid final RegistrationDetails registrationDetails);
 }

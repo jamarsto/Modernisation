@@ -1,9 +1,9 @@
 package uk.me.jasonmarston.mvc.controller.bean;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 import uk.me.jasonmarston.domain.validator.FieldsValueMatch;
+import uk.me.jasonmarston.domain.validator.StrongPassword;
 
 @FieldsValueMatch(
 		field = "password", 
@@ -11,12 +11,11 @@ import uk.me.jasonmarston.domain.validator.FieldsValueMatch;
 		message = "Passwords do not match!"
 )
 public class ResetPasswordBean extends AbstractBean {
-	@NotNull(message = "Password is required")
-	@NotEmpty(message = "Password is required")
+	@NotBlank(message = "Password is required")
+	@StrongPassword(message = "Invalid Password")
 	private String password;
 	
-	@NotNull(message = "Password confirmation is required")
-	@NotEmpty(message = "Password confirmation is required")
+	@NotBlank(message = "Password confirmation is required")
 	private String passwordConfirmation;
 
 	public String getPassword() {

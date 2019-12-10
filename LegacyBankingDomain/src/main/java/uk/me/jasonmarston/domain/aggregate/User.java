@@ -168,6 +168,12 @@ public class User extends AbstractAggregate implements UserDetails {
 	public boolean isCredentialsNonExpired() {
 		return credentialsNonExpired;
 	}
+
+	public boolean isCurrentPassword(final Password password) {
+		return passwordEncoder.matches(
+				password.getPassword(),
+				this.password.getPassword());
+	}
 	
 	@Override
 	public boolean isEnabled() {

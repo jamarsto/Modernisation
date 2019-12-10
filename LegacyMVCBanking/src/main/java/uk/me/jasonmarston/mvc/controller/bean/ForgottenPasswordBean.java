@@ -1,10 +1,10 @@
 package uk.me.jasonmarston.mvc.controller.bean;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 public class ForgottenPasswordBean extends AbstractBean {
-	@NotNull(message = "Email is required")
+	@NotBlank(message = "Email address is required")
 	@Email(message = "Must be a valid email address")
 	private String email;
 	

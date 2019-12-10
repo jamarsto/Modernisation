@@ -3,23 +3,19 @@
 	<body>
 		<div class="container">
 			<div class="row">
-				<h1>Reset Password</h1>
+				<h1 th:text="#{resetPassword.heading}"></h1>
 			</div>
 			<div th:if="!${param.expired}" class="row">
 				<div class="col-md-4"></div>
 				<div class="col-md-4">
-					<div class="alert alert-info text-center" role="alert">
-						You will shortly receive an email with a link to reset your password.
-					</div>
+					<div class="alert alert-info text-center" role="alert" th:text="#{info.passwordResetEmail}"></div>
 				</div>
 				<div class="col-md-4"></div>
 			</div>
 			<div th:if="${param.expired}" class="row">
 				<div class="col-md-4"></div>
 				<div class="col-md-4">
-					<div class="alert alert-error text-center" role="alert">
-						Your reset token has expired.
-					</div>
+					<div class="alert alert-error text-center" role="alert" th:text="#{error.token}"></div>
 				</div>
 				<div class="col-md-4"></div>
 			</div>

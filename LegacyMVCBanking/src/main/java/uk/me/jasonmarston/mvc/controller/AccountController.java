@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 @Validated
 public class AccountController {
-	
-	@GetMapping("/")
+	@GetMapping({"/", "account"})
 	public String home() {
 		return "account/index";
 	}
