@@ -27,7 +27,10 @@ import uk.me.jasonmarston.framework.domain.builder.IBuilder;
 import uk.me.jasonmarston.framework.domain.entity.AbstractEntity;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
-@Configurable(autowire = Autowire.BY_TYPE)
+@Configurable(
+		preConstruction = true,
+		autowire = Autowire.BY_TYPE,
+		dependencyCheck = false)
 @Entity(name = "TRANSACTIONS")
 public class Transaction extends AbstractEntity {
 	public static class Builder implements IBuilder<Transaction> {

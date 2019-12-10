@@ -1,8 +1,8 @@
 package uk.me.jasonmarston.domain.aggregate;
 
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -29,7 +29,10 @@ import uk.me.jasonmarston.framework.domain.aggregate.AbstractAggregate;
 import uk.me.jasonmarston.framework.domain.builder.IBuilder;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
-@Configurable(preConstruction = true, autowire = Autowire.BY_TYPE, dependencyCheck = false)
+@Configurable(
+		preConstruction = true,
+		autowire = Autowire.BY_TYPE,
+		dependencyCheck = false)
 @Entity
 @Table(name = "USERS")
 public class User extends AbstractAggregate implements UserDetails {
@@ -37,8 +40,16 @@ public class User extends AbstractAggregate implements UserDetails {
 		private EmailAddress email;
 		private Password password;
 		private EntityId id;
+		private Set<GrantedAuthority> authorities = 
+				new HashSet<GrantedAuthority>();
 
 		private Builder() {
+			this.authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+		}
+		
+		public Builder addAuthoriy(final SimpleGrantedAuthority authority) {
+			authorities.add(authority);
+			return this;
 		}
 
 		public Builder andId(EntityId id) {
@@ -54,10 +65,11 @@ public class User extends AbstractAggregate implements UserDetails {
 
 			final User user = new User();
 			user.email = email;
-			user.password = new Password(user.passwordEncoder.encode(password.getPassword()));
+			user.changePassword(password);
 			if(id != null) {
 				user.setId(id);
 			}
+			user.authorities = authorities;
 
 			return user;
 		}
@@ -103,8 +115,8 @@ public class User extends AbstractAggregate implements UserDetails {
 	private Password password;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private Collection<GrantedAuthority> authorities = 
-			new ArrayList<GrantedAuthority>();
+	private Set<GrantedAuthority> authorities = 
+			new HashSet<GrantedAuthority>();
 
 	private boolean accountNonExpired = true;
 	private boolean accountNonLocked = true;
@@ -113,11 +125,15 @@ public class User extends AbstractAggregate implements UserDetails {
 
 	private User() {
 		super();
-		this.authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+	}
+
+	public boolean addAuthority(final GrantedAuthority authority) {
+		return authorities.add(authority);
 	}
 
 	public void changePassword(final Password password) {
-		this.password = new Password(passwordEncoder.encode(password.getPassword()));
+		this.password = new Password(passwordEncoder
+				.encode(password.toString()));
 	}
 
 	public void enable() {
@@ -125,7 +141,7 @@ public class User extends AbstractAggregate implements UserDetails {
 	}
 
 	@Override
-	public Collection<GrantedAuthority> getAuthorities() {
+	public Set<GrantedAuthority> getAuthorities() {
 		return authorities;
 	}
 
@@ -134,7 +150,7 @@ public class User extends AbstractAggregate implements UserDetails {
 	}
 
 	public String getEmail() {
-		return email.getEmail();
+		return email.toString();
 	}
 
 	public String getIssuer() {
@@ -143,7 +159,7 @@ public class User extends AbstractAggregate implements UserDetails {
 
 	@Override
 	public String getPassword() {
-		return password.getPassword();
+		return password.toString();
 	}
 
 	public String getPicture() {
@@ -179,5 +195,9 @@ public class User extends AbstractAggregate implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return enabled;
+	}
+
+	public boolean removeAuthority(final GrantedAuthority authority) {
+		return authorities.remove(authority);
 	}
 }

@@ -22,7 +22,10 @@ import uk.me.jasonmarston.framework.domain.aggregate.AbstractAggregate;
 import uk.me.jasonmarston.framework.domain.builder.IBuilder;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
-@Configurable(preConstruction = true, autowire = Autowire.BY_TYPE, dependencyCheck = false)
+@Configurable(
+		preConstruction = true,
+		autowire = Autowire.BY_TYPE,
+		dependencyCheck = false)
 @Entity
 @Table(name = "RESET_TOKEN")
 public class ResetToken extends AbstractAggregate {
