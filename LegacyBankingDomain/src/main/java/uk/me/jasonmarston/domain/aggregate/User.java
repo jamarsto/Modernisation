@@ -150,13 +150,9 @@ public class User extends AbstractAggregate implements UserDetails {
 		return picture;
 	}
 
-	public String getUid() {
-		return getId().toString();
-	}
-
 	@Override
 	public String getUsername() {
-		return password.toString();
+		return email.toString();
 	}
 
 	@Override
