@@ -33,6 +33,14 @@ public class Cleanup {
 	@Autowired
 	private UserService userService;
 	
+	@Scheduled(initialDelay = THIRTY_SECONDS, fixedDelay = ONE_MINUTE)
+	public void cleanupResetTokens() {
+		final List<ResetToken> list = resetTokenService.findExpiredTokens();
+		for(ResetToken token: list) {
+			resetTokenService.delete(token);
+		}
+	}
+	
 	@Scheduled(fixedDelay = ONE_MINUTE)
 	public void cleanupVerificationTokens() {
 		final List<VerificationToken> list = verificationTokenService
@@ -43,14 +51,6 @@ public class Cleanup {
 			if(!user.isEnabled()) {
 				userService.delete(user);
 			}
-		}
-	}
-	
-	@Scheduled(initialDelay = THIRTY_SECONDS, fixedDelay = ONE_MINUTE)
-	public void cleanupResetTokens() {
-		final List<ResetToken> list = resetTokenService.findExpiredTokens();
-		for(ResetToken token: list) {
-			resetTokenService.delete(token);
 		}
 	}
 }

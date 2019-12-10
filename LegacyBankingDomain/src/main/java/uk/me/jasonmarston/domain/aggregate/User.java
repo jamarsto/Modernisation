@@ -3,7 +3,6 @@ package uk.me.jasonmarston.domain.aggregate;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -28,6 +27,7 @@ import uk.me.jasonmarston.domain.value.EmailAddress;
 import uk.me.jasonmarston.domain.value.Password;
 import uk.me.jasonmarston.framework.domain.aggregate.AbstractAggregate;
 import uk.me.jasonmarston.framework.domain.builder.IBuilder;
+import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 @Configurable(preConstruction = true, autowire = Autowire.BY_TYPE, dependencyCheck = false)
 @Entity
@@ -37,8 +37,14 @@ public class User extends AbstractAggregate implements UserDetails {
 		
 		private EmailAddress email;
 		private Password password;
+		private EntityId uid;
 
 		private Builder() {
+		}
+
+		public Builder andUid(EntityId uid) {
+			this.uid = uid;
+			return this;
 		}
 
 		@Override
@@ -50,9 +56,12 @@ public class User extends AbstractAggregate implements UserDetails {
 			user.email = email;
 			user.password = new Password(user.passwordEncoder.encode(password.getPassword()));
 			user.username = user.email.getEmail();
+			if(uid == null) {
+				user.uid = user.uid;
+			}
 			return user;
 		}
-
+		
 		public Builder forEmail(EmailAddress email) {
 			this.email = email;
 			return this;
@@ -79,7 +88,8 @@ public class User extends AbstractAggregate implements UserDetails {
 	@Transient
 	private PasswordEncoder passwordEncoder;
 
-	private String uid = UUID.randomUUID().toString();
+	@Column(unique = true)
+	private EntityId uid;
 	
 	@NotNull
 	@Column(unique = true)
@@ -146,7 +156,7 @@ public class User extends AbstractAggregate implements UserDetails {
 	}
 
 	public String getUid() {
-		return uid;
+		return uid.toString();
 	}
 
 	@Override

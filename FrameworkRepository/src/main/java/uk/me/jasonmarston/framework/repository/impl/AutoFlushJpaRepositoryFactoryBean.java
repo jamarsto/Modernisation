@@ -15,17 +15,6 @@ import org.springframework.data.repository.core.support.RepositoryFactorySupport
 public class AutoFlushJpaRepositoryFactoryBean<R extends JpaRepository<T, I>,
 		T, I extends Serializable> extends JpaRepositoryFactoryBean<R, T, I> {
 
-	public AutoFlushJpaRepositoryFactoryBean(
-			final Class<? extends R> repositoryInterface) {
-		super(repositoryInterface);
-	}
-
-	@Override
-	protected RepositoryFactorySupport createRepositoryFactory(
-			final EntityManager entityManager) {
-		return new AutoFlushJpaRepositoryFactory<T, I>(entityManager);
-	}
-
 	private static class AutoFlushJpaRepositoryFactory<T, 
 			I extends Serializable> extends JpaRepositoryFactory {
 		private final EntityManager entityManager;
@@ -34,6 +23,12 @@ public class AutoFlushJpaRepositoryFactoryBean<R extends JpaRepository<T, I>,
 				final EntityManager entityManager) {
 			super(entityManager);
 			this.entityManager = entityManager;
+		}
+
+		@Override
+		protected Class<?> getRepositoryBaseClass(
+				final RepositoryMetadata metadata) {
+			return AutoFlushJpaRepositoryImpl.class;
 		}
 
 		@SuppressWarnings("unchecked")
@@ -54,11 +49,16 @@ public class AutoFlushJpaRepositoryFactoryBean<R extends JpaRepository<T, I>,
 					(Class<T>) information.getDomainType(),
 					entityManager);
 		}
+	}
 
-		@Override
-		protected Class<?> getRepositoryBaseClass(
-				final RepositoryMetadata metadata) {
-			return AutoFlushJpaRepositoryImpl.class;
-		}
+	public AutoFlushJpaRepositoryFactoryBean(
+			final Class<? extends R> repositoryInterface) {
+		super(repositoryInterface);
+	}
+
+	@Override
+	protected RepositoryFactorySupport createRepositoryFactory(
+			final EntityManager entityManager) {
+		return new AutoFlushJpaRepositoryFactory<T, I>(entityManager);
 	}
 }

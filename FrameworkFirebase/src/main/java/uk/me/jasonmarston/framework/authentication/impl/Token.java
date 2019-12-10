@@ -11,12 +11,16 @@ public class Token {
 		this.token = token;
 	}
 
-	public String getUid() {
-		return token.getUid();
+	public boolean equals(Object obj) {
+		return token.equals(obj);
 	}
 
-	public int hashCode() {
-		return token.hashCode();
+	public Map<String, Object> getClaims() {
+		return token.getClaims();
+	}
+
+	public String getEmail() {
+		return token.getEmail();
 	}
 
 	public String getIssuer() {
@@ -31,20 +35,16 @@ public class Token {
 		return token.getPicture();
 	}
 
-	public String getEmail() {
-		return token.getEmail();
+	public String getUid() {
+		return token.getUid();
+	}
+
+	public int hashCode() {
+		return token.hashCode();
 	}
 
 	public boolean isEmailVerified() {
 		return token.isEmailVerified();
-	}
-
-	public Map<String, Object> getClaims() {
-		return token.getClaims();
-	}
-
-	public boolean equals(Object obj) {
-		return token.equals(obj);
 	}
 
 	public String toString() {

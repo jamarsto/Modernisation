@@ -27,12 +27,12 @@ public class OnPasswordResetEvent extends ApplicationEvent {
 		this.locale = locale;
 	}
 
-	public EmailAddress getEmail() {
-		return email;
-	}
-
 	public String getContextPath() {
 		return contextPath;
+	}
+
+	public EmailAddress getEmail() {
+		return email;
 	}
 	
 	public Locale getLocale() {

@@ -27,15 +27,15 @@ public class OnRegistrationEvent extends ApplicationEvent {
 		this.locale = locale;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
 	public String getContextPath() {
 		return contextPath;
 	}
-	
+
 	public Locale getLocale() {
 		return locale;
+	}
+	
+	public User getUser() {
+		return user;
 	}
 }

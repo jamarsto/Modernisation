@@ -11,19 +11,6 @@ import com.google.firebase.auth.FirebaseAuthException;
 public class JwtValidation {
 	private static final Object MUTEX = new Object();
 	private static volatile JwtValidation INSTANCE;
-	private final FirebaseAuth auth;
-	
-	private JwtValidation() throws IOException {
-		final FirebaseOptions options = 
-				new FirebaseOptions
-					.Builder()
-						.setCredentials(GoogleCredentials
-								.getApplicationDefault())
-						.build();
-		FirebaseApp.initializeApp(options);
-		auth = FirebaseAuth.getInstance();
-	}
-
 	public static JwtValidation getInstance() throws IOException {
 		JwtValidation result = INSTANCE;
 		if(result == null) {
@@ -35,6 +22,19 @@ public class JwtValidation {
 			}
 		}
 		return result;
+	}
+	
+	private final FirebaseAuth auth;
+
+	private JwtValidation() throws IOException {
+		final FirebaseOptions options = 
+				new FirebaseOptions
+					.Builder()
+						.setCredentials(GoogleCredentials
+								.getApplicationDefault())
+						.build();
+		FirebaseApp.initializeApp(options);
+		auth = FirebaseAuth.getInstance();
 	}
 
 	public Token verifyIdToken(String token) {

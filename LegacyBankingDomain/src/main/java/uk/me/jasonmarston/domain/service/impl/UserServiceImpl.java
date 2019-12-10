@@ -74,6 +74,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public boolean isCurrentPassword(@NotNull @Valid User user, @NotNull Password password) {
+		return user.isCurrentPassword(password);
+	}
+
+	@Override
 	public User register(
 			@NotNull @Valid final RegistrationDetails registrationDetails) {
 		if(userRepository.findByEmail(registrationDetails.getEmail())
@@ -89,10 +94,5 @@ public class UserServiceImpl implements UserService {
 				.build();
 
 		return userRepository.save(user);
-	}
-
-	@Override
-	public boolean isCurrentPassword(@NotNull @Valid User user, @NotNull Password password) {
-		return user.isCurrentPassword(password);
 	}
 }

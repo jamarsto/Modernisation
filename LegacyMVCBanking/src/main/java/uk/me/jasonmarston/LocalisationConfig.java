@@ -20,27 +20,14 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 
 @Configuration
 public class LocalisationConfig implements WebMvcConfigurer {
-	@Bean
-	public LocaleResolver localeResolver() {
-		SessionLocaleResolver resolver = new SessionLocaleResolver();
-		resolver.setDefaultLocale(Locale.forLanguageTag("en-UK"));
-		return resolver;
-	}
-
-	@Bean
-	public LocaleChangeInterceptor localeChangeInterceptor() {
-		LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
-		return interceptor;
-	}
+	// Cannot be lazy due to final methods
+	@Autowired
+	private ResourceBundleMessageSource resourceBundleMessageSource;
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(localeChangeInterceptor());
 	}
-
-	// Cannot be lazy due to final methods
-	@Autowired
-	private ResourceBundleMessageSource resourceBundleMessageSource;
 
 	@Bean(name = "htmlEmailTemplateEngine")
 	public TemplateEngine htmlEmailTemplateEngine() {
@@ -65,5 +52,18 @@ public class LocalisationConfig implements WebMvcConfigurer {
 		templateResolver.setCacheable(false);
 
 		return templateResolver;
+	}
+
+	@Bean
+	public LocaleChangeInterceptor localeChangeInterceptor() {
+		LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
+		return interceptor;
+	}
+
+	@Bean
+	public LocaleResolver localeResolver() {
+		SessionLocaleResolver resolver = new SessionLocaleResolver();
+		resolver.setDefaultLocale(Locale.forLanguageTag("en-UK"));
+		return resolver;
 	}
 }

@@ -28,6 +28,13 @@ public class UserPasswordChangeController {
 	@Lazy
 	private UserService userService;
 
+	@GetMapping("/user/password/change")
+	public String forgotten(final ModelMap model) {
+		model.addAttribute("strongPassword", STRONG_PASSWORD);
+		model.addAttribute("changePasswordBean", new ChangePasswordBean());
+		return "user/password/change/index";
+	}
+	
 	@PostMapping("/user/password/change")
 	public String forgotten(
 			@AuthenticationPrincipal User user,
@@ -48,12 +55,5 @@ public class UserPasswordChangeController {
 		AuthenticationHelper.loginUser(user);
 
 		return "user/password/change/confirmation";
-	}
-	
-	@GetMapping("/user/password/change")
-	public String forgotten(final ModelMap model) {
-		model.addAttribute("strongPassword", STRONG_PASSWORD);
-		model.addAttribute("changePasswordBean", new ChangePasswordBean());
-		return "user/password/change/index";
 	}
 }
