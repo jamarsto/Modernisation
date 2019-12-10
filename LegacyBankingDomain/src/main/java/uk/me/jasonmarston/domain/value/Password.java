@@ -25,7 +25,7 @@ public class Password extends AbstractValueObject {
 	public String getPassword() {
 		return password;
 	}
-	
+
 	@Override
 	public String toString() {
 		return password;

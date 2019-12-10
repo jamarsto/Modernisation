@@ -21,9 +21,10 @@ public class JwtValidation {
 				}
 			}
 		}
+
 		return result;
 	}
-	
+
 	private final FirebaseAuth auth;
 
 	private JwtValidation() throws IOException {
@@ -44,5 +45,4 @@ public class JwtValidation {
 			throw new RuntimeException("Failed to initialize Firebase");
 		}
 	}
-	
 }

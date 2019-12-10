@@ -36,8 +36,10 @@ public class VerificationToken extends AbstractAggregate {
 			if(userId == null) {
 				throw new RuntimeException("A User ID is required");
 			}
+
 			final VerificationToken verificationToken = new VerificationToken();
 			verificationToken.userId = userId;
+
 			return verificationToken;
 		}
 
@@ -46,6 +48,7 @@ public class VerificationToken extends AbstractAggregate {
 			return this;
 		}
 	}
+
 	@Service
 	public static class Factory implements VerificationTokenBuilderFactory {
 		@Override
@@ -65,13 +68,13 @@ public class VerificationToken extends AbstractAggregate {
 	
 	@NotNull
 	private Date expiryDate;
-	
+
 	private VerificationToken() {
 		super();
 		this.token = new Token(UUID.randomUUID().toString());
 		this.expiryDate = calculateExpiryDate();
 	}
-	
+
 	private Date calculateExpiryDate() {
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(new Timestamp(cal.getTime().getTime()));

@@ -22,6 +22,7 @@ public class StrongPasswordImpl implements ConstraintValidator<StrongPassword, S
 		}
 
 		final Pattern pattern = Pattern.compile(STRONG_PASSWORD);
+
 		final Matcher matcher = pattern.matcher(value);
 		if(matcher.matches()) {
 			return true;

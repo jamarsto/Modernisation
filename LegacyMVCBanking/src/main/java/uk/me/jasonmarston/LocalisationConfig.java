@@ -41,7 +41,7 @@ public class LocalisationConfig implements WebMvcConfigurer {
 	}
 
 	private ITemplateResolver htmlEmailTemplateResolver() {
-		ClassLoaderTemplateResolver templateResolver = 
+		final ClassLoaderTemplateResolver templateResolver = 
 				new ClassLoaderTemplateResolver();
 
 		templateResolver.setPrefix("/templates/");
@@ -56,14 +56,18 @@ public class LocalisationConfig implements WebMvcConfigurer {
 
 	@Bean
 	public LocaleChangeInterceptor localeChangeInterceptor() {
-		LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
+		final LocaleChangeInterceptor interceptor = 
+				new LocaleChangeInterceptor();
+
 		return interceptor;
 	}
 
 	@Bean
 	public LocaleResolver localeResolver() {
-		SessionLocaleResolver resolver = new SessionLocaleResolver();
+		final SessionLocaleResolver resolver = 
+				new SessionLocaleResolver();
 		resolver.setDefaultLocale(Locale.forLanguageTag("en-UK"));
+
 		return resolver;
 	}
 }

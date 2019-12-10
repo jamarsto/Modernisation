@@ -15,12 +15,13 @@ public class FieldsValueMatchValidator implements ConstraintValidator<FieldsValu
 		this.field = constraintAnnotation.field();
 		this.fieldMatch = constraintAnnotation.fieldMatch();
 	}
- 
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean isValid(Object value, ConstraintValidatorContext context) {
 		final Object fieldValue = new BeanWrapperImpl(value)
 				.getPropertyValue(field);
+
 		final Object fieldMatchValue = new BeanWrapperImpl(value)
 				.getPropertyValue(fieldMatch);
 
@@ -28,21 +29,25 @@ public class FieldsValueMatchValidator implements ConstraintValidator<FieldsValu
 			if(fieldValue.equals(fieldMatchValue)) {
 				return true;
 			}
+
 			context.disableDefaultConstraintViolation();
 			context.buildConstraintViolationWithTemplate(
 					context.getDefaultConstraintMessageTemplate())
 				.addNode(fieldMatch)
 				.addConstraintViolation();
+
 			return false;
     	} else {
     		if(fieldMatchValue == null) {
     			return true;
     		}
-			context.disableDefaultConstraintViolation();
+
+    		context.disableDefaultConstraintViolation();
 			context.buildConstraintViolationWithTemplate(
 					context.getDefaultConstraintMessageTemplate())
 				.addNode(fieldMatch)
 				.addConstraintViolation();
+
 			return false;
     	}
     }

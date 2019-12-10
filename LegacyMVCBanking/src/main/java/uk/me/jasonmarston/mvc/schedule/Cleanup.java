@@ -32,7 +32,7 @@ public class Cleanup {
 	
 	@Autowired
 	private UserService userService;
-	
+
 	@Scheduled(initialDelay = THIRTY_SECONDS, fixedDelay = ONE_MINUTE)
 	public void cleanupResetTokens() {
 		final List<ResetToken> list = resetTokenService.findExpiredTokens();
@@ -40,7 +40,7 @@ public class Cleanup {
 			resetTokenService.delete(token);
 		}
 	}
-	
+
 	@Scheduled(fixedDelay = ONE_MINUTE)
 	public void cleanupVerificationTokens() {
 		final List<VerificationToken> list = verificationTokenService

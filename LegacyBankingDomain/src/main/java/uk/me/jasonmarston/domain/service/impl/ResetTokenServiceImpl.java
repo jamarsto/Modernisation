@@ -34,11 +34,11 @@ public class ResetTokenServiceImpl implements ResetTokenService {
 	@Autowired
 	@Lazy
 	private ResetTokenBuilderFactory resetTokenBuilderFactory;
-	
+
 	@Autowired
 	@Lazy
 	private ResetTokenRepository resetTokenRepository;
-	
+
 	@Autowired
 	@Lazy
 	private UserRepository userRepository;
@@ -59,6 +59,7 @@ public class ResetTokenServiceImpl implements ResetTokenService {
 
 			return resetTokenRepository.save(token);
 		}
+
 		return null;
 	}
 
@@ -75,6 +76,7 @@ public class ResetTokenServiceImpl implements ResetTokenService {
 		if(optional.isPresent()) {
 			return optional.get();
 		}
+
 		return null;
 	}
 

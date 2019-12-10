@@ -30,7 +30,7 @@ public class PasswordResetListener implements
 	@Autowired
 	@Lazy
 	private ResetTokenService resetTokenService;
-	
+
 	@Autowired
 	@Lazy
 	private JavaMailSender sender;
@@ -39,17 +39,17 @@ public class PasswordResetListener implements
 	@Autowired
 	@Qualifier("htmlEmailTemplateEngine")
 	private TemplateEngine templateEngine;
-	
+
 	@Autowired
 	@Lazy
 	private MessageSource messageSource;
-	
+
 	@Value("${SPRING_MAIL_FROM}")
     private String from;
-	
+
 	@Value("${SPRING_HOST_NAME}")
 	private String hostName;
-	
+
 	@Async
 	@Override
 	public void onApplicationEvent(final OnPasswordResetEvent event) {
@@ -61,6 +61,7 @@ public class PasswordResetListener implements
 					+ " does not match with a user.");
 			return;
 		}
+
 		final MimeMessage message = sender.createMimeMessage();
 		final MimeMessageHelper helper = new MimeMessageHelper(message);
 		try {

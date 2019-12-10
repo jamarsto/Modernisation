@@ -17,7 +17,7 @@ public class ResetTokenSpecification {
 	public static class ResetTokenIsExpired 
 			implements Specification<ResetToken> {
 		private static final long serialVersionUID = 1L;
-		
+
 		@Override
 		public Predicate toPredicate(
 				final Root<ResetToken> root, 

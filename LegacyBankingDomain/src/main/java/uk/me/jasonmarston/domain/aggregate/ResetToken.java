@@ -37,8 +37,10 @@ public class ResetToken extends AbstractAggregate {
 			if(userId == null) {
 				throw new InvalidParameterException("A User ID is required");
 			}
+
 			final ResetToken resetToken = new ResetToken();
 			resetToken.userId = userId;
+
 			return resetToken;
 		}
 
@@ -67,7 +69,7 @@ public class ResetToken extends AbstractAggregate {
 
 	@NotNull
 	private Date expiryDate;
-	
+
 	private ResetToken() {
 		super();
 		this.token = new Token(UUID.randomUUID().toString());
@@ -78,6 +80,7 @@ public class ResetToken extends AbstractAggregate {
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(new Timestamp(cal.getTime().getTime()));
 		cal.add(Calendar.MINUTE, 60);
+
 		return new Date(cal.getTime().getTime());
     }
 

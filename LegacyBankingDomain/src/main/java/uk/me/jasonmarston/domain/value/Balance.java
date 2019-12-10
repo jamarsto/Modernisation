@@ -29,7 +29,7 @@ public class Balance extends AbstractValueObject {
 		this();
 		this.balance = balance;
 	}
-	
+
 	public Balance(final String amountString) {
 		this.balance = new BigDecimal(amountString);
 	}
@@ -45,7 +45,7 @@ public class Balance extends AbstractValueObject {
 	public Balance subtract(final Amount amount) {
 		return new Balance(balance.subtract(amount.getAmount()));
 	}
-	
+
 	@Override
 	public String toString() {
 		return balance.toString();

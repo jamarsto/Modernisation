@@ -21,7 +21,7 @@ public class Amount extends AbstractValueObject {
 	@Digits(integer = 7, fraction = 2)
 	@Column(nullable = false, precision = 7, scale = 2)
 	private BigDecimal amount;
-	
+
 	private Amount() {
 	}
 
@@ -33,7 +33,7 @@ public class Amount extends AbstractValueObject {
 	public BigDecimal getAmount() {
 		return amount;
 	}
-	
+
 	@Override
 	public String toString() {
 		return amount.toString();

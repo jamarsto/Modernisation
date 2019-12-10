@@ -17,7 +17,7 @@ public class TransactionIdentifierDetails extends AbstractValueObject implements
 
 		private Builder() {
 		}
-		
+
 		@Override
 		public TransactionIdentifierDetails build() {
 			if(accountId == null || transactionId == null) {
@@ -28,10 +28,10 @@ public class TransactionIdentifierDetails extends AbstractValueObject implements
 					new TransactionIdentifierDetails();
 			transactionIdentifierDetails.accountId = accountId;
 			transactionIdentifierDetails.transactionId = transactionId;
-			
+
 			return transactionIdentifierDetails;
 		}
-		
+
 		public Builder forAccountId(final EntityId accountId) {
 			this.accountId = accountId;
 			return this;
@@ -42,19 +42,19 @@ public class TransactionIdentifierDetails extends AbstractValueObject implements
 			return this;
 		}
 	}
-	
+
 	public static class Factory implements TransactionIdentifierDetailsBuilderFactory {
 		@Override
 		public Builder create() {
 			return new Builder();
 		}
 	}
-	
+
 	private static final long serialVersionUID = 1L;
 
 	@NotNull(message = "Account Id is required")
 	private EntityId accountId;
-	
+
 	@NotNull(message = "Transaction Id is required")
 	private EntityId transactionId;
 

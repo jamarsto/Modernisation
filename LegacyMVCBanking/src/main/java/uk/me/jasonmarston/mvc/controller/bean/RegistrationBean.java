@@ -20,7 +20,7 @@ public class RegistrationBean extends AbstractBean {
 	@NotBlank(message = "Password is required")
 	@StrongPassword(message = "Invalid Password!!!")
 	private String password;
-	
+
 	@NotBlank(message = "Password confirmation is required")
 	private String passwordConfirmation;
 

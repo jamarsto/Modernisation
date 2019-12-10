@@ -34,15 +34,14 @@ import uk.me.jasonmarston.mvc.event.OnPasswordResetEvent;
 @Validated
 @SessionAttributes("token")
 public class UserPasswordResetController {
-	
 	@Autowired
 	@Lazy
 	private ResetTokenService resetTokenService;
-	
+
 	@Autowired
 	@Lazy
 	private UserService userService;
-	
+
 	@Autowired
 	@Lazy
 	private ApplicationEventPublisher applicationEventPublisher;
@@ -67,6 +66,7 @@ public class UserPasswordResetController {
 	public String forgotten(final ModelMap model) {
 		model.addAttribute("forgottenPasswordBean", 
 				new ForgottenPasswordBean());
+
 		return "user/password/reset/index";
 	}
 

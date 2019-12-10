@@ -4,7 +4,6 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -37,13 +36,13 @@ public class User extends AbstractAggregate implements UserDetails {
 	public static class Builder implements IBuilder<User> {
 		private EmailAddress email;
 		private Password password;
-		private EntityId uid;
+		private EntityId id;
 
 		private Builder() {
 		}
 
-		public Builder andUid(EntityId uid) {
-			this.uid = uid;
+		public Builder andId(EntityId id) {
+			this.id = id;
 			return this;
 		}
 
@@ -52,12 +51,14 @@ public class User extends AbstractAggregate implements UserDetails {
 			if(email == null || password == null) {
 				throw new InvalidParameterException("Invalid registration details");
 			}
+
 			final User user = new User();
 			user.email = email;
 			user.password = new Password(user.passwordEncoder.encode(password.getPassword()));
-			if(uid == null) {
-				user.uid = user.uid;
+			if(id != null) {
+				user.setId(id);
 			}
+
 			return user;
 		}
 
@@ -86,9 +87,6 @@ public class User extends AbstractAggregate implements UserDetails {
 	@Lazy
 	@Transient
 	private PasswordEncoder passwordEncoder;
-
-	@AttributeOverride(name="id", column=@Column(name="uid", unique = true))
-	private EntityId uid;
 
 	@NotNull
 	@Column(unique = true)
@@ -153,7 +151,7 @@ public class User extends AbstractAggregate implements UserDetails {
 	}
 
 	public String getUid() {
-		return uid.toString();
+		return getId().toString();
 	}
 
 	@Override

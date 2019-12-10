@@ -27,7 +27,7 @@ public class Token extends AbstractValueObject {
 	public void setToken(String token) {
 		this.token = token;
 	}
-	
+
 	@Override
 	public String toString() {
 		return token;

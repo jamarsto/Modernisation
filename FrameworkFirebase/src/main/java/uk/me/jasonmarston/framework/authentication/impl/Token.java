@@ -6,13 +6,19 @@ import com.google.firebase.auth.FirebaseToken;
 
 public class Token {
 	private FirebaseToken token;
-	
+
 	Token(FirebaseToken token) {
 		this.token = token;
 	}
 
 	public boolean equals(Object obj) {
-		return token.equals(obj);
+		if(obj instanceof Token) {
+			return token.equals(((Token)obj).token);
+		}
+		if(obj instanceof FirebaseToken) {
+			return token.equals(obj);
+		}
+		return false;
 	}
 
 	public Map<String, Object> getClaims() {

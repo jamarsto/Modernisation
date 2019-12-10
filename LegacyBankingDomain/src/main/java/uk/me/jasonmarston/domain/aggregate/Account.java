@@ -37,7 +37,7 @@ import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 public class Account extends AbstractAggregate {
 	public static class Builder implements IBuilder<Account> {
 		private Balance balance;
-		
+
 		private Builder() {
 		}
 
@@ -46,11 +46,13 @@ public class Account extends AbstractAggregate {
 			if(balance == null) {
 				throw new InvalidParameterException("An opening balance is required");
 			}
+
 			final Account account = new Account();
 			account.balance = balance;
+
 			return account;
 		}
-		
+
 		public Builder withOpeningBalance(Balance balance) {
 			this.balance = balance;
 			return this;
@@ -66,12 +68,12 @@ public class Account extends AbstractAggregate {
 	}
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Autowired
 	@Lazy
 	@Transient
 	private TransactionBuilderFactory transactionBuilderFactory;
-	
+
 	@JsonUnwrapped
 	@NotNull
 	private Balance balance;
@@ -81,15 +83,15 @@ public class Account extends AbstractAggregate {
 	@NotNull
 	private List<@NotNull Transaction> transactions = 
 			new ArrayList<Transaction>();
-	
+
 	private Account() {
 		super();
 	}
-	
+
 	public Transaction depositFunds(final Amount amount) {
 		return depositFunds(amount, null);
 	}
-	
+
 	public Transaction depositFunds(final Amount amount, 
 			final EntityId referenceAccountId) {
 		balance = balance.add(amount);
@@ -101,7 +103,7 @@ public class Account extends AbstractAggregate {
 				.forAmount(amount)
 				.withReferenceAccountId(referenceAccountId)
 				.build();
-				
+
 		transactions.add(transaction);
 
 		return transaction;

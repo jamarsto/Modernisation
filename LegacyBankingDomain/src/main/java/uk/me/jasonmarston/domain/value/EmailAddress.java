@@ -13,7 +13,7 @@ public class EmailAddress extends AbstractValueObject {
 	@NotNull(message = "Email is required")
 	@Email(message = "Must be a valid email address")
 	private String email;
-	
+
 	private EmailAddress() {
 	}
 
@@ -25,7 +25,7 @@ public class EmailAddress extends AbstractValueObject {
 	public String getEmail() {
 		return email;
 	}
-	
+
 	@Override
 	public String toString() {
 		return email;

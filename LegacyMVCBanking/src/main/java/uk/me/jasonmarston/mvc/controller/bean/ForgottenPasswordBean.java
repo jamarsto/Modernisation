@@ -7,10 +7,10 @@ public class ForgottenPasswordBean extends AbstractBean {
 	@NotBlank(message = "Email address is required")
 	@Email(message = "Must be a valid email address")
 	private String email;
-	
+
 	public ForgottenPasswordBean() {
 	}
-	
+
 	public ForgottenPasswordBean(final String email) {
 		this.email = email;
 	}

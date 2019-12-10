@@ -18,10 +18,12 @@ public @interface FieldsValueMatch {
 	@interface List {
 		FieldsValueMatch[] value();
 	}
+
 	String field();
 	String fieldMatch();
-	Class<?>[] groups() default {};
+
 	String message() default "Fields values don't match!";
 
+	Class<?>[] groups() default {};
 	Class<?>[] payload() default {};
 }

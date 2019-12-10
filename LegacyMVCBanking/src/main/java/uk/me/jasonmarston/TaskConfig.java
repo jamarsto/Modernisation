@@ -14,15 +14,17 @@ public class TaskConfig {
 		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setThreadNamePrefix("executor-");
 		executor.setWaitForTasksToCompleteOnShutdown(true);
+
 		return executor;
 	}
-	
+
 	@Bean
 	public TaskScheduler taskScheduler() {
 		final ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
 		scheduler.setPoolSize(20);
 		scheduler.setThreadNamePrefix("scheduler-");
 		scheduler.setWaitForTasksToCompleteOnShutdown(true);
+
 		return scheduler;
 	}
 }

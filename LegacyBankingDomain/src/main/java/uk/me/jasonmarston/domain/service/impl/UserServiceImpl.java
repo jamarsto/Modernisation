@@ -70,6 +70,7 @@ public class UserServiceImpl implements UserService {
 		if(optional.isPresent()) {
 			return optional.get();
 		}
+
 		return null;
 	}
 

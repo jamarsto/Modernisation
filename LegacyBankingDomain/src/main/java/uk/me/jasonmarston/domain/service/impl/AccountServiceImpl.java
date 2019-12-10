@@ -57,7 +57,9 @@ public class AccountServiceImpl implements AccountService {
 			final Account account = optional.get();
 			final Transaction transaction = account
 					.depositFunds(transactionDetails.getAmount());
+
 			accountRepository.save(account);
+
 			return transaction;
 		}
 

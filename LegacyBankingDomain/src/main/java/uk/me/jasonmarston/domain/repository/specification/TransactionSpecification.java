@@ -44,7 +44,7 @@ public class TransactionSpecification {
 		private EntityId id;
 		private EntityId accountId;
 		private TransactionType transactionType;
-		
+
 		public TransactionHasIdAccountIdAndType(
 				final EntityId id,
 				final EntityId accountId,
@@ -53,7 +53,7 @@ public class TransactionSpecification {
 			this.accountId = accountId;
 			this.transactionType = transactionType;
 		}
-		
+
 		private Predicate accountId(final Root<Transaction> root,
 				final CriteriaBuilder builder) {
 			return builder.equal(root.get("account").get("id"),
@@ -64,7 +64,7 @@ public class TransactionSpecification {
 				final CriteriaBuilder builder) {
 			return builder.equal(root.get("id"), this.id);
 		}
-		
+
 		@Override
 		public Predicate toPredicate(
 				final Root<Transaction> root, 
@@ -76,13 +76,13 @@ public class TransactionSpecification {
 						accountId(root, builder),
 						transactionType(root, builder)));
 		}
-		
+
 		private Predicate transactionType(final Root<Transaction> root,
 				final CriteriaBuilder builder) {
 			return builder.equal(root.get("type"), transactionType);
 		}
 	}
-	
+
 	public static class TransactionHasIdAndAccountId 
 			implements Specification<Transaction> {
 
@@ -96,7 +96,7 @@ public class TransactionSpecification {
 			this.id = id;
 			this.accountId = accountId;
 		}
-		
+
 		private Predicate accountId(final Root<Transaction> root,
 				final CriteriaBuilder builder) {
 			return builder.equal(root.get("id"), this.accountId);
@@ -106,7 +106,7 @@ public class TransactionSpecification {
 				final CriteriaBuilder builder) {
 			return builder.equal(root.get("id"), this.id);
 		}
-		
+
 		@Override
 		public Predicate toPredicate(
 				final Root<Transaction> root, 

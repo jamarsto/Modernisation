@@ -32,9 +32,10 @@ public class UserPasswordChangeController {
 	public String forgotten(final ModelMap model) {
 		model.addAttribute("strongPassword", STRONG_PASSWORD);
 		model.addAttribute("changePasswordBean", new ChangePasswordBean());
+
 		return "user/password/change/index";
 	}
-	
+
 	@PostMapping("/user/password/change")
 	public String forgotten(
 			@AuthenticationPrincipal User user,
@@ -43,7 +44,6 @@ public class UserPasswordChangeController {
 							changePasswordBean,
 			final WebRequest request,
 			final ModelMap model) {
-		
 		if(!userService.isCurrentPassword(user, 
 				new Password(changePasswordBean.getCurrentPassword()))) {
 			return "redirect:/user/password/change?incorrect";
@@ -51,7 +51,7 @@ public class UserPasswordChangeController {
 
 		user = userService.changePassword(user,
 				new Password(changePasswordBean.getPassword()));
-		
+
 		AuthenticationHelper.loginUser(user);
 
 		return "user/password/change/confirmation";

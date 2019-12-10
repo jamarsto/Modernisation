@@ -37,15 +37,15 @@ public class UserRegistrationController {
 	@Autowired
 	@Lazy
 	private VerificationTokenService verificationTokenService;
-	
+
 	@Autowired
 	@Lazy
 	private UserService userService;
-	
+
 	@Autowired
 	@Lazy
 	private ApplicationEventPublisher applicationEventPublisher;
-	
+
 	@Autowired
 	@Lazy
 	private RegistrationDetailsBuilderFactory 
@@ -55,6 +55,7 @@ public class UserRegistrationController {
 	public String registration(final ModelMap model) {
 		model.addAttribute("strongPassword", STRONG_PASSWORD);
 		model.addAttribute("registrationBean", new RegistrationBean());
+
 		return "user/registration/index";
 	}
 
@@ -63,7 +64,6 @@ public class UserRegistrationController {
 			@ModelAttribute("registrationBean") 
 					@NotNull @Valid final RegistrationBean registrationBean,
 			final WebRequest request) {
-
 		try {
 			final RegistrationDetails.Builder builder = 
 					registrationDetailsBuilderfactory.create();
@@ -122,7 +122,7 @@ public class UserRegistrationController {
 		}
 
 		AuthenticationHelper.loginUser(user);
-	    
+
 		return "user/registration/verification/confirmation";
 	}
 }

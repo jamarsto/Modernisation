@@ -18,10 +18,10 @@ public class TransferDetails extends AbstractValueObject implements DetailsObjec
 		private EntityId fromAccountId;
 		private EntityId toAccountId;
 		private Amount amount;
-		
+
 		private Builder() {
 		}
-		
+
 		@Override
 		public TransferDetails build() {
 			if(fromAccountId == null || toAccountId == null || amount == null) {
@@ -32,15 +32,15 @@ public class TransferDetails extends AbstractValueObject implements DetailsObjec
 			transferDetails.fromAccountId = fromAccountId;
 			transferDetails.toAccountId = toAccountId;
 			transferDetails.amount = amount;
-			
+
 			return transferDetails;
 		}
-		
+
 		public Builder forAmount(final Amount amount) {
 			this.amount = amount;
 			return this;
 		}
-		
+
 		public Builder fromAccountId(final EntityId fromAccountId) {
 			this.fromAccountId = fromAccountId;
 			return this;
@@ -58,7 +58,6 @@ public class TransferDetails extends AbstractValueObject implements DetailsObjec
 		public Builder create() {
 			return new Builder();
 		}
-		
 	}
 
 	private static final long serialVersionUID = 1L;
@@ -68,7 +67,7 @@ public class TransferDetails extends AbstractValueObject implements DetailsObjec
 
 	@NotNull(message = "To Account Id is required")
 	private EntityId toAccountId;
-	
+
 	@NotNull(message = "Amount is required")
 	private Amount amount;
 

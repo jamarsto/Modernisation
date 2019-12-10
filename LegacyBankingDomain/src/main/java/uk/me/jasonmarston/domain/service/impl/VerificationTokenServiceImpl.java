@@ -40,7 +40,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
 	public VerificationToken create(@NotNull @Valid final EntityId id) {
 		final VerificationToken.Builder builder = 
 				verificationTokenBuilderFactory.create();
-		
+
 		final VerificationToken token = builder
 				.forUserId(id)
 				.build();
@@ -62,6 +62,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
 		if(optional.isPresent()) {
 			return optional.get();
 		}
+
 		return null;
 	}
 

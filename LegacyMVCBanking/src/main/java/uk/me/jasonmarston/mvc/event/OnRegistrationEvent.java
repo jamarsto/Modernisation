@@ -22,6 +22,7 @@ public class OnRegistrationEvent extends ApplicationEvent {
 		if(user == null || contextPath == null || locale == null) {
 			throw new InvalidParameterException("Invalid OnRegistrationEvent");
 		}
+
 		this.user = user;
 		this.contextPath = contextPath;
 		this.locale = locale;

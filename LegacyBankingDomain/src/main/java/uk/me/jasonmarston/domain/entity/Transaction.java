@@ -35,10 +35,10 @@ public class Transaction extends AbstractEntity {
 		private Account account;
 		private Amount amount;
 		private EntityId referenceAccountId;
-		
+
 		private Builder() {
 		}
-		
+
 		public Builder againstAccount(Account account) {
 			this.account = account;
 			return this;
@@ -50,32 +50,33 @@ public class Transaction extends AbstractEntity {
 				throw new RuntimeException("Invalid transaction.");
 			}
 
-			final Transaction transaction = new Transaction(
-					type,
-					account,
-					amount,
-					referenceAccountId);
+			final Transaction transaction = new Transaction();
+			transaction.type = type;
+			transaction.account = account;
+			transaction.ownerAccountId = account.getId();
+			transaction.amount = amount;
+			transaction.referenceAccountId = referenceAccountId;
 
 			return transaction;
 		}
-		
+
 		public Builder forAmount(Amount amount) {
 			this.amount = amount;
 			return this;
 		}
-		
+
 		public Builder ofType(TransactionType type) {
 			this.type = type;
 			return this;
 		}
-		
+
 		public Builder withReferenceAccountId(
 				final EntityId referenceAccountId) {
 			this.referenceAccountId = referenceAccountId;
 			return this;
 		}
 	}
-	
+
 	@Service
 	public static class FactoryImpl implements TransactionBuilderFactory {
 		@Override
@@ -101,29 +102,17 @@ public class Transaction extends AbstractEntity {
 	@Transient
 	@NotNull
 	private EntityId ownerAccountId;
-	
+
 	@JsonUnwrapped
 	@NotNull
 	@Positive
 	private Amount amount;
-	
+
 	@JsonUnwrapped
 	@AttributeOverride(name="id", column=@Column(name="referenceAccountId"))
 	private EntityId referenceAccountId;
 
 	private Transaction() {
-	}
-
-	private Transaction(TransactionType type, 
-			Account account, 
-			Amount amount, 
-			EntityId referenceAccountId) {
-		this();
-		this.type = type;
-		this.account = account;
-		this.ownerAccountId = account.getId();
-		this.amount = amount;
-		this.referenceAccountId = referenceAccountId;
 	}
 
 	public Account getAccount() {
@@ -133,7 +122,7 @@ public class Transaction extends AbstractEntity {
 	public Amount getAmount() {
 		return amount;
 	}
-	
+
 	public EntityId getReferenceAccountId() {
 		return referenceAccountId;
 	}

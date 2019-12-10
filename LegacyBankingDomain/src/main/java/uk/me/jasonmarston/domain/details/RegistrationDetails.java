@@ -41,7 +41,7 @@ public class RegistrationDetails extends AbstractValueObject implements DetailsO
 			if(!password.equals(passwordConfirmation)) {
 				throw new InvalidParameterException("Passwords must match");
 			}
-			
+
 			final RegistrationDetails registrationDetails = new RegistrationDetails();
 			registrationDetails.email = email;
 			registrationDetails.password = password;
@@ -60,7 +60,7 @@ public class RegistrationDetails extends AbstractValueObject implements DetailsO
 			return this;
 		}
 	}
-	
+
 	@Service
 	public static class Factory implements RegistrationDetailsBuilderFactory {
 		@Override
@@ -76,10 +76,10 @@ public class RegistrationDetails extends AbstractValueObject implements DetailsO
 
 	@NotNull(message = "Password is required")
 	private Password password;
-	
+
 	@NotNull(message = "Password confirmation is required")
 	private Password passwordConfirmation;
-	
+
 	private RegistrationDetails() {
 	}
 

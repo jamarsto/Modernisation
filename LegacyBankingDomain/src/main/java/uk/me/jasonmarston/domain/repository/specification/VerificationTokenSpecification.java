@@ -17,7 +17,7 @@ public class VerificationTokenSpecification {
 	public static class VerificationTokenIsExpired 
 			implements Specification<VerificationToken> {
 		private static final long serialVersionUID = 1L;
-		
+
 		@Override
 		public Predicate toPredicate(
 				final Root<VerificationToken> root, 

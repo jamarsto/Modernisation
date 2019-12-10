@@ -31,7 +31,7 @@ public class RegistrationListener implements
 	@Autowired
 	@Lazy
 	private VerificationTokenService verificationTokenService;
-	
+
 	@Autowired
 	@Lazy
 	private JavaMailSender sender;
@@ -40,23 +40,24 @@ public class RegistrationListener implements
 	@Autowired
 	@Qualifier("htmlEmailTemplateEngine")
 	private TemplateEngine templateEngine;
-	
+
 	@Autowired
 	@Lazy
 	private MessageSource messageSource;
-	
+
 	@Value("${SPRING_MAIL_FROM}")
     private String from;
-	
+
 	@Value("${SPRING_HOST_NAME}")
 	private String hostName;
-	
+
 	@Async
 	@Override
 	public void onApplicationEvent(final OnRegistrationEvent event) {
 		final User user = event.getUser();
 		final VerificationToken token = verificationTokenService
 				.create(user.getId());
+
 		final MimeMessage message = sender.createMimeMessage();
 		final MimeMessageHelper helper = new MimeMessageHelper(message);
 		try {
@@ -74,7 +75,7 @@ public class RegistrationListener implements
 			context.setVariable("contextRoot", event.getContextPath());
 			context.setVariable("token", token.getToken().toString());
 			context.setVariable("locale", event.getLocale().toString());
-			
+
 			final String text = templateEngine.process(
 					"emails/register",
 					context);

@@ -13,7 +13,8 @@ import uk.me.jasonmarston.domain.validator.impl.StrongPasswordImpl;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = StrongPasswordImpl.class)
 public @interface StrongPassword {
+	String message() default "Weak Password";
+
 	Class<?>[] groups() default {};
-	String message() default "Failed regex";
 	Class<?>[] payload() default {};
 }

@@ -22,6 +22,7 @@ public class OnPasswordResetEvent extends ApplicationEvent {
 		if(email == null || contextPath == null || locale == null) {
 			throw new InvalidParameterException("Invalid OnPasswordResetEvent");
 		}
+
 		this.email = email;
 		this.contextPath = contextPath;
 		this.locale = locale;
@@ -34,7 +35,7 @@ public class OnPasswordResetEvent extends ApplicationEvent {
 	public EmailAddress getEmail() {
 		return email;
 	}
-	
+
 	public Locale getLocale() {
 		return locale;
 	}

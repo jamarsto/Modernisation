@@ -19,7 +19,7 @@ public abstract class AbstractEntity extends AbstractDomainObject
 	@JsonUnwrapped
 	@NotNull
 	private EntityId id;
-	
+
 	protected AbstractEntity() {
 		id = new EntityId();
 	}
@@ -28,7 +28,7 @@ public abstract class AbstractEntity extends AbstractDomainObject
 	public EntityId getId() {
 		return id;
 	}
-	
+
 	protected void setId(EntityId id) {
 		this.id = id;
 	}

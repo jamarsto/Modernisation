@@ -20,7 +20,7 @@ public class TransactionDetails extends AbstractValueObject implements DetailsOb
 
 		private Builder() {
 		}
-		
+
 		@Override
 		public TransactionDetails build() {
 			if(accountId == null || amount == null) {
@@ -31,10 +31,10 @@ public class TransactionDetails extends AbstractValueObject implements DetailsOb
 					new TransactionDetails();
 			transactionDetails.accountId = accountId;
 			transactionDetails.amount = amount;
-			
+
 			return transactionDetails;
 		}
-		
+
 		public Builder forAccountId(final EntityId accountId) {
 			this.accountId = accountId;
 			return this;
@@ -53,15 +53,15 @@ public class TransactionDetails extends AbstractValueObject implements DetailsOb
 			return new Builder();
 		}
 	}
-	
+
 	private static final long serialVersionUID = 1L;
 
 	@NotNull(message = "Account Id is required")
 	private EntityId accountId;
-	
+
 	@NotNull(message = "Amount is required")
 	private Amount amount;
-	
+
 	private TransactionDetails() {
 	}
 
