@@ -35,7 +35,6 @@ import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 @Table(name = "USERS")
 public class User extends AbstractAggregate implements UserDetails {
 	public static class Builder implements IBuilder<User> {
-		
 		private EmailAddress email;
 		private Password password;
 		private EntityId uid;
@@ -56,18 +55,17 @@ public class User extends AbstractAggregate implements UserDetails {
 			final User user = new User();
 			user.email = email;
 			user.password = new Password(user.passwordEncoder.encode(password.getPassword()));
-			user.username = user.email.getEmail();
 			if(uid == null) {
 				user.uid = user.uid;
 			}
 			return user;
 		}
-		
+
 		public Builder forEmail(EmailAddress email) {
 			this.email = email;
 			return this;
 		}
-		
+
 		public Builder withPassword(Password password) {
 			this.password = password;
 			return this;
@@ -81,9 +79,9 @@ public class User extends AbstractAggregate implements UserDetails {
 			return new Builder();
 		}
 	}
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	@Autowired
 	@Lazy
 	@Transient
@@ -91,27 +89,25 @@ public class User extends AbstractAggregate implements UserDetails {
 
 	@AttributeOverride(name="id", column=@Column(name="uid", unique = true))
 	private EntityId uid;
-	
+
 	@NotNull
 	@Column(unique = true)
 	private EmailAddress email;
-
-	private String username;
 
 	@Transient
 	private String issuer = null;
 
 	private String picture = null;
-	
+
 	@Transient
 	private String credentials = null;
 
 	private Password password;
-	
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Collection<GrantedAuthority> authorities = 
 			new ArrayList<GrantedAuthority>();
-	
+
 	private boolean accountNonExpired = true;
 	private boolean accountNonLocked = true;
 	private boolean credentialsNonExpired = true;
@@ -151,7 +147,7 @@ public class User extends AbstractAggregate implements UserDetails {
 	public String getPassword() {
 		return password.getPassword();
 	}
-	
+
 	public String getPicture() {
 		return picture;
 	}
@@ -162,7 +158,7 @@ public class User extends AbstractAggregate implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return username;
+		return password.toString();
 	}
 
 	@Override
@@ -174,7 +170,7 @@ public class User extends AbstractAggregate implements UserDetails {
 	public boolean isAccountNonLocked() {
 		return accountNonLocked;
 	}
-	
+
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return credentialsNonExpired;
@@ -185,7 +181,7 @@ public class User extends AbstractAggregate implements UserDetails {
 				password.getPassword(),
 				this.password.getPassword());
 	}
-	
+
 	@Override
 	public boolean isEnabled() {
 		return enabled;
