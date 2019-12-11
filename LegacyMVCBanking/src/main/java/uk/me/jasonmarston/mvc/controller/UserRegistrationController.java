@@ -2,8 +2,11 @@ package uk.me.jasonmarston.mvc.controller;
 
 import static uk.me.jasonmarston.domain.Constants.STRONG_PASSWORD;
 
+import java.util.Locale;
+
 import javax.persistence.EntityExistsException;
 import javax.persistence.OptimisticLockException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -17,7 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.LocaleResolver;
 
 import uk.me.jasonmarston.domain.aggregate.User;
 import uk.me.jasonmarston.domain.aggregate.VerificationToken;
@@ -51,6 +54,10 @@ public class UserRegistrationController {
 	private RegistrationDetailsBuilderFactory 
 			registrationDetailsBuilderfactory;
 
+	@Autowired
+	@Lazy
+	private LocaleResolver localeResolver;
+
 	@GetMapping("/user/registration")
 	public String registration(final ModelMap model) {
 		model.addAttribute("strongPassword", STRONG_PASSWORD);
@@ -63,10 +70,11 @@ public class UserRegistrationController {
 	public String registration(
 			@ModelAttribute("registrationBean") 
 					@NotNull @Valid final RegistrationBean registrationBean,
-			final WebRequest request) {
+					final HttpServletRequest request) {
 		try {
 			final RegistrationDetails.Builder builder = 
 					registrationDetailsBuilderfactory.create();
+			final Locale locale = localeResolver.resolveLocale(request);
 
 			final RegistrationDetails registrationDetails = builder
 					.forEmail(new EmailAddress(registrationBean.getEmail()))
@@ -76,6 +84,7 @@ public class UserRegistrationController {
 									registrationBean.getPasswordConfirmation()
 							)
 					)
+					.inLocale(locale)
 					.build();
 
 			final User user = userService.register(registrationDetails);
@@ -84,7 +93,7 @@ public class UserRegistrationController {
 					.publishEvent(new OnRegistrationEvent(
 							user, 
 							request.getContextPath(),
-							request.getLocale()));
+							locale));
 		}
 		catch(final EntityExistsException e) {
 			return "redirect:/user/registration?registration";
@@ -123,6 +132,11 @@ public class UserRegistrationController {
 
 		AuthenticationHelper.loginUser(user);
 
+		return "redirect:/user/registration/verification/confirmation";
+	}
+
+	@GetMapping("/user/registration/verification/confirmation")
+	public String verificationConfirmation() {
 		return "user/registration/verification/confirmation";
 	}
 }

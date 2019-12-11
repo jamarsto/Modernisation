@@ -1,6 +1,7 @@
 package uk.me.jasonmarston.domain.details;
 
 import java.security.InvalidParameterException;
+import java.util.Locale;
 
 import javax.validation.constraints.NotNull;
 
@@ -24,6 +25,7 @@ public class RegistrationDetails extends AbstractValueObject implements DetailsO
 		private EmailAddress email;
 		private Password password;
 		private Password passwordConfirmation;
+		private Locale locale;
 
 		private Builder() {
 		}
@@ -46,12 +48,18 @@ public class RegistrationDetails extends AbstractValueObject implements DetailsO
 			registrationDetails.email = email;
 			registrationDetails.password = password;
 			registrationDetails.passwordConfirmation = passwordConfirmation;
+			registrationDetails.locale = locale;
 
 			return registrationDetails;
 		}
 
 		public Builder forEmail(final EmailAddress email) {
 			this.email = email;
+			return this;
+		}
+
+		public Builder inLocale(final Locale locale) {
+			this.locale = locale;
 			return this;
 		}
 
@@ -80,11 +88,18 @@ public class RegistrationDetails extends AbstractValueObject implements DetailsO
 	@NotNull(message = "Password confirmation is required")
 	private Password passwordConfirmation;
 
+	@NotNull(message = "Locale is required")
+	private Locale locale;
+
 	private RegistrationDetails() {
 	}
 
 	public EmailAddress getEmail() {
 		return email;
+	}
+
+	public Locale getLocale() {
+		return locale;
 	}
 
 	public Password getPassword() {

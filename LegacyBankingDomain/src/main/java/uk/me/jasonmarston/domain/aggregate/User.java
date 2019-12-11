@@ -2,6 +2,7 @@ package uk.me.jasonmarston.domain.aggregate;
 
 import java.security.InvalidParameterException;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -40,6 +41,7 @@ public class User extends AbstractAggregate implements UserDetails {
 		private EmailAddress email;
 		private Password password;
 		private EntityId id;
+		private Locale locale;
 		private Set<GrantedAuthority> authorities = 
 				new HashSet<GrantedAuthority>();
 
@@ -59,13 +61,15 @@ public class User extends AbstractAggregate implements UserDetails {
 
 		@Override
 		public User build() {
-			if(email == null || password == null) {
-				throw new InvalidParameterException("Invalid registration details");
+			if(email == null || password == null || locale == null) {
+				throw new 
+					InvalidParameterException("Invalid registration details");
 			}
 
 			final User user = new User();
 			user.email = email;
 			user.changePassword(password);
+			user.locale = locale;
 			if(id != null) {
 				user.setId(id);
 			}
@@ -74,12 +78,17 @@ public class User extends AbstractAggregate implements UserDetails {
 			return user;
 		}
 
-		public Builder forEmail(EmailAddress email) {
+		public Builder forEmail(final EmailAddress email) {
 			this.email = email;
 			return this;
 		}
 
-		public Builder withPassword(Password password) {
+		public Builder inLocale(final Locale locale) {
+			this.locale = locale;
+			return this;
+		}
+
+		public Builder withPassword(final Password password) {
 			this.password = password;
 			return this;
 		}
@@ -103,6 +112,8 @@ public class User extends AbstractAggregate implements UserDetails {
 	@NotNull
 	@Column(unique = true)
 	private EmailAddress email;
+
+	private Locale locale;
 
 	@Transient
 	private String issuer = null;
@@ -155,6 +166,10 @@ public class User extends AbstractAggregate implements UserDetails {
 
 	public String getIssuer() {
 		return issuer;
+	}
+
+	public Locale getLocale() {
+		return locale;
 	}
 
 	@Override

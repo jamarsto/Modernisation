@@ -3,6 +3,7 @@ package uk.me.jasonmarston.mvc.controller;
 import static uk.me.jasonmarston.domain.Constants.STRONG_PASSWORD;
 
 import javax.persistence.OptimisticLockException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.LocaleResolver;
 
 import uk.me.jasonmarston.domain.aggregate.ResetToken;
 import uk.me.jasonmarston.domain.aggregate.User;
@@ -46,18 +48,22 @@ public class UserPasswordResetController {
 	@Lazy
 	private ApplicationEventPublisher applicationEventPublisher;
 
+	@Autowired
+	@Lazy
+	private LocaleResolver localeResolver;
+
 	@PostMapping("/user/password/reset")
 	public String forgotten(
 			@ModelAttribute("forgottenPasswordBean") 
 					@NotNull @Valid final ForgottenPasswordBean 
 							forgottenPasswordBean,
-			final WebRequest request,
+			final HttpServletRequest request,
 			final ModelMap model) {
 		applicationEventPublisher
 				.publishEvent(new OnPasswordResetEvent(
 						new EmailAddress(forgottenPasswordBean.getEmail()),
 						request.getContextPath(),
-						request.getLocale()));
+						localeResolver.resolveLocale(request)));
 
 		return "user/password/reset/confirmation";
 	}
@@ -105,7 +111,7 @@ public class UserPasswordResetController {
 
 		AuthenticationHelper.loginUser(user);
 
-	    return "user/password/reset/verification/confirmation";
+	    return "redirect:/user/password/reset/verification/confirmation";
 	}
 
 	@GetMapping("/user/password/reset/verification")
@@ -130,5 +136,10 @@ public class UserPasswordResetController {
 		model.addAttribute("resetPasswordBean", new ResetPasswordBean());
 
 	    return "user/password/reset/verification/index";
+	}
+
+	@GetMapping("/user/password/reset/verification/confirmation")
+	public String verificationConfirmation() {
+		return "user/password/reset/verification/confirmation";
 	}
 }

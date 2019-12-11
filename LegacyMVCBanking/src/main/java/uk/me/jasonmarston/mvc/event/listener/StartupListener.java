@@ -1,0 +1,100 @@
+package uk.me.jasonmarston.mvc.event.listener;
+
+import java.util.Locale;
+
+import javax.persistence.EntityExistsException;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import uk.me.jasonmarston.domain.aggregate.User;
+import uk.me.jasonmarston.domain.details.RegistrationDetails;
+import uk.me.jasonmarston.domain.factory.details.RegistrationDetailsBuilderFactory;
+import uk.me.jasonmarston.domain.service.UserService;
+import uk.me.jasonmarston.domain.value.EmailAddress;
+import uk.me.jasonmarston.domain.value.Password;
+
+// This is for development environments only.
+// Would be a major security violation in production.
+@Component
+@Profile("!PRODUCTION")
+@Transactional(propagation = Propagation.REQUIRED,
+		isolation = Isolation.READ_COMMITTED, 
+		readOnly = false)
+public class StartupListener implements
+		ApplicationListener<ApplicationReadyEvent> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(StartupListener.class);
+	@Autowired
+	@Lazy
+	private UserService userService;
+	
+	@Autowired
+	@Lazy
+	private RegistrationDetailsBuilderFactory
+			registrationDetailsBuilderFactory;
+
+	@Autowired
+	@Lazy
+	private ApplicationEventPublisher applicationEventPublisher;
+
+	@Override
+	public void onApplicationEvent(ApplicationReadyEvent event) {
+		LOGGER.warn("Creating default admin account that is enabled and does not require email validation.");
+
+		final String emailString = System
+				.getenv("SPRING_INITIAL_ADMIN_EMAIL");
+		final String passwordString = System
+				.getenv("SPRING_INITIAL_ADMIN_PASSWORD");
+		final String contextPath = System
+				.getenv("SPRING_INITIAL_ADMIN_CONTEXT_PATH");
+		if(StringUtils.isBlank(emailString) 
+				|| StringUtils.isBlank(passwordString)
+				|| StringUtils.isBlank(contextPath)) {
+			return;
+		}
+
+		final EmailAddress email = new EmailAddress(emailString);
+		final Password password = new Password(passwordString);
+
+		if(userService.findByEmail(email) ==  null) {
+			final RegistrationDetails.Builder builder = 
+					registrationDetailsBuilderFactory.create();
+			
+			final RegistrationDetails details = builder
+					.forEmail(email)
+					.withPassword(password)
+					.andPasswordConfirmation(password)
+					.inLocale(Locale.forLanguageTag("en-UK"))
+					.build();
+
+			User user = null;
+			try {
+				user = userService.register(details);
+
+				user = userService.addAuthority(
+						user,
+						new SimpleGrantedAuthority("ROLE_ADMIN"));
+				
+				user = userService.enable(user);
+			}
+			catch(final EntityExistsException e) {
+				// assume multiple nodes starting and
+				// trying to do this, so ignore as another one
+				// has succeeded
+				return;
+			}
+		}
+	}
+}

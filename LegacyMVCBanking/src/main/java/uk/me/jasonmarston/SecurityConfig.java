@@ -10,8 +10,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
+import uk.me.jasonmarston.mvc.filter.LocaleFilter;
 import uk.me.jasonmarston.mvc.service.impl.CustomUserDetailsService;
 
 @Configuration
@@ -21,6 +23,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	@Lazy
 	private CustomUserDetailsService customUserDetailsService;
+	
+	@Autowired
+	private LocaleFilter localeFilter;
 
 	@Override
 	protected void configure(
@@ -57,6 +62,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					"/**/*.css",
 					"/**/*.js").permitAll()
 				.anyRequest().authenticated();
+
+		http.addFilterAfter(localeFilter,
+            	UsernamePasswordAuthenticationFilter.class);
     }
 
 	@Bean

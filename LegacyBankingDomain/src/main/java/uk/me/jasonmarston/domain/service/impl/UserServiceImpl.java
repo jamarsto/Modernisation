@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -38,7 +39,17 @@ public class UserServiceImpl implements UserService {
 	private UserRepository userRepository;
 
 	@Override
-	public User changePassword(@NotNull @Valid User user, @NotNull @Valid Password password) {
+	public User addAuthority(
+			@NotNull @Valid final User user,
+			@NotNull final GrantedAuthority authority) {
+		user.addAuthority(authority);
+		return userRepository.save(user);
+	}
+
+	@Override
+	public User changePassword(
+			@NotNull @Valid User user,
+			@NotNull @Valid Password password) {
 		user.changePassword(password);
 		return userRepository.save(user);
 	}
@@ -92,6 +103,7 @@ public class UserServiceImpl implements UserService {
 		final User user = builder
 				.forEmail(registrationDetails.getEmail())
 				.withPassword(registrationDetails.getPassword())
+				.inLocale(registrationDetails.getLocale())
 				.build();
 
 		return userRepository.save(user);

@@ -6,7 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import uk.me.jasonmarston.domain.aggregate.User;
 
-class AuthenticationHelper {
+public class AuthenticationHelper {
 	public static void loginUser(final User user) {
 		final Authentication authentication = 
 				new UsernamePasswordAuthenticationToken(
@@ -15,6 +15,16 @@ class AuthenticationHelper {
 						user.getAuthorities());
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
+	}
+	
+	public static User getUser() {
+		final Authentication authentication = SecurityContextHolder
+				.getContext()
+				.getAuthentication();
+		if(authentication != null) {
+			return (User)authentication.getPrincipal();
+		}
+		return null;
 	}
 
 	private AuthenticationHelper() {
