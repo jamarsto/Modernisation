@@ -54,11 +54,6 @@ public class User extends AbstractAggregate implements UserDetails {
 			return this;
 		}
 
-		public Builder andId(EntityId id) {
-			this.id = id;
-			return this;
-		}
-
 		@Override
 		public User build() {
 			if(email == null || password == null || locale == null) {
@@ -70,9 +65,6 @@ public class User extends AbstractAggregate implements UserDetails {
 			user.email = email;
 			user.changePassword(password);
 			user.locale = locale;
-			if(id != null) {
-				user.setId(id);
-			}
 			user.authorities = authorities;
 
 			return user;

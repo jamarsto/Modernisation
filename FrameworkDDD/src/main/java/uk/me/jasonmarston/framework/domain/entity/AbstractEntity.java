@@ -28,8 +28,4 @@ public abstract class AbstractEntity extends AbstractDomainObject
 	public EntityId getId() {
 		return id;
 	}
-
-	protected void setId(EntityId id) {
-		this.id = id;
-	}
 }

@@ -15,8 +15,4 @@ public class AbstractAggregate extends AbstractEntity {
 	public Long getVersion() {
 		return version;
 	}
-
-	public void setVersion(Long version) {
-		this.version = version;
-	}
 }
