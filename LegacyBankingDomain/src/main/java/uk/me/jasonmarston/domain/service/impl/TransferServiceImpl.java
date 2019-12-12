@@ -19,7 +19,7 @@ import uk.me.jasonmarston.domain.service.TransferService;
 @Service
 @Validated
 @Transactional(propagation = Propagation.REQUIRED,
-		isolation = Isolation.READ_COMMITTED,
+		isolation = Isolation.REPEATABLE_READ,
 		readOnly = false)
 public class TransferServiceImpl implements TransferService {
 

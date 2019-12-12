@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -27,7 +28,7 @@ import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 @Service
 @Validated
 @Transactional(propagation = Propagation.REQUIRED, 
-		isolation = Isolation.READ_COMMITTED, 
+		isolation = Isolation.REPEATABLE_READ, 
 		readOnly = false)
 public class UserServiceImpl implements UserService {
 	@Autowired
@@ -105,6 +106,28 @@ public class UserServiceImpl implements UserService {
 				.withPassword(registrationDetails.getPassword())
 				.inLocale(registrationDetails.getLocale())
 				.build();
+
+		return userRepository.save(user);
+	}
+
+	@Override
+	public User registerAdministrator(
+			@NotNull @Valid final RegistrationDetails registrationDetails) {
+		if(userRepository.findByEmail(registrationDetails.getEmail())
+						.isPresent()) {
+			throw new EntityExistsException("Already registered.");
+		}
+
+		final User.Builder builder = userBuilderFactory.create();
+
+		final User user = builder
+				.forEmail(registrationDetails.getEmail())
+				.withPassword(registrationDetails.getPassword())
+				.inLocale(registrationDetails.getLocale())
+				.build();
+		
+		user.addAuthority(new SimpleGrantedAuthority("ROLE_ADMIN"));
+		user.enable();
 
 		return userRepository.save(user);
 	}

@@ -25,4 +25,6 @@ public interface UserService {
 			@NotNull final Password password);
 	User register(
 			@NotNull @Valid final RegistrationDetails registrationDetails);
+	User registerAdministrator(
+			@NotNull @Valid final RegistrationDetails registrationDetails);
 }

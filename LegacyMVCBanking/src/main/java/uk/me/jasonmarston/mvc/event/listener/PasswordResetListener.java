@@ -44,10 +44,10 @@ public class PasswordResetListener implements
 	@Lazy
 	private MessageSource messageSource;
 
-	@Value("${SPRING_MAIL_FROM}")
+	@Value("$BANKING_MAIL_FROM}")
     private String from;
 
-	@Value("${SPRING_HOST_NAME}")
+	@Value("${BANKING_HOST_NAME}")
 	private String hostName;
 
 	@Async

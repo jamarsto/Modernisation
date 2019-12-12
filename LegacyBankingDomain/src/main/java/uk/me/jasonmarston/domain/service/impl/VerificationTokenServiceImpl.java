@@ -25,7 +25,7 @@ import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 @Service
 @Validated
 @Transactional(propagation = Propagation.REQUIRED,
-		isolation = Isolation.READ_COMMITTED, 
+		isolation = Isolation.REPEATABLE_READ, 
 		readOnly = false)
 public class VerificationTokenServiceImpl implements VerificationTokenService {
 	@Autowired

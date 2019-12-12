@@ -29,8 +29,7 @@ dependencies {
 	implementation 'org.springframework:spring-aspects:5.2.1.RELEASE'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE'
 	
-	// used for in memory database.  Replace in a real application with the correct jdbc support
-	implementation 'com.h2database:h2:1.4.200'
+	runtimeOnly 'mysql:mysql-connector-java'
 	
 	agent 'org.springframework:spring-instrument:5.2.1.RELEASE'
 	

@@ -27,7 +27,7 @@ import uk.me.jasonmarston.domain.value.Token;
 @Service
 @Validated
 @Transactional(propagation = Propagation.REQUIRED,
-		isolation = Isolation.READ_COMMITTED, 
+		isolation = Isolation.REPEATABLE_READ, 
 		readOnly = false)
 public class ResetTokenServiceImpl implements ResetTokenService {
 

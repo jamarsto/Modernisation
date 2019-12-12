@@ -6,18 +6,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import uk.me.jasonmarston.domain.aggregate.User;
 import uk.me.jasonmarston.domain.service.UserService;
 import uk.me.jasonmarston.domain.value.EmailAddress;
 
 @Service
-@Transactional(propagation = Propagation.REQUIRED, 
-		isolation = Isolation.READ_COMMITTED, 
-		readOnly = false)
 public class CustomUserDetailsService implements UserDetailsService {
 	@Autowired
 	@Lazy

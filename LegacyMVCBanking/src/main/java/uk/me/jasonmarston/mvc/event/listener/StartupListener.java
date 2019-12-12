@@ -13,13 +13,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import uk.me.jasonmarston.domain.aggregate.User;
 import uk.me.jasonmarston.domain.details.RegistrationDetails;
 import uk.me.jasonmarston.domain.factory.details.RegistrationDetailsBuilderFactory;
 import uk.me.jasonmarston.domain.service.UserService;
@@ -30,9 +25,6 @@ import uk.me.jasonmarston.domain.value.Password;
 // Would be a major security violation in production.
 @Component
 @Profile("!PRODUCTION")
-@Transactional(propagation = Propagation.REQUIRED,
-		isolation = Isolation.READ_COMMITTED, 
-		readOnly = false)
 public class StartupListener implements
 		ApplicationListener<ApplicationReadyEvent> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(StartupListener.class);
@@ -54,11 +46,11 @@ public class StartupListener implements
 		LOGGER.warn("Creating default admin account that is enabled and does not require email validation.");
 
 		final String emailString = System
-				.getenv("SPRING_INITIAL_ADMIN_EMAIL");
+				.getenv("BANKING_INITIAL_ADMIN_EMAIL");
 		final String passwordString = System
-				.getenv("SPRING_INITIAL_ADMIN_PASSWORD");
+				.getenv("BANKING_INITIAL_ADMIN_PASSWORD");
 		final String contextPath = System
-				.getenv("SPRING_INITIAL_ADMIN_CONTEXT_PATH");
+				.getenv("BANKING_INITIAL_ADMIN_CONTEXT_PATH");
 		if(StringUtils.isBlank(emailString) 
 				|| StringUtils.isBlank(passwordString)
 				|| StringUtils.isBlank(contextPath)) {
@@ -79,15 +71,8 @@ public class StartupListener implements
 					.inLocale(Locale.forLanguageTag("en-UK"))
 					.build();
 
-			User user = null;
 			try {
-				user = userService.register(details);
-
-				user = userService.addAuthority(
-						user,
-						new SimpleGrantedAuthority("ROLE_ADMIN"));
-				
-				user = userService.enable(user);
+				userService.registerAdministrator(details);
 			}
 			catch(final EntityExistsException e) {
 				// assume multiple nodes starting and
