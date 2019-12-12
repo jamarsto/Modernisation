@@ -26,7 +26,7 @@ import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 		autowire = Autowire.BY_TYPE,
 		dependencyCheck = false)
 @Entity
-@Table(name = "VERIFICATION_TOKEN")
+@Table(name = "VERIFICATION_TOKENS")
 public class VerificationToken extends AbstractAggregate {
 	public static class Builder implements IBuilder<VerificationToken> {
 		private EntityId userId;

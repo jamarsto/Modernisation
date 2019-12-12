@@ -82,7 +82,7 @@ public class Account extends AbstractAggregate {
 	private Balance balance;
 
 	@JsonIgnore
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
 	@NotNull
 	private List<@NotNull Transaction> transactions = 
 			new ArrayList<Transaction>();

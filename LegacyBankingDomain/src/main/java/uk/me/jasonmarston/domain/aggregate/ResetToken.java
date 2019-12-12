@@ -27,7 +27,7 @@ import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 		autowire = Autowire.BY_TYPE,
 		dependencyCheck = false)
 @Entity
-@Table(name = "RESET_TOKEN")
+@Table(name = "RESET_TOKENS")
 public class ResetToken extends AbstractAggregate {
 	public static class Builder implements IBuilder<ResetToken> {
 		private EntityId userId;
