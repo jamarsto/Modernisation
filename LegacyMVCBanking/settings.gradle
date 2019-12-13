@@ -1,8 +1,5 @@
 rootProject.name = 'LegacyMVCBanking'
 
-include 'FrameworkRepository'
-project(':FrameworkRepository').projectDir = new File(settingsDir, "../FrameworkRepository");
-
 include 'FrameworkDDD'
 project(':FrameworkDDD').projectDir = new File(settingsDir, "../FrameworkDDD");
 

@@ -37,7 +37,7 @@ public class Cleanup {
 	public void cleanupResetTokens() {
 		final List<ResetToken> list = resetTokenService.findExpiredTokens();
 		for(ResetToken token: list) {
-			resetTokenService.delete(token);
+			resetTokenService.delete(token.getId());
 		}
 	}
 
@@ -46,10 +46,10 @@ public class Cleanup {
 		final List<VerificationToken> list = verificationTokenService
 				.findExpiredTokens();
 		for(VerificationToken token: list) {
-			verificationTokenService.delete(token);
+			verificationTokenService.delete(token.getId());
 			final User user = userService.findById(token.getUserId());
 			if(!user.isEnabled()) {
-				userService.delete(user);
+				userService.delete(user.getId());
 			}
 		}
 	}

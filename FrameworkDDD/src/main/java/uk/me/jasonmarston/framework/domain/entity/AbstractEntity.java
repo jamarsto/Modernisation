@@ -21,11 +21,15 @@ public abstract class AbstractEntity extends AbstractDomainObject
 	private EntityId id;
 
 	protected AbstractEntity() {
-		id = new EntityId();
+		this.id = new EntityId();
 	}
 
 	@Override
 	public EntityId getId() {
 		return id;
+	}
+	
+	protected <T> T getBean(Class<T> clazz) {
+		return BeanHelper.INSTANCE.getBean(clazz);
 	}
 }

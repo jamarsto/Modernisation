@@ -90,7 +90,7 @@ public class UserPasswordResetController {
 			return "redirect:/user/password/reset?expired";
 		}
 
-		resetTokenService.delete(resetToken);
+		resetTokenService.delete(resetToken.getId());
 
 		if(resetToken.isExpired()) {
 			return "redirect:/user/password/reset?expired";
@@ -102,7 +102,7 @@ public class UserPasswordResetController {
 		}
 
 		try {
-			user = userService.changePassword(user, 
+			user = userService.changePassword(user.getId(), 
 					new Password(resetPasswordBean.getPassword()));
 		}
 		catch(OptimisticLockException e) {

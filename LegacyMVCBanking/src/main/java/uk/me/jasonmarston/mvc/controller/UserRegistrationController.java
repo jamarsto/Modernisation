@@ -112,7 +112,7 @@ public class UserRegistrationController {
 			return "redirect:/user/registration?expired";
 		}
 
-		verificationTokenService.delete(verificationToken);
+		verificationTokenService.delete(verificationToken.getId());
 
 		if(verificationToken.isExpired()) {
 			return "redirect:/user/registration?expired";
@@ -124,7 +124,7 @@ public class UserRegistrationController {
 		}
 
 		try {
-			user = userService.enable(user);
+			user = userService.enable(user.getId());
 		}
 		catch(OptimisticLockException e) {
 			return "redirect:/user/registration?expired";

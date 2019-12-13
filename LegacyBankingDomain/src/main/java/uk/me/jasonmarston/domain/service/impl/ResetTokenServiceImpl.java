@@ -23,6 +23,7 @@ import uk.me.jasonmarston.domain.repository.specification.ResetTokenSpecificatio
 import uk.me.jasonmarston.domain.service.ResetTokenService;
 import uk.me.jasonmarston.domain.value.EmailAddress;
 import uk.me.jasonmarston.domain.value.Token;
+import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 @Service
 @Validated
@@ -64,8 +65,8 @@ public class ResetTokenServiceImpl implements ResetTokenService {
 	}
 
 	@Override
-	public void delete(@NotNull @Valid final ResetToken resetToken) {
-		resetTokenRepository.delete(resetToken);
+	public void delete(@NotNull @Valid final EntityId id) {
+		resetTokenRepository.deleteById(id);
 	}
 
 	@Override

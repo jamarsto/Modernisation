@@ -11,7 +11,7 @@ import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 public interface VerificationTokenService {
 	VerificationToken create(@NotNull @Valid final EntityId id);
-	void delete(@NotNull @Valid final VerificationToken verificationToken);
+	void delete(@NotNull @Valid final EntityId id);
 	VerificationToken findByToken(
 			@NotNull @Valid final Token token);
 	List<VerificationToken> findExpiredTokens();

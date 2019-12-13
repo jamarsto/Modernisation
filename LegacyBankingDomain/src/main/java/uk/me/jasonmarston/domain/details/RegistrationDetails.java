@@ -1,6 +1,5 @@
 package uk.me.jasonmarston.domain.details;
 
-import java.security.InvalidParameterException;
 import java.util.Locale;
 
 import javax.validation.constraints.NotNull;
@@ -38,10 +37,10 @@ public class RegistrationDetails extends AbstractValueObject implements DetailsO
 		@Override
 		public RegistrationDetails build() {
 			if(email == null || password == null || passwordConfirmation == null) {
-				throw new InvalidParameterException("Invalid registration details");
+				throw new IllegalArgumentException("Invalid registration details");
 			}
 			if(!password.equals(passwordConfirmation)) {
-				throw new InvalidParameterException("Passwords must match");
+				throw new IllegalArgumentException("Passwords must match");
 			}
 
 			final RegistrationDetails registrationDetails = new RegistrationDetails();

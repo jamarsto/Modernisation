@@ -1,6 +1,5 @@
 package uk.me.jasonmarston.mvc.event;
 
-import java.security.InvalidParameterException;
 import java.util.Locale;
 
 import org.springframework.context.ApplicationEvent;
@@ -20,7 +19,7 @@ public class OnPasswordResetEvent extends ApplicationEvent {
 			final Locale locale) {
 		super(email);
 		if(email == null || contextPath == null || locale == null) {
-			throw new InvalidParameterException("Invalid OnPasswordResetEvent");
+			throw new IllegalArgumentException("Invalid OnPasswordResetEvent");
 		}
 
 		this.email = email;

@@ -12,16 +12,16 @@ import uk.me.jasonmarston.domain.value.Password;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
 public interface UserService {
-	User addAuthority(@NotNull @Valid final User user,
+	User addAuthority(@NotNull @Valid final EntityId id,
 			@NotNull final GrantedAuthority authority);
 	User changePassword(
-			@NotNull @Valid final User user,
+			@NotNull @Valid final EntityId id,
 			@NotNull @Valid final Password password);
-	void delete(@NotNull @Valid final User user);
-	User enable(@NotNull @Valid final User user);
+	void delete(@NotNull @Valid final EntityId id);
+	User enable(@NotNull @Valid final EntityId id);
 	User findByEmail(@NotNull @Valid final EmailAddress email);
 	User findById(@NotNull @Valid final EntityId id);
-	boolean isCurrentPassword(@NotNull @Valid final User user,
+	boolean isCurrentPassword(@NotNull @Valid final EntityId id,
 			@NotNull final Password password);
 	User register(
 			@NotNull @Valid final RegistrationDetails registrationDetails);

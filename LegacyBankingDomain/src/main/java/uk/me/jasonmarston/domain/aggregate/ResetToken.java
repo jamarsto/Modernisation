@@ -1,6 +1,5 @@
 package uk.me.jasonmarston.domain.aggregate;
 
-import java.security.InvalidParameterException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
@@ -12,8 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.beans.factory.annotation.Autowire;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
 import uk.me.jasonmarston.domain.factory.aggregate.ResetTokenBuilderFactory;
@@ -22,10 +19,6 @@ import uk.me.jasonmarston.framework.domain.aggregate.AbstractAggregate;
 import uk.me.jasonmarston.framework.domain.builder.IBuilder;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
-@Configurable(
-		preConstruction = true,
-		autowire = Autowire.BY_TYPE,
-		dependencyCheck = false)
 @Entity
 @Table(name = "RESET_TOKENS")
 public class ResetToken extends AbstractAggregate {
@@ -38,7 +31,7 @@ public class ResetToken extends AbstractAggregate {
 		@Override
 		public ResetToken build() {
 			if(userId == null) {
-				throw new InvalidParameterException("A User ID is required");
+				throw new IllegalArgumentException("A User ID is required");
 			}
 
 			final ResetToken resetToken = new ResetToken();

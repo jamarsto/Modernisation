@@ -11,8 +11,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-import org.springframework.beans.factory.annotation.Autowire;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -27,10 +25,6 @@ import uk.me.jasonmarston.framework.domain.builder.IBuilder;
 import uk.me.jasonmarston.framework.domain.entity.AbstractEntity;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
-@Configurable(
-		preConstruction = true,
-		autowire = Autowire.BY_TYPE,
-		dependencyCheck = false)
 @Entity(name = "TRANSACTIONS")
 public class Transaction extends AbstractEntity {
 	public static class Builder implements IBuilder<Transaction> {

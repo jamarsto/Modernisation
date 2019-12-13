@@ -43,8 +43,6 @@ public class StartupListener implements
 
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
-		LOGGER.warn("Creating default admin account that is enabled and does not require email validation.");
-
 		final String emailString = System
 				.getenv("BANKING_INITIAL_ADMIN_EMAIL");
 		final String passwordString = System
@@ -61,6 +59,8 @@ public class StartupListener implements
 		final Password password = new Password(passwordString);
 
 		if(userService.findByEmail(email) ==  null) {
+			LOGGER.warn("Creating default admin account that is enabled and does not require email validation.");
+
 			final RegistrationDetails.Builder builder = 
 					registrationDetailsBuilderFactory.create();
 			

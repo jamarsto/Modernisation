@@ -49,8 +49,8 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
 	}
 
 	@Override
-	public void delete(@NotNull @Valid VerificationToken verificationToken) {
-		verificationTokenRepository.delete(verificationToken);
+	public void delete(@NotNull @Valid EntityId id) {
+		verificationTokenRepository.deleteById(id);
 	}
 
 	@Override

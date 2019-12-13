@@ -41,29 +41,45 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User addAuthority(
-			@NotNull @Valid final User user,
+			@NotNull @Valid final EntityId id,
 			@NotNull final GrantedAuthority authority) {
-		user.addAuthority(authority);
-		return userRepository.save(user);
+		final Optional<User> optional = userRepository.findById(id);
+		if(optional.isPresent()) {
+			final User user = optional.get();
+			user.addAuthority(authority);
+			return userRepository.save(user);
+		}
+		throw new IllegalArgumentException("Invalid Key");
 	}
 
 	@Override
 	public User changePassword(
-			@NotNull @Valid User user,
+			@NotNull @Valid EntityId id,
 			@NotNull @Valid Password password) {
-		user.changePassword(password);
-		return userRepository.save(user);
+		final Optional<User> optional = userRepository.findById(id);
+		if(optional.isPresent()) {
+			final User user = optional.get();
+			user.changePassword(password);
+			return userRepository.save(user);
+		}
+
+		throw new IllegalArgumentException("Invalid Key");
 	}
 
 	@Override
-	public void delete(@NotNull @Valid User user) {
-		userRepository.delete(user);
+	public void delete(@NotNull @Valid EntityId id) {
+		userRepository.deleteById(id);
 	}
 
 	@Override
-	public User enable(@NotNull @Valid User user) {
-		user.enable();
-		return userRepository.save(user);
+	public User enable(@NotNull @Valid EntityId id) {
+		final Optional<User> optional = userRepository.findById(id);
+		if(optional.isPresent()) {
+			final User user = optional.get();
+			user.enable();
+			return userRepository.save(user);
+		}
+		throw new IllegalArgumentException("Invalid Key");
 	}
 
 	@Override
@@ -85,10 +101,15 @@ public class UserServiceImpl implements UserService {
 
 		return null;
 	}
-
 	@Override
-	public boolean isCurrentPassword(@NotNull @Valid User user, @NotNull Password password) {
-		return user.isCurrentPassword(password);
+	public boolean isCurrentPassword(@NotNull @Valid EntityId id, @NotNull Password password) {
+		final Optional<User> optional = userRepository.findById(id);
+		if(optional.isPresent()) {
+			final User user = optional.get();
+			return user.isCurrentPassword(password);
+		}
+
+		throw new IllegalArgumentException("Invalid Key");
 	}
 
 	@Override

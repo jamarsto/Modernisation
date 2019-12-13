@@ -44,12 +44,12 @@ public class UserPasswordChangeController {
 							changePasswordBean,
 			final WebRequest request,
 			final ModelMap model) {
-		if(!userService.isCurrentPassword(user, 
+		if(!userService.isCurrentPassword(user.getId(), 
 				new Password(changePasswordBean.getCurrentPassword()))) {
 			return "redirect:/user/password/change?incorrect";
 		}
 
-		user = userService.changePassword(user,
+		user = userService.changePassword(user.getId(),
 				new Password(changePasswordBean.getPassword()));
 
 		AuthenticationHelper.loginUser(user);

@@ -1,6 +1,5 @@
 package uk.me.jasonmarston.mvc.event;
 
-import java.security.InvalidParameterException;
 import java.util.Locale;
 
 import org.springframework.context.ApplicationEvent;
@@ -20,7 +19,7 @@ public class OnRegistrationEvent extends ApplicationEvent {
 			final Locale locale) {
 		super(user);
 		if(user == null || contextPath == null || locale == null) {
-			throw new InvalidParameterException("Invalid OnRegistrationEvent");
+			throw new IllegalArgumentException("Invalid OnRegistrationEvent");
 		}
 
 		this.user = user;

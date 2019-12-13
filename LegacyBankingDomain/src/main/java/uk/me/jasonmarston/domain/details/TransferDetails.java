@@ -1,7 +1,5 @@
 package uk.me.jasonmarston.domain.details;
 
-import java.security.InvalidParameterException;
-
 import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
@@ -25,7 +23,7 @@ public class TransferDetails extends AbstractValueObject implements DetailsObjec
 		@Override
 		public TransferDetails build() {
 			if(fromAccountId == null || toAccountId == null || amount == null) {
-				throw new InvalidParameterException("Invalid transfer details");
+				throw new IllegalArgumentException("Invalid transfer details");
 			}
 
 			final TransferDetails transferDetails = new TransferDetails();

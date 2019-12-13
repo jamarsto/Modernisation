@@ -1,7 +1,5 @@
 package uk.me.jasonmarston.domain.details;
 
-import java.security.InvalidParameterException;
-
 import javax.validation.constraints.NotNull;
 
 import uk.me.jasonmarston.domain.factory.details.TransactionIdentifierDetailsBuilderFactory;
@@ -21,7 +19,7 @@ public class TransactionIdentifierDetails extends AbstractValueObject implements
 		@Override
 		public TransactionIdentifierDetails build() {
 			if(accountId == null || transactionId == null) {
-				throw new InvalidParameterException("Invalid transaction identifier details");
+				throw new IllegalArgumentException("Invalid transaction identifier details");
 			}
 
 			final TransactionIdentifierDetails transactionIdentifierDetails = 

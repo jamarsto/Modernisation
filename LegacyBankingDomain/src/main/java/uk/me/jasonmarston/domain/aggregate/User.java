@@ -1,6 +1,5 @@
 package uk.me.jasonmarston.domain.aggregate;
 
-import java.security.InvalidParameterException;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -13,10 +12,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.beans.factory.annotation.Autowire;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,19 +23,13 @@ import uk.me.jasonmarston.domain.value.EmailAddress;
 import uk.me.jasonmarston.domain.value.Password;
 import uk.me.jasonmarston.framework.domain.aggregate.AbstractAggregate;
 import uk.me.jasonmarston.framework.domain.builder.IBuilder;
-import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
-@Configurable(
-		preConstruction = true,
-		autowire = Autowire.BY_TYPE,
-		dependencyCheck = false)
 @Entity
 @Table(name = "USERS")
 public class User extends AbstractAggregate implements UserDetails {
 	public static class Builder implements IBuilder<User> {
 		private EmailAddress email;
 		private Password password;
-		private EntityId id;
 		private Locale locale;
 		private Set<GrantedAuthority> authorities = 
 				new HashSet<GrantedAuthority>();
@@ -58,7 +47,7 @@ public class User extends AbstractAggregate implements UserDetails {
 		public User build() {
 			if(email == null || password == null || locale == null) {
 				throw new 
-					InvalidParameterException("Invalid registration details");
+					IllegalArgumentException("Invalid registration details");
 			}
 
 			final User user = new User();
@@ -96,11 +85,6 @@ public class User extends AbstractAggregate implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 
-	@Autowired
-	@Lazy
-	@Transient
-	private PasswordEncoder passwordEncoder;
-
 	@NotNull
 	@Column(unique = true)
 	private EmailAddress email;
@@ -123,7 +107,7 @@ public class User extends AbstractAggregate implements UserDetails {
 
 	private boolean accountNonExpired = true;
 	private boolean accountNonLocked = true;
-	private boolean credentialsNonExpired = true;
+	private Boolean credentialsNonExpired = true;
 	private boolean enabled = false;
 
 	private User() {
@@ -135,7 +119,7 @@ public class User extends AbstractAggregate implements UserDetails {
 	}
 
 	public void changePassword(final Password password) {
-		this.password = new Password(passwordEncoder
+		this.password = new Password(getBean(PasswordEncoder.class)
 				.encode(password.toString()));
 	}
 
@@ -194,7 +178,7 @@ public class User extends AbstractAggregate implements UserDetails {
 	}
 
 	public boolean isCurrentPassword(final Password password) {
-		return passwordEncoder.matches(
+		return getBean(PasswordEncoder.class).matches(
 				password.getPassword(),
 				this.password.getPassword());
 	}

@@ -1,6 +1,5 @@
 package uk.me.jasonmarston.domain.aggregate;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,13 +8,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.beans.factory.annotation.Autowire;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -31,10 +25,6 @@ import uk.me.jasonmarston.framework.domain.aggregate.AbstractAggregate;
 import uk.me.jasonmarston.framework.domain.builder.IBuilder;
 import uk.me.jasonmarston.framework.domain.type.impl.EntityId;
 
-@Configurable(
-		preConstruction = true,
-		autowire = Autowire.BY_TYPE,
-		dependencyCheck = false)
 @Entity
 @Table(name = "ACCOUNTS")
 public class Account extends AbstractAggregate {
@@ -47,7 +37,7 @@ public class Account extends AbstractAggregate {
 		@Override
 		public Account build() {
 			if(balance == null) {
-				throw new InvalidParameterException("An opening balance is required");
+				throw new IllegalArgumentException("An opening balance is required");
 			}
 
 			final Account account = new Account();
@@ -72,11 +62,6 @@ public class Account extends AbstractAggregate {
 
 	private static final long serialVersionUID = 1L;
 
-	@Autowired
-	@Lazy
-	@Transient
-	private TransactionBuilderFactory transactionBuilderFactory;
-
 	@JsonUnwrapped
 	@NotNull
 	private Balance balance;
@@ -99,7 +84,8 @@ public class Account extends AbstractAggregate {
 			final EntityId referenceAccountId) {
 		balance = balance.add(amount);
 
-		final Transaction.Builder builder = transactionBuilderFactory.create();
+		final Transaction.Builder builder = 
+				getBean(TransactionBuilderFactory.class).create();
 		final Transaction transaction = builder
 				.againstAccount(this)
 				.ofType(TransactionType.DEPOSIT)
@@ -146,7 +132,8 @@ public class Account extends AbstractAggregate {
 			final EntityId referenceAccountId) {
 		balance = balance.subtract(amount);
 
-		final Transaction.Builder builder = transactionBuilderFactory.create();
+		final Transaction.Builder builder = 
+				getBean(TransactionBuilderFactory.class).create();
 		final Transaction transaction = builder
 				.againstAccount(this)
 				.ofType(TransactionType.WITHDRAWAL)
