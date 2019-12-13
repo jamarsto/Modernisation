@@ -25,7 +25,7 @@ import uk.me.jasonmarston.framework.domain.aggregate.AbstractAggregate;
 import uk.me.jasonmarston.framework.domain.builder.IBuilder;
 
 @Entity
-@Table(name = "USERS")
+@Table(name = "USER_PROFILES")
 public class User extends AbstractAggregate implements UserDetails {
 	public static class Builder implements IBuilder<User> {
 		private EmailAddress email;
