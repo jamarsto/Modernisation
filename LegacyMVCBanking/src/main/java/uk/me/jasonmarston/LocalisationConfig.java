@@ -65,6 +65,11 @@ public class LocalisationConfig implements WebMvcConfigurer {
 	}
 
 	@Bean
+	public LocaleFilter localeFilter() {
+		return new LocaleFilter();
+	}
+
+	@Bean
 	public LocaleResolver localeResolver() {
 		final CookieLocaleResolver resolver = 
 				new CookieLocaleResolver();
@@ -72,10 +77,5 @@ public class LocalisationConfig implements WebMvcConfigurer {
 		resolver.setCookieMaxAge(Integer.MAX_VALUE);
 
 		return resolver;
-	}
-
-	@Bean
-	public LocaleFilter localeFilter() {
-		return new LocaleFilter();
 	}
 }

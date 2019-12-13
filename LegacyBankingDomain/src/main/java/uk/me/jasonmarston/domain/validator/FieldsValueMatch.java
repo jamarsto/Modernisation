@@ -22,8 +22,8 @@ public @interface FieldsValueMatch {
 	String field();
 	String fieldMatch();
 
-	String message() default "Fields values don't match!";
-
 	Class<?>[] groups() default {};
+
+	String message() default "Fields values don't match!";
 	Class<?>[] payload() default {};
 }

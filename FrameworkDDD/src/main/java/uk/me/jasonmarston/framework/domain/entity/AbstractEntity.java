@@ -24,12 +24,12 @@ public abstract class AbstractEntity extends AbstractDomainObject
 		this.id = new EntityId();
 	}
 
+	protected <T> T getBean(Class<T> clazz) {
+		return BeanHelper.INSTANCE.getBean(clazz);
+	}
+	
 	@Override
 	public EntityId getId() {
 		return id;
-	}
-	
-	protected <T> T getBean(Class<T> clazz) {
-		return BeanHelper.INSTANCE.getBean(clazz);
 	}
 }
