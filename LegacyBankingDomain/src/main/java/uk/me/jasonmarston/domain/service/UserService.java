@@ -23,6 +23,8 @@ public interface UserService {
 	User findById(@NotNull @Valid final EntityId id);
 	boolean isCurrentPassword(@NotNull @Valid final EntityId id,
 			@NotNull final Password password);
+	boolean login(@NotNull @Valid final EntityId id,
+			@NotNull final Password password);
 	User register(
 			@NotNull @Valid final RegistrationDetails registrationDetails);
 	User registerAdministrator(

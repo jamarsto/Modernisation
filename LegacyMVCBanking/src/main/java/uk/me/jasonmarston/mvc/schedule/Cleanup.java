@@ -1,6 +1,9 @@
 package uk.me.jasonmarston.mvc.schedule;
 
+import java.security.SecureRandom;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -35,6 +38,11 @@ public class Cleanup {
 
 	@Scheduled(initialDelay = THIRTY_SECONDS, fixedDelay = ONE_MINUTE)
 	public void cleanupResetTokens() {
+		try {
+			TimeUnit.SECONDS.sleep(forUpToTenSeconds());
+		} catch (InterruptedException e) {
+			return;
+		}
 		final List<ResetToken> list = resetTokenService.findExpiredTokens();
 		for(ResetToken token: list) {
 			resetTokenService.delete(token.getId());
@@ -43,6 +51,11 @@ public class Cleanup {
 
 	@Scheduled(fixedDelay = ONE_MINUTE)
 	public void cleanupVerificationTokens() {
+		try {
+			TimeUnit.SECONDS.sleep(forUpToTenSeconds());
+		} catch (InterruptedException e) {
+			return;
+		}
 		final List<VerificationToken> list = verificationTokenService
 				.findExpiredTokens();
 		for(VerificationToken token: list) {
@@ -52,5 +65,11 @@ public class Cleanup {
 				userService.delete(user.getId());
 			}
 		}
+	}
+
+	private int forUpToTenSeconds() {
+		final Random random = new SecureRandom();
+		return random.nextInt(11);
+
 	}
 }

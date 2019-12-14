@@ -13,16 +13,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
+import uk.me.jasonmarston.authentication.CustomAuthenticationProvider;
 import uk.me.jasonmarston.mvc.filter.LocaleFilter;
-import uk.me.jasonmarston.mvc.service.impl.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
 	@Autowired
 	@Lazy
-	private CustomUserDetailsService customUserDetailsService;
+	private CustomAuthenticationProvider authenticationProvider;
 	
 	@Autowired
 	private LocaleFilter localeFilter;
@@ -31,9 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(
 			AuthenticationManagerBuilder authenticationManagerBuilder)
 					throws Exception {
-		authenticationManagerBuilder
-			.userDetailsService(customUserDetailsService)
-			.passwordEncoder(passwordEncoder());
+		authenticationManagerBuilder.authenticationProvider(authenticationProvider);
 	}
 
 	@Override

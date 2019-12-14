@@ -106,7 +106,7 @@ public class Transaction extends AbstractEntity {
 	private Amount amount;
 
 	@JsonUnwrapped
-	@AttributeOverride(name="id", column=@Column(name="referenceAccountId"))
+	@AttributeOverride(name="id", column=@Column(name="referenceAccountId", columnDefinition = "CHAR(36)"))
 	private EntityId referenceAccountId;
 
 	private Transaction() {

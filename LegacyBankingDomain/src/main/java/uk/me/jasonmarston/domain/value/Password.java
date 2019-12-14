@@ -1,5 +1,6 @@
 package uk.me.jasonmarston.domain.value;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotEmpty;
 
@@ -12,6 +13,7 @@ public class Password extends AbstractValueObject {
 
 	@NotEmpty(message = "Password is required")
 	@StrongPassword(message = "Invalid Password")
+	@Column(columnDefinition = "CHAR(60)")
 	private String password;
 
 	private Password() {

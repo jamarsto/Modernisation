@@ -29,7 +29,7 @@ dependencies {
 	implementation 'redis.clients:jedis'
 	implementation 'org.apache.commons:commons-pool2'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE'
-	
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE'
 	runtimeOnly 'mysql:mysql-connector-java'
 	
 	// bespoke application dependencies

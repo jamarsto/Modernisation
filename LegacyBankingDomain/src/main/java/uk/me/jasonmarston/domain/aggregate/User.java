@@ -1,5 +1,9 @@
 package uk.me.jasonmarston.domain.aggregate;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -89,6 +93,7 @@ public class User extends AbstractAggregate implements UserDetails {
 	@Column(unique = true)
 	private EmailAddress email;
 
+	@Column(columnDefinition = "VARCHAR(42)")
 	private Locale locale;
 
 	@Transient
@@ -105,10 +110,15 @@ public class User extends AbstractAggregate implements UserDetails {
 	private Set<GrantedAuthority> authorities = 
 			new HashSet<GrantedAuthority>();
 
-	private boolean accountNonExpired = true;
-	private boolean accountNonLocked = true;
-	private Boolean credentialsNonExpired = true;
 	private boolean enabled = false;
+
+	@Column(columnDefinition="TIMESTAMP")
+	private ZonedDateTime lastLogin;
+
+	@Column(columnDefinition="TIMESTAMP")
+	private ZonedDateTime lastLoginFailure;
+	
+	private int failedLogins = 0;
 
 	private User() {
 		super();
@@ -164,17 +174,33 @@ public class User extends AbstractAggregate implements UserDetails {
 
 	@Override
 	public boolean isAccountNonExpired() {
-		return accountNonExpired;
+		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return accountNonLocked;
+		if(failedLogins == 0) {
+			return true;
+		}
+		final Instant fiveMinutesAgo = Instant
+				.now()
+				.minus(5, ChronoUnit.MINUTES);
+		final ZoneId utc = ZoneId.of("UTC");
+		final ZonedDateTime dateTime = ZonedDateTime
+				.ofInstant(fiveMinutesAgo, utc);
+		if(dateTime.isAfter(lastLoginFailure)) {
+			failedLogins = 0;
+			return true;
+		}
+		if(failedLogins > 4) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return credentialsNonExpired;
+		return true;
 	}
 
 	public boolean isCurrentPassword(final Password password) {
@@ -186,6 +212,22 @@ public class User extends AbstractAggregate implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return enabled;
+	}
+	
+	public boolean login(final Password password) {
+		final Instant now = Instant.now();
+		final ZoneId utc = ZoneId.of("UTC");
+		final ZonedDateTime current = ZonedDateTime.ofInstant(now, utc);
+		if(isCurrentPassword(password)) {
+			failedLogins = 0;
+			lastLogin = current;
+			return true;
+		}
+		else {
+			failedLogins++;
+			lastLoginFailure = current;
+			return false;
+		}
 	}
 
 	public boolean removeAuthority(final GrantedAuthority authority) {

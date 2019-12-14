@@ -1,8 +1,8 @@
 package uk.me.jasonmarston.domain.repository.specification;
 
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -23,14 +23,13 @@ public class ResetTokenSpecification {
 				final Root<ResetToken> root, 
 				final CriteriaQuery<?> query, 
 				final CriteriaBuilder builder) {
+			final Instant now = Instant.now();
+			final ZoneId utc = ZoneId.of("UTC");
+			final ZonedDateTime current = ZonedDateTime.ofInstant(now, utc);
 
-			final Calendar cal = Calendar.getInstance();
-			cal.setTime(new Timestamp(cal.getTime().getTime()));
-			cal.add(Calendar.MINUTE, 65);
-
-			return builder.greaterThanOrEqualTo(
-					root.<Date>get("expiryDate"),
-					cal.getTime());
+			return builder.lessThanOrEqualTo(
+					root.<ZonedDateTime>get("expiryDate"),
+					current);
 		}
 	}
 }

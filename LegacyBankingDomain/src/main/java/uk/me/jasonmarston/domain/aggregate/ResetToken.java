@@ -1,8 +1,9 @@
 package uk.me.jasonmarston.domain.aggregate;
 
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import javax.persistence.AttributeOverride;
@@ -59,12 +60,13 @@ public class ResetToken extends AbstractAggregate {
 	@NotNull
 	private Token token;
 
-	@AttributeOverride(name="id", column=@Column(name="userId"))
+	@AttributeOverride(name="id", column=@Column(name="userId", columnDefinition = "CHAR(36)"))
 	@NotNull
 	private EntityId userId;
 
 	@NotNull
-	private Date expiryDate;
+	@Column(columnDefinition="TIMESTAMP")
+	private ZonedDateTime expiryDate;
 
 	private ResetToken() {
 		super();
@@ -72,15 +74,13 @@ public class ResetToken extends AbstractAggregate {
 		this.expiryDate = calculateExpiryDate();
 	}
 
-	private Date calculateExpiryDate() {
-		final Calendar cal = Calendar.getInstance();
-		cal.setTime(new Timestamp(cal.getTime().getTime()));
-		cal.add(Calendar.MINUTE, 60);
-
-		return new Date(cal.getTime().getTime());
+	private ZonedDateTime calculateExpiryDate() {
+		final Instant inOneHour = Instant.now().plus(1, ChronoUnit.HOURS);
+		final ZoneId utc = ZoneId.of("UTC");
+		return ZonedDateTime.ofInstant(inOneHour, utc);
     }
 
-	public Date getExpiryDate() {
+	public ZonedDateTime getExpiryDate() {
 		return expiryDate;
 	}
 
@@ -93,9 +93,9 @@ public class ResetToken extends AbstractAggregate {
 	}
 
 	public boolean isExpired() {
-		final Calendar cal = Calendar.getInstance();
-		final long now = cal.getTime().getTime();
-		final long timeRemaining = expiryDate.getTime() - now;
-		return timeRemaining <= 0;
+		final Instant now = Instant.now();
+		final ZoneId utc = ZoneId.of("UTC");
+		final ZonedDateTime current = ZonedDateTime.ofInstant(now, utc);
+		return current.isAfter(expiryDate);
 	}
 }

@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
 			user.addAuthority(authority);
 			return userRepository.save(user);
 		}
-		throw new IllegalArgumentException("Invalid Key");
+		throw new IllegalArgumentException("Invalid UserId");
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
 			return userRepository.save(user);
 		}
 
-		throw new IllegalArgumentException("Invalid Key");
+		throw new IllegalArgumentException("Invalid UserId");
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
 			user.enable();
 			return userRepository.save(user);
 		}
-		throw new IllegalArgumentException("Invalid Key");
+		throw new IllegalArgumentException("Invalid UserId");
 	}
 
 	@Override
@@ -101,6 +101,7 @@ public class UserServiceImpl implements UserService {
 
 		return null;
 	}
+
 	@Override
 	public boolean isCurrentPassword(@NotNull @Valid EntityId id, @NotNull Password password) {
 		final Optional<User> optional = userRepository.findById(id);
@@ -109,7 +110,18 @@ public class UserServiceImpl implements UserService {
 			return user.isCurrentPassword(password);
 		}
 
-		throw new IllegalArgumentException("Invalid Key");
+		throw new IllegalArgumentException("Invalid UserId");
+	}
+
+	@Override
+	public boolean login(@NotNull @Valid EntityId id, @NotNull Password password) {
+		final Optional<User> optional = userRepository.findById(id);
+		if(optional.isPresent()) {
+			final User user = optional.get();
+			return user.login(password);
+		}
+
+		throw new IllegalArgumentException("Invalid UserId");
 	}
 
 	@Override
