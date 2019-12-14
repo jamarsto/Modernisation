@@ -71,7 +71,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		if(!userService.login(
 				user.getId(),
 				new Password(password))) {
-			if(!user.isAccountNonLocked()) {
+			if(!userService.findById(user.getId()).isAccountNonLocked()) {
 				throw new LockedException("User account locked");
 			}
 			throw new BadCredentialsException("User credentials bad");

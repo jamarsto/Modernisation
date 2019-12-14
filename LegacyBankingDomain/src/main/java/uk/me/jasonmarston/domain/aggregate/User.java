@@ -182,20 +182,32 @@ public class User extends AbstractAggregate implements UserDetails {
 		if(failedLogins == 0) {
 			return true;
 		}
-		final Instant fiveMinutesAgo = Instant
-				.now()
-				.minus(5, ChronoUnit.MINUTES);
-		final ZoneId utc = ZoneId.of("UTC");
-		final ZonedDateTime dateTime = ZonedDateTime
-				.ofInstant(fiveMinutesAgo, utc);
+		final ZonedDateTime dateTime = updateAccountNonLocked();
 		if(dateTime.isAfter(lastLoginFailure)) {
-			failedLogins = 0;
 			return true;
 		}
 		if(failedLogins > 4) {
 			return false;
 		}
 		return true;
+	}
+	
+	private ZonedDateTime getTestDateTime() {
+		final Instant fiveMinutesAgo = Instant
+				.now()
+				.minus(5, ChronoUnit.MINUTES);
+		final ZoneId utc = ZoneId.of("UTC");
+		final ZonedDateTime dateTime = ZonedDateTime
+				.ofInstant(fiveMinutesAgo, utc);
+		return dateTime;
+	}
+	
+	private ZonedDateTime updateAccountNonLocked() {
+		final ZonedDateTime dateTime = getTestDateTime(); 
+		if(dateTime.isAfter(lastLoginFailure)) {
+			failedLogins = 0;
+		}
+		return dateTime;
 	}
 
 	@Override
@@ -224,6 +236,7 @@ public class User extends AbstractAggregate implements UserDetails {
 			return true;
 		}
 		else {
+			updateAccountNonLocked();
 			failedLogins++;
 			lastLoginFailure = current;
 			return false;

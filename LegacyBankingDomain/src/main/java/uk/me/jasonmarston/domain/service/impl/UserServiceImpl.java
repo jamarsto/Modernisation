@@ -118,7 +118,9 @@ public class UserServiceImpl implements UserService {
 		final Optional<User> optional = userRepository.findById(id);
 		if(optional.isPresent()) {
 			final User user = optional.get();
-			return user.login(password);
+			final boolean loggedIn = user.login(password); 
+			userRepository.save(user);
+			return loggedIn;
 		}
 
 		throw new IllegalArgumentException("Invalid UserId");
