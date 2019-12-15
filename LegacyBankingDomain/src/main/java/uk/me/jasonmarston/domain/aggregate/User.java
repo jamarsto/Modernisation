@@ -131,7 +131,7 @@ public class User extends AbstractAggregate implements UserDetails {
 	private ZonedDateTime lastLoginFailure;
 
 	private int failedLogins = 0;
-	
+
 	private User() {
 		super();
 	}
@@ -238,12 +238,12 @@ public class User extends AbstractAggregate implements UserDetails {
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this, "_authorities", "authorities");
 	}
-	
+
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean isAccountNonLocked() {
 		if(failedLogins == 0) {
