@@ -11,7 +11,7 @@ public class AccountController {
 	@GetMapping({"/", "account"})
 	public ModelAndView home() {
 		final ModelAndView model = new ModelAndView();
-		model.addObject("heading", "login.heading");
+		model.addObject("heading", "account.heading");
 
 		model.setViewName("account/index");
 
