@@ -147,6 +147,11 @@ public class User extends AbstractAggregate implements UserDetails {
 		return _authorities;
 	}
 
+	@Override
+	protected String[] _getExcludeFromUniqueness() {
+		return new String[] { "_authorities", "authorities", "credentials" };
+	}
+
 	private ZonedDateTime _getTestDateTime() {
 		final Instant fiveMinutesAgo = Instant
 				.now()
@@ -168,7 +173,7 @@ public class User extends AbstractAggregate implements UserDetails {
 	public boolean addAuthority(final GrantedAuthority grantedAuthority) {
 		if(_getAuthorities().add(grantedAuthority)) {
 			final Authority.Builder builder = 
-					getBean(AuthorityBuilderFactory.class).create();
+					_getBean(AuthorityBuilderFactory.class).create();
 
 			final Authority authority = builder
 					.forUser(this)
@@ -183,7 +188,7 @@ public class User extends AbstractAggregate implements UserDetails {
 	}
 
 	public void changePassword(final Password password) {
-		this.password = new Password(getBean(PasswordEncoder.class)
+		this.password = new Password(_getBean(PasswordEncoder.class)
 				.encode(password.toString()));
 	}
 
@@ -202,11 +207,6 @@ public class User extends AbstractAggregate implements UserDetails {
 
 	public String getEmail() {
 		return email.toString();
-	}
-
-	@Override
-	protected String[] getExcludeFromUniqueness() {
-		return new String[] { "_authorities", "authorities", "credentials" };
 	}
 
 	public Locale getLocale() {
@@ -253,7 +253,7 @@ public class User extends AbstractAggregate implements UserDetails {
 	}
 
 	public boolean isCurrentPassword(final Password password) {
-		return getBean(PasswordEncoder.class).matches(
+		return _getBean(PasswordEncoder.class).matches(
 				password.getPassword(),
 				this.password.getPassword());
 	}

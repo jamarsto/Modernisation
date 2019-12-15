@@ -72,6 +72,11 @@ public class Account extends AbstractAggregate {
 		super();
 	}
 
+	@Override
+	protected String[] _getExcludeFromUniqueness() {
+		return new String[] { "transactions" };
+	}
+
 	public Transaction depositFunds(final Amount amount) {
 		return depositFunds(amount, null);
 	}
@@ -81,7 +86,7 @@ public class Account extends AbstractAggregate {
 		balance = balance.add(amount);
 
 		final Transaction.Builder builder = 
-				getBean(TransactionBuilderFactory.class).create();
+				_getBean(TransactionBuilderFactory.class).create();
 		final Transaction transaction = builder
 				.againstAccount(this)
 				.ofType(TransactionType.DEPOSIT)
@@ -106,11 +111,6 @@ public class Account extends AbstractAggregate {
 			.collect(Collectors.toList());
 	}
 
-	@Override
-	protected String[] getExcludeFromUniqueness() {
-		return new String[] { "transactions" };
-	}
-
 	public List<Transaction> getTransactions() {
 		return transactions;
 	}
@@ -132,7 +132,7 @@ public class Account extends AbstractAggregate {
 		balance = balance.subtract(amount);
 
 		final Transaction.Builder builder = 
-				getBean(TransactionBuilderFactory.class).create();
+				_getBean(TransactionBuilderFactory.class).create();
 		final Transaction transaction = builder
 				.againstAccount(this)
 				.ofType(TransactionType.WITHDRAWAL)

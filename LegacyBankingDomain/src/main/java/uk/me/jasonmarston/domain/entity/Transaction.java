@@ -100,9 +100,14 @@ public class Transaction extends AbstractEntity {
 	}
 
 	@Override
-	protected ToStringBuilder addFieldsToToString() {
-		return getToStringBuilder()
+	protected ToStringBuilder _addFieldsToToString() {
+		return _getToStringBuilder()
 				.append("accountId", account.getId());
+	}
+
+	@Override
+	protected String[] _getExcludeFromUniqueness() {
+		return new String[] { "account" };
 	}
 
 	public Account getAccount() {
@@ -111,11 +116,6 @@ public class Transaction extends AbstractEntity {
 
 	public Amount getAmount() {
 		return amount;
-	}
-
-	@Override
-	protected String[] getExcludeFromUniqueness() {
-		return new String[] { "account" };
 	}
 
 	public EntityId getReferenceAccountId() {

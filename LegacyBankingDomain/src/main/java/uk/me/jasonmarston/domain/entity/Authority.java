@@ -71,17 +71,17 @@ public class Authority extends AbstractEntity {
 	}
 
 	@Override
-	protected ToStringBuilder addFieldsToToString() {
-		return getToStringBuilder()
+	protected ToStringBuilder _addFieldsToToString() {
+		return _getToStringBuilder()
 				.append("userId", user.getId());
+	}
+
+	@Override
+	protected String[] _getExcludeFromUniqueness() {
+		return new String[] { "user" };
 	}
 
 	public GrantedAuthority getAuthority() {
 		return new SimpleGrantedAuthority(authority);
-	}
-
-	@Override
-	protected String[] getExcludeFromUniqueness() {
-		return new String[] { "user" };
 	}
 }
