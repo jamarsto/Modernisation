@@ -18,10 +18,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -103,6 +99,7 @@ public class User extends AbstractAggregate implements UserDetails {
 	@Column(unique = true)
 	private EmailAddress email;
 
+	@NotNull
 	@Column(columnDefinition = "VARCHAR(42)")
 	private Locale locale;
 
@@ -111,10 +108,11 @@ public class User extends AbstractAggregate implements UserDetails {
 	@Transient
 	private String credentials;
 
+	@NotNull
 	private Password password;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
 	@NotNull
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
 	private Set<Authority> authorities = new HashSet<Authority>();
 	
 	@Transient
@@ -194,11 +192,6 @@ public class User extends AbstractAggregate implements UserDetails {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj, "_authorities", "authorities", "credentials");
-	}
-
-	@Override
 	public Set<GrantedAuthority> getAuthorities() {
 		return Collections.unmodifiableSet(_getAuthorities());
 	}
@@ -209,6 +202,11 @@ public class User extends AbstractAggregate implements UserDetails {
 
 	public String getEmail() {
 		return email.toString();
+	}
+
+	@Override
+	protected String[] getExcludeFromUniqueness() {
+		return new String[] { "_authorities", "authorities", "credentials" };
 	}
 
 	public Locale getLocale() {
@@ -227,11 +225,6 @@ public class User extends AbstractAggregate implements UserDetails {
 	@Override
 	public String getUsername() {
 		return email.toString();
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this, "_authorities", "authorities", "credentials");
 	}
 
 	@Override
@@ -298,18 +291,5 @@ public class User extends AbstractAggregate implements UserDetails {
 			}
 		}
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-				.append("id", getId())
-				.append("email", email)
-				.append("locale", locale)
-				.append("enabled", enabled)
-				.append("lastLogin", lastLogin)
-				.append("lastLoginFailure", lastLoginFailure)
-				.append("failedLogins", failedLogins)
-				.build();
 	}
 }

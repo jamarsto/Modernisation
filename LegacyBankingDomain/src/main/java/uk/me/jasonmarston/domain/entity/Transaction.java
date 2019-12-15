@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Service;
 
 import uk.me.jasonmarston.domain.aggregate.Account;
@@ -100,6 +99,12 @@ public class Transaction extends AbstractEntity {
 		super();
 	}
 
+	@Override
+	protected ToStringBuilder addFieldsToToString() {
+		return getToStringBuilder()
+				.append("accountId", account.getId());
+	}
+
 	public Account getAccount() {
 		return account;
 	}
@@ -108,22 +113,16 @@ public class Transaction extends AbstractEntity {
 		return amount;
 	}
 
+	@Override
+	protected String[] getExcludeFromUniqueness() {
+		return new String[] { "account" };
+	}
+
 	public EntityId getReferenceAccountId() {
 		return referenceAccountId;
 	}
 
 	public TransactionType getType() {
 		return type;
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-				.append("id", getId())
-				.append("accountId", account.getId())
-				.append("type", type)
-				.append("amount", amount)
-				.append("referenceAccountId", referenceAccountId)
-				.build();
 	}
 }

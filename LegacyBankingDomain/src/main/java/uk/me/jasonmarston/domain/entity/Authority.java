@@ -8,7 +8,6 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,7 @@ public class Authority extends AbstractEntity {
 	public static class Builder implements IBuilder<Authority> {
 		private User user;
 		private GrantedAuthority grantedAuthority;
-		
+
 		@Override
 		public Authority build() {
 			if(user == null || grantedAuthority == null) {
@@ -36,17 +35,16 @@ public class Authority extends AbstractEntity {
 
 			return authority;
 		}
-		
+
 		public Builder forUser(final User user) {
 			this.user = user;
 			return this;
 		}
-		
+
 		public Builder withAuthority(final GrantedAuthority grantedAuthority) {
 			this.grantedAuthority = grantedAuthority;
 			return this;
 		}
-		
 	}
 
 	@Service
@@ -72,16 +70,18 @@ public class Authority extends AbstractEntity {
 		super();
 	}
 
+	@Override
+	protected ToStringBuilder addFieldsToToString() {
+		return getToStringBuilder()
+				.append("userId", user.getId());
+	}
+
 	public GrantedAuthority getAuthority() {
 		return new SimpleGrantedAuthority(authority);
 	}
 
 	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-				.append("id", getId())
-				.append("userId", user.getId())
-				.append("authority", authority)
-				.build();
+	protected String[] getExcludeFromUniqueness() {
+		return new String[] { "user" };
 	}
 }

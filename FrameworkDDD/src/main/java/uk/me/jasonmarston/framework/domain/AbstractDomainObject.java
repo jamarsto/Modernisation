@@ -12,7 +12,7 @@ public class AbstractDomainObject implements DomainObject {
 	public boolean equals(Object obj) {
 		return EqualsBuilder.reflectionEquals(this, obj);
 	}
-
+	
 	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this);
@@ -20,7 +20,7 @@ public class AbstractDomainObject implements DomainObject {
 
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this, 
-				ToStringStyle.MULTI_LINE_STYLE);
+		return ToStringBuilder
+				.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

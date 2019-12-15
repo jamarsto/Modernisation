@@ -11,10 +11,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Service;
 
 import uk.me.jasonmarston.domain.entity.Transaction;
@@ -98,11 +94,6 @@ public class Account extends AbstractAggregate {
 		return transaction;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj, "transactions");
-	}
-
 	public Balance getBalance() {
 		return balance;
 	}
@@ -115,6 +106,11 @@ public class Account extends AbstractAggregate {
 			.collect(Collectors.toList());
 	}
 
+	@Override
+	protected String[] getExcludeFromUniqueness() {
+		return new String[] { "transactions" };
+	}
+
 	public List<Transaction> getTransactions() {
 		return transactions;
 	}
@@ -125,18 +121,6 @@ public class Account extends AbstractAggregate {
 			.filter(transaction -> 
 				TransactionType.WITHDRAWAL.equals(transaction.getType()))
 			.collect(Collectors.toList());
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this, "transactions");
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-				.append("balance", balance)
-				.build();
 	}
 
 	public Transaction withdrawFunds(final Amount amount) {
