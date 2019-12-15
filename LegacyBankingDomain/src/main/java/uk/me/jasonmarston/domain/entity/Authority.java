@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
@@ -72,5 +74,14 @@ public class Authority extends AbstractEntity {
 
 	public GrantedAuthority getAuthority() {
 		return new SimpleGrantedAuthority(authority);
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+				.append("id", getId())
+				.append("userId", user.getId())
+				.append("authority", authority)
+				.build();
 	}
 }

@@ -13,10 +13,9 @@ import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 import uk.me.jasonmarston.domain.entity.Transaction;
 import uk.me.jasonmarston.domain.factory.aggregate.AccountBuilderFactory;
@@ -65,11 +64,9 @@ public class Account extends AbstractAggregate {
 
 	private static final long serialVersionUID = 1L;
 
-	@JsonUnwrapped
 	@NotNull
 	private Balance balance;
 
-	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "account", fetch = FetchType.EAGER)
 	@NotNull
 	private List<@NotNull Transaction> transactions = 
@@ -110,7 +107,6 @@ public class Account extends AbstractAggregate {
 		return balance;
 	}
 
-	@JsonIgnore
 	public List<Transaction> getDeposits() {
 		return transactions
 			.stream()
@@ -123,7 +119,6 @@ public class Account extends AbstractAggregate {
 		return transactions;
 	}
 
-	@JsonIgnore
 	public List<Transaction> getWithdrawals() {
 		return transactions
 			.stream()
@@ -135,6 +130,13 @@ public class Account extends AbstractAggregate {
 	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this, "transactions");
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+				.append("balance", balance)
+				.build();
 	}
 
 	public Transaction withdrawFunds(final Amount amount) {

@@ -7,15 +7,12 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 import uk.me.jasonmarston.domain.aggregate.Account;
 import uk.me.jasonmarston.domain.factory.entity.TransactionBuilderFactory;
@@ -50,7 +47,6 @@ public class Transaction extends AbstractEntity {
 			final Transaction transaction = new Transaction();
 			transaction.type = type;
 			transaction.account = account;
-			transaction.ownerAccountId = account.getId();
 			transaction.amount = amount;
 			transaction.referenceAccountId = referenceAccountId;
 
@@ -88,24 +84,15 @@ public class Transaction extends AbstractEntity {
 	@NotNull
 	private TransactionType type;
 
-	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.ALL)
 	@AttributeOverride(name="id", column=@Column(name="ownerAccountId"))
 	@NotNull
 	private Account account;
 
-	@JsonInclude
-	@JsonUnwrapped
-	@Transient
-	@NotNull
-	private EntityId ownerAccountId;
-
-	@JsonUnwrapped
 	@NotNull
 	@Positive
 	private Amount amount;
 
-	@JsonUnwrapped
 	@AttributeOverride(name="id", column=@Column(name="referenceAccountId", columnDefinition = "CHAR(36)"))
 	private EntityId referenceAccountId;
 
@@ -127,5 +114,16 @@ public class Transaction extends AbstractEntity {
 
 	public TransactionType getType() {
 		return type;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+				.append("id", getId())
+				.append("accountId", account.getId())
+				.append("type", type)
+				.append("amount", amount)
+				.append("referenceAccountId", referenceAccountId)
+				.build();
 	}
 }

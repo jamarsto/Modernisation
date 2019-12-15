@@ -20,6 +20,8 @@ import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -304,4 +306,18 @@ public class User extends AbstractAggregate implements UserDetails {
 		}
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+				.append("id", getId())
+				.append("email", email)
+				.append("locale", locale)
+				.append("enabled", enabled)
+				.append("lastLogin", lastLogin)
+				.append("lastLoginFailure", lastLoginFailure)
+				.append("failedLogins", failedLogins)
+				.build();
+	}
+
 }
