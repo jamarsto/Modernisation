@@ -60,6 +60,17 @@ public class UserRegistrationController {
 	@Lazy
 	private LocaleResolver localeResolver;
 
+	private ModelAndView expiredViewAndModel(final ModelAndView model) {
+		model.addObject("strongPassword", STRONG_PASSWORD);
+		model.addObject("registrationBean", new RegistrationBean());
+		final AlertDanger alert = new AlertDanger("error.token");
+		model.addObject("alert", alert);
+		
+		model.setViewName("user/registration");
+		
+		return model;
+	}
+
 	@GetMapping("/user/registration")
 	public ModelAndView registration() {
 		final ModelAndView model = new ModelAndView();
@@ -159,17 +170,6 @@ public class UserRegistrationController {
 
 		model.setViewName("confirmation");
 
-		return model;
-	}
-
-	private ModelAndView expiredViewAndModel(final ModelAndView model) {
-		model.addObject("strongPassword", STRONG_PASSWORD);
-		model.addObject("registrationBean", new RegistrationBean());
-		final AlertDanger alert = new AlertDanger("error.token");
-		model.addObject("alert", alert);
-		
-		model.setViewName("user/registration");
-		
 		return model;
 	}
 }

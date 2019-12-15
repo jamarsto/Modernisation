@@ -20,6 +20,11 @@ public class CustomErrorController implements ErrorController {
 	@Value("server.error.include-stacktrace")
 	private String includeStackTrace;
 
+	@Override
+	public String getErrorPath() {
+		return "/error";
+	}
+
 	@RequestMapping("/error")
 	public ModelAndView handleError(HttpServletRequest request) {
 		final ModelAndView model = new ModelAndView();
@@ -61,10 +66,5 @@ public class CustomErrorController implements ErrorController {
 		model.setViewName("error");
 
 		return model;
-	}
-
-	@Override
-	public String getErrorPath() {
-		return "/error";
 	}
 }

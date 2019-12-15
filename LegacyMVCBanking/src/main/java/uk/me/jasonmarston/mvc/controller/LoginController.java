@@ -18,33 +18,6 @@ import uk.me.jasonmarston.mvc.alerts.AlertInfo;
 
 @Controller
 public class LoginController {
-	@GetMapping("/login")
-	public ModelAndView login(
-			final @RequestParam(value ="error", required = false) 
-					String error,
-			final @RequestParam(value = "logout", required = false)
-					String logout,
-			final HttpServletRequest request) {
-		final ModelAndView model = new ModelAndView();
-		model.addObject("heading", "login.heading");
-
-		if(error != null) {
-			final String errorKey = getErrorKey(request);
-			if(errorKey != null) {
-				final AlertDanger alert = new AlertDanger(errorKey);
-				model.addObject("alert", alert);
-			}
-		}
-		else if(logout != null) {
-			final AlertInfo alert = new AlertInfo("info.logout");
-			model.addObject("alert", alert);
-		}
-		
-		model.setViewName("login");
-		
-		return model;
-	}
-
 	private String getErrorKey(HttpServletRequest request) {
 		final Exception e = (Exception)request
 				.getSession()
@@ -78,5 +51,32 @@ public class LoginController {
 		}
 
 		return null;
+	}
+
+	@GetMapping("/login")
+	public ModelAndView login(
+			final @RequestParam(value ="error", required = false) 
+					String error,
+			final @RequestParam(value = "logout", required = false)
+					String logout,
+			final HttpServletRequest request) {
+		final ModelAndView model = new ModelAndView();
+		model.addObject("heading", "login.heading");
+
+		if(error != null) {
+			final String errorKey = getErrorKey(request);
+			if(errorKey != null) {
+				final AlertDanger alert = new AlertDanger(errorKey);
+				model.addObject("alert", alert);
+			}
+		}
+		else if(logout != null) {
+			final AlertInfo alert = new AlertInfo("info.logout");
+			model.addObject("alert", alert);
+		}
+		
+		model.setViewName("login");
+		
+		return model;
 	}
 }

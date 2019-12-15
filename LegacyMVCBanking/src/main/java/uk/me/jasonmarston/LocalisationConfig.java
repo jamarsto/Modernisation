@@ -34,6 +34,14 @@ public class LocalisationConfig implements WebMvcConfigurer {
 		registry.addInterceptor(localeChangeInterceptor());
 	}
 
+	@Bean
+	public Function<String, String> currentUrlWithoutParam() {
+		return param -> ServletUriComponentsBuilder
+	    		.fromCurrentRequest()
+	    		.replaceQueryParam(param)
+	    		.toUriString();
+	}
+
 	@Bean(name = "htmlEmailTemplateEngine")
 	public TemplateEngine htmlEmailTemplateEngine() {
 		final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
@@ -85,10 +93,5 @@ public class LocalisationConfig implements WebMvcConfigurer {
 	@Bean
 	public Java8TimeDialect  springJava8TimeDialect (){
 		return new Java8TimeDialect ();
-	}
-
-	@Bean
-	public Function<String, String> currentUrlWithoutParam() {
-	    return param ->   ServletUriComponentsBuilder.fromCurrentRequest().replaceQueryParam(param).toUriString();
 	}
 }

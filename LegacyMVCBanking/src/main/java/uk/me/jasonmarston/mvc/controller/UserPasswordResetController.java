@@ -55,6 +55,27 @@ public class UserPasswordResetController {
 	@Lazy
 	private LocaleResolver localeResolver;
 
+	private ModelAndView expiredViewAndModel(final ModelAndView model) {
+		model.addObject("forgottenPasswordBean", new ForgottenPasswordBean());
+		final AlertDanger alert = new AlertDanger("error.token");
+		model.addObject("alert", alert);
+		
+		model.setViewName("user/password/reset");
+		
+		return model;
+	}
+
+	@GetMapping("/user/password/reset")
+	public ModelAndView forgotten() {
+		final ModelAndView model = new ModelAndView();
+		model.addObject("heading", "resetPassword.heading");
+		model.addObject("forgottenPasswordBean", new ForgottenPasswordBean());
+		
+		model.setViewName("user/password/reset");
+
+		return model;
+	}
+
 	@PostMapping("/user/password/reset")
 	public ModelAndView forgotten(
 			@ModelAttribute("forgottenPasswordBean") 
@@ -73,17 +94,6 @@ public class UserPasswordResetController {
 						localeResolver.resolveLocale(request)));
 
 		model.setViewName("confirmation");
-
-		return model;
-	}
-
-	@GetMapping("/user/password/reset")
-	public ModelAndView forgotten() {
-		final ModelAndView model = new ModelAndView();
-		model.addObject("heading", "resetPassword.heading");
-		model.addObject("forgottenPasswordBean", new ForgottenPasswordBean());
-		
-		model.setViewName("user/password/reset");
 
 		return model;
 	}
@@ -162,16 +172,6 @@ public class UserPasswordResetController {
 		model.setViewName("user/password/reset/verification");
 
 	    return model;
-	}
-
-	private ModelAndView expiredViewAndModel(final ModelAndView model) {
-		model.addObject("forgottenPasswordBean", new ForgottenPasswordBean());
-		final AlertDanger alert = new AlertDanger("error.token");
-		model.addObject("alert", alert);
-		
-		model.setViewName("user/password/reset");
-		
-		return model;
 	}
 
 }
