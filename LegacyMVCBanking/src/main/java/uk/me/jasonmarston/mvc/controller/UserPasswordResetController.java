@@ -151,7 +151,6 @@ public class UserPasswordResetController {
 			@RequestParam(value = "token") final String tokenString) {
 		final ModelAndView model = new ModelAndView();
 		model.addObject("heading", "resetPassword.heading");
-		model.addObject("strongPassword", STRONG_PASSWORD);
 
 		final Token token =  new Token(tokenString);
 		final ResetToken resetToken = 

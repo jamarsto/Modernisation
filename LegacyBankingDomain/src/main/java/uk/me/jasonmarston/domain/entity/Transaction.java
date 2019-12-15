@@ -44,7 +44,7 @@ public class Transaction extends AbstractEntity {
 		@Override
 		public Transaction build() {
 			if(type == null || account == null || amount == null) {
-				throw new RuntimeException("Invalid transaction.");
+				throw new IllegalArgumentException("Invalid transaction.");
 			}
 
 			final Transaction transaction = new Transaction();
@@ -110,6 +110,7 @@ public class Transaction extends AbstractEntity {
 	private EntityId referenceAccountId;
 
 	private Transaction() {
+		super();
 	}
 
 	public Account getAccount() {

@@ -32,7 +32,7 @@ public class VerificationToken extends AbstractAggregate {
 		@Override
 		public VerificationToken build() {
 			if(userId == null) {
-				throw new RuntimeException("A User ID is required");
+				throw new IllegalArgumentException("A User ID is required");
 			}
 
 			final VerificationToken verificationToken = new VerificationToken();
