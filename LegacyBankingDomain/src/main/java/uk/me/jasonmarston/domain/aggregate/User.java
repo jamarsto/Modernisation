@@ -106,13 +106,10 @@ public class User extends AbstractAggregate implements UserDetails {
 	@Column(columnDefinition = "VARCHAR(42)")
 	private Locale locale;
 
-	@Transient
-	private String issuer = null;
-
-	private String picture = null;
+	private String picture;
 
 	@Transient
-	private String credentials = null;
+	private String credentials;
 
 	private Password password;
 
@@ -198,7 +195,7 @@ public class User extends AbstractAggregate implements UserDetails {
 
 	@Override
 	public boolean equals(Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj, "_authorities", "authorities");
+		return EqualsBuilder.reflectionEquals(this, obj, "_authorities", "authorities", "credentials");
 	}
 
 	@Override
@@ -212,10 +209,6 @@ public class User extends AbstractAggregate implements UserDetails {
 
 	public String getEmail() {
 		return email.toString();
-	}
-
-	public String getIssuer() {
-		return issuer;
 	}
 
 	public Locale getLocale() {
@@ -238,7 +231,7 @@ public class User extends AbstractAggregate implements UserDetails {
 
 	@Override
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this, "_authorities", "authorities");
+		return HashCodeBuilder.reflectionHashCode(this, "_authorities", "authorities", "credentials");
 	}
 
 	@Override
@@ -319,5 +312,4 @@ public class User extends AbstractAggregate implements UserDetails {
 				.append("failedLogins", failedLogins)
 				.build();
 	}
-
 }
