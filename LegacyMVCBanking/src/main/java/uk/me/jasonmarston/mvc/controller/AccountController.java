@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Validated
 public class AccountController {
 	@GetMapping({"/", "account"})
-	public ModelAndView home() {
+	public ModelAndView getAccount() {
 		final ModelAndView model = new ModelAndView();
 		model.addObject("heading", "account.heading");
 

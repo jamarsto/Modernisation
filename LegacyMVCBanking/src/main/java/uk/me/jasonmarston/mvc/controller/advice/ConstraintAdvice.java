@@ -21,7 +21,7 @@ public class ConstraintAdvice {
 			ConstraintViolationException.class,
 			MethodArgumentNotValidException.class,
 			IllegalArgumentException.class})
-	public String exception(final Throwable e, HttpServletRequest req) throws Throwable {
+	public String handleException(final Throwable e, HttpServletRequest req) throws Throwable {
 		if(e instanceof TransactionSystemException) {
 			final Throwable t = ((TransactionSystemException) e).getRootCause();
 			if(!(t instanceof ConstraintViolationException) &&

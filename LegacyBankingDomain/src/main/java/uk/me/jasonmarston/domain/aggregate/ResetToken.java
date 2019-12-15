@@ -71,10 +71,10 @@ public class ResetToken extends AbstractAggregate {
 	private ResetToken() {
 		super();
 		this.token = new Token(UUID.randomUUID().toString());
-		this.expiryDate = calculateExpiryDate();
+		this.expiryDate = _calculateExpiryDate();
 	}
 
-	private ZonedDateTime calculateExpiryDate() {
+	private ZonedDateTime _calculateExpiryDate() {
 		final Instant inOneHour = Instant.now().plus(1, ChronoUnit.HOURS);
 		final ZoneId utc = ZoneId.of("UTC");
 		return ZonedDateTime.ofInstant(inOneHour, utc);

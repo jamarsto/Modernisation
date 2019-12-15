@@ -18,7 +18,7 @@ import uk.me.jasonmarston.mvc.alerts.AlertInfo;
 
 @Controller
 public class LoginController {
-	private String getErrorKey(HttpServletRequest request) {
+	private String _getErrorKey(HttpServletRequest request) {
 		final Exception e = (Exception)request
 				.getSession()
 				.getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
@@ -54,7 +54,7 @@ public class LoginController {
 	}
 
 	@GetMapping("/login")
-	public ModelAndView login(
+	public ModelAndView getLogin(
 			final @RequestParam(value ="error", required = false) 
 					String error,
 			final @RequestParam(value = "logout", required = false)
@@ -64,7 +64,7 @@ public class LoginController {
 		model.addObject("heading", "login.heading");
 
 		if(error != null) {
-			final String errorKey = getErrorKey(request);
+			final String errorKey = _getErrorKey(request);
 			if(errorKey != null) {
 				final AlertDanger alert = new AlertDanger(errorKey);
 				model.addObject("alert", alert);

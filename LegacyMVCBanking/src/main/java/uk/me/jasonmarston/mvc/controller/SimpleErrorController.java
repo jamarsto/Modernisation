@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class CustomErrorController implements ErrorController {
+public class SimpleErrorController implements ErrorController {
 	@Value("server.error.include-stacktrace")
 	private String includeStackTrace;
 
@@ -26,7 +26,7 @@ public class CustomErrorController implements ErrorController {
 	}
 
 	@RequestMapping("/error")
-	public ModelAndView handleError(HttpServletRequest request) {
+	public ModelAndView requestError(HttpServletRequest request) {
 		final ModelAndView model = new ModelAndView();
 		model.addObject("heading", "error.heading");
 

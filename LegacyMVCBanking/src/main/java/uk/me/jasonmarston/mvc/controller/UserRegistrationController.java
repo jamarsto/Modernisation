@@ -60,7 +60,7 @@ public class UserRegistrationController {
 	@Lazy
 	private LocaleResolver localeResolver;
 
-	private ModelAndView expiredViewAndModel(final ModelAndView model) {
+	private ModelAndView _expiredViewAndModel(final ModelAndView model) {
 		model.addObject("strongPassword", STRONG_PASSWORD);
 		model.addObject("registrationBean", new RegistrationBean());
 		final AlertDanger alert = new AlertDanger("error.token");
@@ -72,7 +72,7 @@ public class UserRegistrationController {
 	}
 
 	@GetMapping("/user/registration")
-	public ModelAndView registration() {
+	public ModelAndView getUserRegistration() {
 		final ModelAndView model = new ModelAndView();
 		model.addObject("heading", "register.heading");
 		model.addObject("strongPassword", STRONG_PASSWORD);
@@ -83,8 +83,48 @@ public class UserRegistrationController {
 		return model;
 	}
 
+	@GetMapping("/user/registration/{token}")
+	public ModelAndView getUserRegistrationToken(
+			@PathVariable("token") final String tokenString) {
+		final ModelAndView model = new ModelAndView();
+		model.addObject("heading", "register.heading");
+		final Token token = new Token(tokenString);
+		final VerificationToken verificationToken = 
+				verificationTokenService.findByToken(token);
+		if(verificationToken == null) {
+			return _expiredViewAndModel(model);
+		}
+
+		verificationTokenService.delete(verificationToken.getId());
+
+		if(verificationToken.isExpired()) {
+			return _expiredViewAndModel(model);
+		}
+
+		User user = userService.findById(verificationToken.getUserId());
+		if(user == null) {
+			return _expiredViewAndModel(model);
+		}
+
+		try {
+			user = userService.enable(user.getId());
+		}
+		catch(OptimisticLockException e) {
+			return _expiredViewAndModel(model);
+		}
+
+		AuthenticationHelper.loginUser(user);
+
+		final AlertInfo alert = new AlertInfo("info.emailVerified");
+		model.addObject("alert", alert);
+
+		model.setViewName("confirmation");
+
+		return model;
+	}
+
 	@PostMapping("/user/registration")
-	public ModelAndView registration(
+	public ModelAndView postUserRegistration(
 			@ModelAttribute("registrationBean") 
 					@NotNull @Valid final RegistrationBean registrationBean,
 					final HttpServletRequest request) {
@@ -126,46 +166,6 @@ public class UserRegistrationController {
 		}
 
 		final AlertInfo alert = new AlertInfo("info.registrationEmail");
-		model.addObject("alert", alert);
-
-		model.setViewName("confirmation");
-
-		return model;
-	}
-
-	@GetMapping("/user/registration/{token}")
-	public ModelAndView verification(
-			@PathVariable("token") final String tokenString) {
-		final ModelAndView model = new ModelAndView();
-		model.addObject("heading", "register.heading");
-		final Token token = new Token(tokenString);
-		final VerificationToken verificationToken = 
-				verificationTokenService.findByToken(token);
-		if(verificationToken == null) {
-			return expiredViewAndModel(model);
-		}
-
-		verificationTokenService.delete(verificationToken.getId());
-
-		if(verificationToken.isExpired()) {
-			return expiredViewAndModel(model);
-		}
-
-		User user = userService.findById(verificationToken.getUserId());
-		if(user == null) {
-			return expiredViewAndModel(model);
-		}
-
-		try {
-			user = userService.enable(user.getId());
-		}
-		catch(OptimisticLockException e) {
-			return expiredViewAndModel(model);
-		}
-
-		AuthenticationHelper.loginUser(user);
-
-		final AlertInfo alert = new AlertInfo("info.emailVerified");
 		model.addObject("alert", alert);
 
 		model.setViewName("confirmation");

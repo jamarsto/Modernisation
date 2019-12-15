@@ -36,7 +36,6 @@ import uk.me.jasonmarston.mvc.event.OnPasswordResetEvent;
 
 @Controller
 @Validated
-//@SessionAttributes("token")
 public class UserPasswordResetController {
 	@Autowired
 	@Lazy
@@ -54,7 +53,7 @@ public class UserPasswordResetController {
 	@Lazy
 	private LocaleResolver localeResolver;
 
-	private ModelAndView expiredViewAndModel(final ModelAndView model) {
+	private ModelAndView _expiredViewAndModel(final ModelAndView model) {
 		model.addObject("forgottenPasswordBean", new ForgottenPasswordBean());
 		final AlertDanger alert = new AlertDanger("error.token");
 		model.addObject("alert", alert);
@@ -65,7 +64,7 @@ public class UserPasswordResetController {
 	}
 
 	@GetMapping("/user/password/reset")
-	public ModelAndView forgotten() {
+	public ModelAndView getUserPasswordReset() {
 		final ModelAndView model = new ModelAndView();
 		model.addObject("heading", "resetPassword.heading");
 		model.addObject("forgottenPasswordBean", new ForgottenPasswordBean());
@@ -75,8 +74,36 @@ public class UserPasswordResetController {
 		return model;
 	}
 
+	@GetMapping("/user/password/reset/{token}")
+	public ModelAndView getUserPasswordResetToken(
+			final WebRequest request, 
+			@PathVariable("token") final String tokenString) {
+		final ModelAndView model = new ModelAndView();
+		model.addObject("heading", "resetPassword.heading");
+
+		final Token token =  new Token(tokenString);
+		final ResetToken resetToken = 
+				resetTokenService.findByToken(token);
+		if(resetToken == null || resetToken.isExpired()) {
+			return _expiredViewAndModel(model);
+		}
+
+		final User user = userService.findById(resetToken.getUserId());
+		if(user == null) {
+			return _expiredViewAndModel(model);
+		}
+
+		//model.addObject("token", token);
+		model.addObject("strongPassword", STRONG_PASSWORD);
+		model.addObject("resetPasswordBean", new ResetPasswordBean());
+		
+		model.setViewName("user/password/reset/verification");
+
+	    return model;
+	}
+
 	@PostMapping("/user/password/reset")
-	public ModelAndView forgotten(
+	public ModelAndView postUserPasswordReset(
 			@ModelAttribute("forgottenPasswordBean") 
 					@NotNull @Valid final ForgottenPasswordBean 
 							forgottenPasswordBean,
@@ -98,7 +125,7 @@ public class UserPasswordResetController {
 	}
 
 	@PostMapping("/user/password/reset/{token}")
-	public ModelAndView verification(
+	public ModelAndView postUserPasswordResetToken(
 			@PathVariable("token") String tokenString,
 			@ModelAttribute("resetPasswordBean") 
 					@NotNull @Valid final ResetPasswordBean resetPasswordBean,
@@ -111,18 +138,18 @@ public class UserPasswordResetController {
 		final ResetToken resetToken = resetTokenService
 				.findByToken(token);
 		if(resetToken == null) {
-			return expiredViewAndModel(model);
+			return _expiredViewAndModel(model);
 		}
 
 		resetTokenService.delete(resetToken.getId());
 
 		if(resetToken.isExpired()) {
-			return expiredViewAndModel(model);
+			return _expiredViewAndModel(model);
 		}
 
 		User user = userService.findById(resetToken.getUserId());
 		if(user == null) {
-			return expiredViewAndModel(model);
+			return _expiredViewAndModel(model);
 		}
 
 		try {
@@ -130,7 +157,7 @@ public class UserPasswordResetController {
 					new Password(resetPasswordBean.getPassword()));
 		}
 		catch(OptimisticLockException e) {
-			return expiredViewAndModel(model);
+			return _expiredViewAndModel(model);
 		}
 
 		AuthenticationHelper.loginUser(user);
@@ -139,34 +166,6 @@ public class UserPasswordResetController {
 		model.addObject("alert", alert);
 		
 		model.setViewName("confirmation");
-
-	    return model;
-	}
-
-	@GetMapping("/user/password/reset/{token}")
-	public ModelAndView verification(
-			final WebRequest request, 
-			@PathVariable("token") final String tokenString) {
-		final ModelAndView model = new ModelAndView();
-		model.addObject("heading", "resetPassword.heading");
-
-		final Token token =  new Token(tokenString);
-		final ResetToken resetToken = 
-				resetTokenService.findByToken(token);
-		if(resetToken == null || resetToken.isExpired()) {
-			return expiredViewAndModel(model);
-		}
-
-		final User user = userService.findById(resetToken.getUserId());
-		if(user == null) {
-			return expiredViewAndModel(model);
-		}
-
-		//model.addObject("token", token);
-		model.addObject("strongPassword", STRONG_PASSWORD);
-		model.addObject("resetPasswordBean", new ResetPasswordBean());
-		
-		model.setViewName("user/password/reset/verification");
 
 	    return model;
 	}

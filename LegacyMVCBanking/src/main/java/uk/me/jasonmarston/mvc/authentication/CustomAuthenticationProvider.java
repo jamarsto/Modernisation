@@ -25,29 +25,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	@Lazy
 	private UserService userService;
 
-	@Override
-	public Authentication authenticate(final Authentication authentication)
-			throws AuthenticationException {
-		final String email = authentication.getName();
-		final String password = authentication.getCredentials().toString();
-
-		final User user = userService.findByEmail(new EmailAddress(email));
-
-		validate(user, password);
-
-		return new UsernamePasswordAuthenticationToken(
-				user,
-				user.getPassword(),
-				user.getAuthorities());
-	}
-
-	@Override
-	public boolean supports(final Class<?> authentication) {
-		return authentication
-				.equals(UsernamePasswordAuthenticationToken.class);
-	}
-
-	private void validate(final User user, final String password) {
+	private void _validate(final User user, final String password) {
 		if(user == null) {
 			throw new UsernameNotFoundException("User not found");
 		}
@@ -76,5 +54,27 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			}
 			throw new BadCredentialsException("User credentials bad");
 		}
+	}
+
+	@Override
+	public Authentication authenticate(final Authentication authentication)
+			throws AuthenticationException {
+		final String email = authentication.getName();
+		final String password = authentication.getCredentials().toString();
+
+		final User user = userService.findByEmail(new EmailAddress(email));
+
+		_validate(user, password);
+
+		return new UsernamePasswordAuthenticationToken(
+				user,
+				user.getPassword(),
+				user.getAuthorities());
+	}
+
+	@Override
+	public boolean supports(final Class<?> authentication) {
+		return authentication
+				.equals(UsernamePasswordAuthenticationToken.class);
 	}
 }

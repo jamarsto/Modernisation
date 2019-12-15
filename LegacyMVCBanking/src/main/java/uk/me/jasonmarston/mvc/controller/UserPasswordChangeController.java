@@ -31,7 +31,7 @@ public class UserPasswordChangeController {
 	private UserService userService;
 
 	@GetMapping("/user/password/change")
-	public ModelAndView forgotten() {
+	public ModelAndView getUserPasswordChange() {
 		final ModelAndView model = new ModelAndView();
 		model.addObject("heading", "changePassword.heading");
 		model.addObject("strongPassword", STRONG_PASSWORD);
@@ -43,7 +43,7 @@ public class UserPasswordChangeController {
 	}
 
 	@PostMapping("/user/password/change")
-	public ModelAndView forgotten(
+	public ModelAndView postUserPasswordChange(
 			@AuthenticationPrincipal final User user,
 			@ModelAttribute("changePasswordBean") 
 					@NotNull @Valid final ChangePasswordBean

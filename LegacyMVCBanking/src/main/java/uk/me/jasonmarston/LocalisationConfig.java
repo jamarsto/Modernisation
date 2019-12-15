@@ -27,23 +27,7 @@ public class LocalisationConfig implements WebMvcConfigurer {
 	@Autowired
 	private ResourceBundleMessageSource resourceBundleMessageSource;
 
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(localeChangeInterceptor());
-	}
-
-	@Bean(name = "htmlEmailTemplateEngine")
-	public TemplateEngine htmlEmailTemplateEngine() {
-		final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-		templateEngine.setDialect(new SpringStandardDialect());
-		templateEngine.addTemplateResolver(htmlEmailTemplateResolver());
-		templateEngine.setTemplateEngineMessageSource(
-				resourceBundleMessageSource);
-
-		return templateEngine;
-	}
-
-	private ITemplateResolver htmlEmailTemplateResolver() {
+	private ITemplateResolver _htmlEmailTemplateResolver() {
 		final ClassLoaderTemplateResolver templateResolver = 
 				new ClassLoaderTemplateResolver();
 
@@ -55,6 +39,22 @@ public class LocalisationConfig implements WebMvcConfigurer {
 		templateResolver.setCacheable(false);
 
 		return templateResolver;
+	}
+
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(localeChangeInterceptor());
+	}
+
+	@Bean(name = "htmlEmailTemplateEngine")
+	public TemplateEngine htmlEmailTemplateEngine() {
+		final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+		templateEngine.setDialect(new SpringStandardDialect());
+		templateEngine.addTemplateResolver(_htmlEmailTemplateResolver());
+		templateEngine.setTemplateEngineMessageSource(
+				resourceBundleMessageSource);
+
+		return templateEngine;
 	}
 
 	@Bean

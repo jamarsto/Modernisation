@@ -36,10 +36,16 @@ public class Cleanup {
 	@Autowired
 	private UserService userService;
 
+	private int _forUpToTenSeconds() {
+		final Random random = new SecureRandom();
+		return random.nextInt(11);
+
+	}
+
 	@Scheduled(initialDelay = THIRTY_SECONDS, fixedDelay = ONE_MINUTE)
 	public void cleanupResetTokens() {
 		try {
-			TimeUnit.SECONDS.sleep(forUpToTenSeconds());
+			TimeUnit.SECONDS.sleep(_forUpToTenSeconds());
 		} catch (InterruptedException e) {
 			return;
 		}
@@ -52,7 +58,7 @@ public class Cleanup {
 	@Scheduled(fixedDelay = ONE_MINUTE)
 	public void cleanupVerificationTokens() {
 		try {
-			TimeUnit.SECONDS.sleep(forUpToTenSeconds());
+			TimeUnit.SECONDS.sleep(_forUpToTenSeconds());
 		} catch (InterruptedException e) {
 			return;
 		}
@@ -65,11 +71,5 @@ public class Cleanup {
 				userService.delete(user.getId());
 			}
 		}
-	}
-
-	private int forUpToTenSeconds() {
-		final Random random = new SecureRandom();
-		return random.nextInt(11);
-
 	}
 }

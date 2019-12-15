@@ -54,15 +54,20 @@ public class TransactionSpecification {
 			this.transactionType = transactionType;
 		}
 
-		private Predicate accountId(final Root<Transaction> root,
+		private Predicate _accountId(final Root<Transaction> root,
 				final CriteriaBuilder builder) {
 			return builder.equal(root.get("account").get("id"),
 					this.accountId);			
 		}
 
-		private Predicate id(final Root<Transaction> root,
+		private Predicate _id(final Root<Transaction> root,
 				final CriteriaBuilder builder) {
 			return builder.equal(root.get("id"), this.id);
+		}
+
+		private Predicate _transactionType(final Root<Transaction> root,
+				final CriteriaBuilder builder) {
+			return builder.equal(root.get("type"), transactionType);
 		}
 
 		@Override
@@ -71,15 +76,10 @@ public class TransactionSpecification {
 				final CriteriaQuery<?> query, 
 				final CriteriaBuilder builder) {
 			return builder.and(
-					id(root, builder),
+					_id(root, builder),
 					builder.and(
-						accountId(root, builder),
-						transactionType(root, builder)));
-		}
-
-		private Predicate transactionType(final Root<Transaction> root,
-				final CriteriaBuilder builder) {
-			return builder.equal(root.get("type"), transactionType);
+						_accountId(root, builder),
+						_transactionType(root, builder)));
 		}
 	}
 
@@ -97,12 +97,12 @@ public class TransactionSpecification {
 			this.accountId = accountId;
 		}
 
-		private Predicate accountId(final Root<Transaction> root,
+		private Predicate _accountId(final Root<Transaction> root,
 				final CriteriaBuilder builder) {
 			return builder.equal(root.get("id"), this.accountId);
 		}
 
-		private Predicate id(final Root<Transaction> root,
+		private Predicate _id(final Root<Transaction> root,
 				final CriteriaBuilder builder) {
 			return builder.equal(root.get("id"), this.id);
 		}
@@ -112,7 +112,7 @@ public class TransactionSpecification {
 				final Root<Transaction> root, 
 				final CriteriaQuery<?> query, 
 				final CriteriaBuilder builder) {
-			return builder.and(id(root, builder), accountId(root, builder));
+			return builder.and(_id(root, builder), _accountId(root, builder));
 		}
 	}
 
