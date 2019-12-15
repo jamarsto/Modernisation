@@ -3,12 +3,18 @@ package uk.me.jasonmarston.mvc.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @Validated
 public class AccountController {
 	@GetMapping({"/", "account"})
-	public String home() {
-		return "account/index";
+	public ModelAndView home() {
+		final ModelAndView model = new ModelAndView();
+		model.addObject("heading", "login.heading");
+
+		model.setViewName("account/index");
+
+		return model;
 	}
 }

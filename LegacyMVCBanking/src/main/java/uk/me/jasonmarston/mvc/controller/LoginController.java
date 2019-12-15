@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import uk.me.jasonmarston.mvc.alerts.AlertDanger;
+import uk.me.jasonmarston.mvc.alerts.AlertInfo;
+
 @Controller
 public class LoginController {
 	@GetMapping("/login")
@@ -22,13 +25,22 @@ public class LoginController {
 			final @RequestParam(value = "logout", required = false)
 					String logout,
 			final HttpServletRequest request) {
-		
 		final ModelAndView model = new ModelAndView();
+		model.addObject("heading", "login.heading");
+
 		if(error != null) {
-			model.addObject("error", getErrorKey(request));
+			final String errorKey = getErrorKey(request);
+			if(errorKey != null) {
+				final AlertDanger alert = new AlertDanger(errorKey);
+				model.addObject("alert", alert);
+			}
+		}
+		else if(logout != null) {
+			final AlertInfo alert = new AlertInfo("info.logout");
+			model.addObject("alert", alert);
 		}
 		
-		model.setViewName("login/index");
+		model.setViewName("login");
 		
 		return model;
 	}
@@ -38,9 +50,7 @@ public class LoginController {
 				.getSession()
 				.getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
 		if(e == null) {
-			// this should never happen
-			throw new 
-				RuntimeException("Spring Framework Authentication Error");
+			return null;
 		}
 
 		if(e instanceof UsernameNotFoundException) {
@@ -67,7 +77,6 @@ public class LoginController {
 			return "error.user.credentials.bad";
 		}
 
-		// this should never happen
-		throw new RuntimeException(e.getMessage());
+		return null;
 	}
 }

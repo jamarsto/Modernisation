@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
@@ -41,17 +42,16 @@ public class StartupListener implements
 	@Lazy
 	private ApplicationEventPublisher applicationEventPublisher;
 
+	@Value("${banking.initial.admin.email}")
+    private String emailString;
+
+	@Value("${banking.initial.admin.password}")
+	private String passwordString;
+
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
-		final String emailString = System
-				.getenv("BANKING_INITIAL_ADMIN_EMAIL");
-		final String passwordString = System
-				.getenv("BANKING_INITIAL_ADMIN_PASSWORD");
-		final String contextPath = System
-				.getenv("BANKING_INITIAL_ADMIN_CONTEXT_PATH");
 		if(StringUtils.isBlank(emailString) 
-				|| StringUtils.isBlank(passwordString)
-				|| StringUtils.isBlank(contextPath)) {
+				|| StringUtils.isBlank(passwordString)) {
 			return;
 		}
 

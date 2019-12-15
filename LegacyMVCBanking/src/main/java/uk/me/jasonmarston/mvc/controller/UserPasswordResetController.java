@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.ModelAndView;
 
 import uk.me.jasonmarston.domain.aggregate.ResetToken;
 import uk.me.jasonmarston.domain.aggregate.User;
@@ -28,6 +29,8 @@ import uk.me.jasonmarston.domain.service.UserService;
 import uk.me.jasonmarston.domain.value.EmailAddress;
 import uk.me.jasonmarston.domain.value.Password;
 import uk.me.jasonmarston.domain.value.Token;
+import uk.me.jasonmarston.mvc.alerts.AlertDanger;
+import uk.me.jasonmarston.mvc.alerts.AlertInfo;
 import uk.me.jasonmarston.mvc.controller.bean.ForgottenPasswordBean;
 import uk.me.jasonmarston.mvc.controller.bean.ResetPasswordBean;
 import uk.me.jasonmarston.mvc.event.OnPasswordResetEvent;
@@ -53,52 +56,65 @@ public class UserPasswordResetController {
 	private LocaleResolver localeResolver;
 
 	@PostMapping("/user/password/reset")
-	public String forgotten(
+	public ModelAndView forgotten(
 			@ModelAttribute("forgottenPasswordBean") 
 					@NotNull @Valid final ForgottenPasswordBean 
 							forgottenPasswordBean,
-			final HttpServletRequest request,
-			final ModelMap model) {
+			final HttpServletRequest request) {
+		final ModelAndView model = new ModelAndView();
+		model.addObject("heading", "resetPassword.heading");
+		final AlertInfo alert = new AlertInfo("info.passwordResetEmail");
+		model.addObject("alert", alert);
+
 		applicationEventPublisher
 				.publishEvent(new OnPasswordResetEvent(
 						new EmailAddress(forgottenPasswordBean.getEmail()),
 						request.getContextPath(),
 						localeResolver.resolveLocale(request)));
 
-		return "user/password/reset/confirmation";
+		model.setViewName("confirmation");
+
+		return model;
 	}
 
 	@GetMapping("/user/password/reset")
-	public String forgotten(final ModelMap model) {
-		model.addAttribute("forgottenPasswordBean", 
-				new ForgottenPasswordBean());
+	public ModelAndView forgotten() {
+		final ModelAndView model = new ModelAndView();
+		model.addObject("heading", "resetPassword.heading");
+		model.addObject("forgottenPasswordBean", new ForgottenPasswordBean());
+		
+		model.setViewName("user/password/reset");
 
-		return "user/password/reset/index";
+		return model;
 	}
 
 	@PostMapping("/user/password/reset/verification")
-	public String verification(
+	public ModelAndView verification(
 			@ModelAttribute("token") @NotNull @Valid final Token token,
 			@ModelAttribute("resetPasswordBean") 
 					@NotNull @Valid final ResetPasswordBean resetPasswordBean,
-			final ModelMap model) {
-		model.remove("token");
+			final ModelMap modelSession) {
+		modelSession.remove("token");
+
+		final ModelAndView model = new ModelAndView();
+		model.addObject("heading", "resetPassword.heading");
+
 
 		final ResetToken resetToken = resetTokenService
 				.findByToken(token);
 		if(resetToken == null) {
-			return "redirect:/user/password/reset?expired";
+			return expiredViewAndModel(model);
 		}
 
 		resetTokenService.delete(resetToken.getId());
 
 		if(resetToken.isExpired()) {
-			return "redirect:/user/password/reset?expired";
+			return expiredViewAndModel(model);
 		}
 
 		User user = userService.findById(resetToken.getUserId());
 		if(user == null) {
-			return "redirect:/user/password/reset?expired";
+			return expiredViewAndModel(model);
 		}
 
 		try {
@@ -106,40 +122,56 @@ public class UserPasswordResetController {
 					new Password(resetPasswordBean.getPassword()));
 		}
 		catch(OptimisticLockException e) {
-			return "redirect:/user/password/reset?expired";
+			return expiredViewAndModel(model);
 		}
 
 		AuthenticationHelper.loginUser(user);
 
-	    return "redirect:/user/password/reset/verification/confirmation";
+		final AlertInfo alert = new AlertInfo("info.passwordReset");
+		model.addObject("alert", alert);
+		
+		model.setViewName("confirmation");
+
+	    return model;
 	}
 
 	@GetMapping("/user/password/reset/verification")
-	public String verification(
+	public ModelAndView verification(
 			final WebRequest request, 
-			@RequestParam(value = "token") final String tokenString,
-			final ModelMap model) {
+			@RequestParam(value = "token") final String tokenString) {
+		final ModelAndView model = new ModelAndView();
+		model.addObject("heading", "resetPassword.heading");
+		model.addObject("strongPassword", STRONG_PASSWORD);
+
 		final Token token =  new Token(tokenString);
 		final ResetToken resetToken = 
 				resetTokenService.findByToken(token);
 		if(resetToken == null || resetToken.isExpired()) {
-			return "redirect:/user/password/reset?expired";
+			return expiredViewAndModel(model);
 		}
 
 		final User user = userService.findById(resetToken.getUserId());
 		if(user == null) {
-			return "redirect:/user/password/reset?expired";
+			return expiredViewAndModel(model);
 		}
 
-		model.addAttribute("token", token);
-		model.addAttribute("strongPassword", STRONG_PASSWORD);
-		model.addAttribute("resetPasswordBean", new ResetPasswordBean());
+		model.addObject("token", token);
+		model.addObject("strongPassword", STRONG_PASSWORD);
+		model.addObject("resetPasswordBean", new ResetPasswordBean());
+		
+		model.setViewName("user/password/reset/verification");
 
-	    return "user/password/reset/verification/index";
+	    return model;
 	}
 
-	@GetMapping("/user/password/reset/verification/confirmation")
-	public String verificationConfirmation() {
-		return "user/password/reset/verification/confirmation";
+	private ModelAndView expiredViewAndModel(final ModelAndView model) {
+		model.addObject("forgottenPasswordBean", new ForgottenPasswordBean());
+		final AlertDanger alert = new AlertDanger("error.token");
+		model.addObject("alert", alert);
+		
+		model.setViewName("user/password/reset");
+		
+		return model;
 	}
+
 }

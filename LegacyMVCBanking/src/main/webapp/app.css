@@ -1,6 +1,7 @@
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 
 h1 {
+	margin-top: 0px !important;
 	text-align: center;
 }
 

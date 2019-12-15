@@ -1,4 +1,4 @@
-package uk.me.jasonmarston.authentication;
+package uk.me.jasonmarston.mvc.authentication;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;

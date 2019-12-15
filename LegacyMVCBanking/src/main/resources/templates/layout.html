@@ -36,17 +36,29 @@
 					</li>
   					<li class="nav-item dropdown" sec:authorize="!isAuthenticated()">
 				        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{menu.locale}"></a>
-       					<ul class="dropdown-menu pull-right" aria-labelledby="navbarDropdown" role="menu">
-       						<li><a class="dropdown-item" th:href="@{?locale=en_UK}" th:text="#{menu.locale.en_UK}"></a></li>
-       						<li><a class="dropdown-item" th:href="@{?locale=en_US}" th:text="#{menu.locale.en_US}"></a></li>
-       						<li><a class="dropdown-item" th:href="@{?locale=en_CA}" th:text="#{menu.locale.en_CA}"></a></li>
-       						<li><a class="dropdown-item" th:href="@{?locale=fr_FR}" th:text="#{menu.locale.fr_FR}"></a></li>
-       						<li><a class="dropdown-item" th:href="@{?locale=fr_CA}" th:text="#{menu.locale.fr_CA}"></a></li>
+       					<ul th:with="currentUrl=(${@currentUrlWithoutParam.apply('locale')})" class="dropdown-menu pull-right" aria-labelledby="navbarDropdown" role="menu">
+       						<li><a class="dropdown-item" th:href="@{${currentUrl}(locale=en_UK)}" th:text="#{menu.locale.en_UK}"></a></li>
+       						<li><a class="dropdown-item" th:href="@{${currentUrl}(locale=en_US)}" th:text="#{menu.locale.en_US}"></a></li>
+       						<li><a class="dropdown-item" th:href="@{${currentUrl}(locale=en_CA)}" th:text="#{menu.locale.en_CA}"></a></li>
+       						<li><a class="dropdown-item" th:href="@{${currentUrl}(locale=fr_FR)}" th:text="#{menu.locale.fr_FR}"></a></li>
+       						<li><a class="dropdown-item" th:href="@{${currentUrl}(locale=fr_CA)}" th:text="#{menu.locale.fr_CA}"></a></li>
        					</ul>
   					</li>
 				</ul>
 			</div>
 		</nav>
+		<div class="container">
+			<div class="row">
+				<h1 th:text="#{${heading}}"></h1>
+			</div>
+			<div th:if="${alert}" class="row">
+				<div class="col-md-4"></div>
+				<div class="col-md-4">
+					<div th:classappend="${alert.type}" class="alert text-center" role="alert" th:text="#{${alert.key}}"></div>
+				</div>
+				<div class="col-md-4"></div>
+			</div>
+		</div>
 		<div th:replace="${content}"></div>
 		<footer class="footer">
   			<div class="container full-height vertical-middle">

@@ -2,13 +2,15 @@
 <html th:replace="~{layout.html :: layout(~{::div})}" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 	<body>
 		<div class="container">
-			<div class="row">
-				<h1 th:text="#{resetPassword.heading}"></h1>
-			</div>
-			<form data-toggle="validator" th:action="@{/user/password/reset/verification}" th:object="${resetPasswordBean}" method="post">
-		       	<div class="row">
+			<form data-toggle="validator" th:action="@{/user/password/change}" th:object="${changePasswordBean}" method="post">
+	        	<div class="row">
 					<div class="col-md-4"></div>
 					<div class="col-md-4">
+						<div class="form-group">
+							<label for="currentPassword" th:text="#{field.currentPassword.label}"></label>
+							<input data-required-error="#{field.currentPassword.error.required}" required th:field="*{currentPassword}" name="currentPassword" id="currentPassword" th:placeholder="#{field.currentPassword.placeholder}" type="password" class="form-control"/>
+							<div class="help-block with-errors"></div>
+						</div>
 						<div class="form-group">
 							<label for="password" th:text="#{field.password.label}"></label>
 							<input th:pattern="${strongPassword}" th:data-error="#{field.password.error.required}" th:data-pattern-error="#{field.password.error.pattern}" required th:field="*{password}" name="password" id="password" th:placeholder="#{field.password.placeholder}" type="password" class="form-control"/>
@@ -20,7 +22,7 @@
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="top-buffer-bg">
-							<button type="submit" class="btn btn-primary btn-block" th:text="#{resetPassword.submit}"></button>
+							<button type="submit" class="btn btn-primary btn-block" th:text="#{changePassword.submit}"></button>
 						</div>
 					</div>
 					<div class="col-md-4"></div>

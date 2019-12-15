@@ -14,13 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.ModelAndView;
 
 import uk.me.jasonmarston.domain.aggregate.User;
 import uk.me.jasonmarston.domain.aggregate.VerificationToken;
@@ -31,6 +31,8 @@ import uk.me.jasonmarston.domain.service.VerificationTokenService;
 import uk.me.jasonmarston.domain.value.EmailAddress;
 import uk.me.jasonmarston.domain.value.Password;
 import uk.me.jasonmarston.domain.value.Token;
+import uk.me.jasonmarston.mvc.alerts.AlertDanger;
+import uk.me.jasonmarston.mvc.alerts.AlertInfo;
 import uk.me.jasonmarston.mvc.controller.bean.RegistrationBean;
 import uk.me.jasonmarston.mvc.event.OnRegistrationEvent;
 
@@ -59,18 +61,24 @@ public class UserRegistrationController {
 	private LocaleResolver localeResolver;
 
 	@GetMapping("/user/registration")
-	public String registration(final ModelMap model) {
-		model.addAttribute("strongPassword", STRONG_PASSWORD);
-		model.addAttribute("registrationBean", new RegistrationBean());
+	public ModelAndView registration() {
+		final ModelAndView model = new ModelAndView();
+		model.addObject("heading", "register.heading");
+		model.addObject("strongPassword", STRONG_PASSWORD);
+		model.addObject("registrationBean", new RegistrationBean());
+		
+		model.setViewName("user/registration");
 
-		return "user/registration/index";
+		return model;
 	}
 
 	@PostMapping("/user/registration")
-	public String registration(
+	public ModelAndView registration(
 			@ModelAttribute("registrationBean") 
 					@NotNull @Valid final RegistrationBean registrationBean,
 					final HttpServletRequest request) {
+		final ModelAndView model = new ModelAndView();
+		model.addObject("heading", "register.heading");
 		try {
 			final RegistrationDetails.Builder builder = 
 					registrationDetailsBuilderfactory.create();
@@ -96,47 +104,72 @@ public class UserRegistrationController {
 							locale));
 		}
 		catch(final EntityExistsException e) {
-			return "redirect:/user/registration?registration";
+			final AlertDanger alert = new AlertDanger("error.alreadyRegistered");
+			model.addObject("alert", alert);
+			model.addObject("strongPassword", STRONG_PASSWORD);
+			model.addObject("registrationBean", registrationBean);
+
+			model.setViewName("user/registration");
+
+			return model;
 		}
 
-		return "user/registration/confirmation";
+		final AlertInfo alert = new AlertInfo("info.registrationEmail");
+		model.addObject("alert", alert);
+
+		model.setViewName("confirmation");
+
+		return model;
 	}
 
 	@GetMapping("/user/registration/verification")
-	public String verification(
+	public ModelAndView verification(
 			@RequestParam(value = "token") final String tokenString) {
+		final ModelAndView model = new ModelAndView();
+		model.addObject("heading", "register.heading");
 		final Token token = new Token(tokenString);
 		final VerificationToken verificationToken = 
 				verificationTokenService.findByToken(token);
 		if(verificationToken == null) {
-			return "redirect:/user/registration?expired";
+			return expiredViewAndModel(model);
 		}
 
 		verificationTokenService.delete(verificationToken.getId());
 
 		if(verificationToken.isExpired()) {
-			return "redirect:/user/registration?expired";
+			return expiredViewAndModel(model);
 		}
 
 		User user = userService.findById(verificationToken.getUserId());
 		if(user == null) {
-			return "redirect:/user/registration?expired";
+			return expiredViewAndModel(model);
 		}
 
 		try {
 			user = userService.enable(user.getId());
 		}
 		catch(OptimisticLockException e) {
-			return "redirect:/user/registration?expired";
+			return expiredViewAndModel(model);
 		}
 
 		AuthenticationHelper.loginUser(user);
 
-		return "redirect:/user/registration/verification/confirmation";
+		final AlertInfo alert = new AlertInfo("info.emailVerified");
+		model.addObject("alert", alert);
+
+		model.setViewName("confirmation");
+
+		return model;
 	}
 
-	@GetMapping("/user/registration/verification/confirmation")
-	public String verificationConfirmation() {
-		return "user/registration/verification/confirmation";
+	private ModelAndView expiredViewAndModel(final ModelAndView model) {
+		model.addObject("strongPassword", STRONG_PASSWORD);
+		model.addObject("registrationBean", new RegistrationBean());
+		final AlertDanger alert = new AlertDanger("error.token");
+		model.addObject("alert", alert);
+		
+		model.setViewName("user/registration");
+		
+		return model;
 	}
 }

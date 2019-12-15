@@ -2,23 +2,13 @@
 <html th:replace="~{layout.html :: layout(~{::div})}" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 	<body>
 		<div class="container">
-			<div class="row">
-				<h1 th:text="#{changePassword.heading}"></h1>
-			</div>
-			<div class="row" th:if="${param.incorrect}">
-				<div class="col-md-4"></div>
-				<div class="col-md-4">
-					<div class="alert alert-danger text-center" role="alert" th:text="#{error.password}"></div>
-				</div>
-				<div class="col-md-4"></div>
-			</div>
-			<form data-toggle="validator" th:action="@{/user/password/change}" th:object="${changePasswordBean}" method="post">
-	        	<div class="row">
+			<form data-toggle="validator" th:action="@{/user/registration}" th:object="${registrationBean}" method="post">
+				<div class="row">
 					<div class="col-md-4"></div>
 					<div class="col-md-4">
 						<div class="form-group">
-							<label for="currentPassword" th:text="#{field.currentPassword.label}"></label>
-							<input data-required-error="#{field.currentPassword.error.required}" required th:field="*{currentPassword}" name="currentPassword" id="currentPassword" th:placeholder="#{field.currentPassword.placeholder}" type="password" class="form-control"/>
+							<label for="email" th:text="#{field.email.label}"></label>
+							<input th:data-required-error="#{field.email.error.required}" th:data-error="#{field.email.error.email}" th:field="*{email}" name="email" id="email" th:placeholder="#{field.email.placeholder}" type="email" class="form-control" required/>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
@@ -32,7 +22,7 @@
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="top-buffer-bg">
-							<button type="submit" class="btn btn-primary btn-block" th:text="#{changePassword.submit}"></button>
+							<button type="submit" class="btn btn-primary btn-block" th:text="#{register.submit}"></button>
 						</div>
 					</div>
 					<div class="col-md-4"></div>

@@ -2,23 +2,6 @@
 <html th:replace="~{layout.html :: layout(~{::div})}" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 	<body>
 		<div class="container">
-			<div class="row">
-				<h1 th:text="#{login.heading}"></h1>
-			</div>
-			<div th:if="${param.error}" class="row">
-				<div class="col-md-4"></div>
-				<div class="col-md-4">
-					<div class="alert alert-danger text-center" role="alert" th:text="#{${error}}"></div>
-				</div>
-				<div class="col-md-4"></div>
-			</div>
-			<div th:if="${param.logout}" class="row">
-				<div class="col-md-4"></div>
-				<div class="col-md-4">
-					<div class="alert alert-info text-center" role="alert" th:text="#{info.logout}"></div>
-				</div>
-				<div class="col-md-4"></div>
-			</div>
         	<div class="row">
 				<form data-toggle="validator" action="#" th:action="@{/login}" method="post">
 					<div class="col-md-4"></div>

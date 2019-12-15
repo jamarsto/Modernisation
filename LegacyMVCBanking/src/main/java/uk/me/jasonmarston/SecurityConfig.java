@@ -13,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
-import uk.me.jasonmarston.authentication.CustomAuthenticationProvider;
+import uk.me.jasonmarston.mvc.authentication.CustomAuthenticationProvider;
 import uk.me.jasonmarston.mvc.filter.LocaleFilter;
 
 @Configuration
