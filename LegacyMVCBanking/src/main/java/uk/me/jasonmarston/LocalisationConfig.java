@@ -1,7 +1,6 @@
 package uk.me.jasonmarston;
 
 import java.util.Locale;
-import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +11,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -32,14 +30,6 @@ public class LocalisationConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(localeChangeInterceptor());
-	}
-
-	@Bean
-	public Function<String, String> currentUrlWithoutParam() {
-		return param -> ServletUriComponentsBuilder
-	    		.fromCurrentRequest()
-	    		.replaceQueryParam(param)
-	    		.toUriString();
 	}
 
 	@Bean(name = "htmlEmailTemplateEngine")

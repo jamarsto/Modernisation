@@ -12,11 +12,14 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -111,7 +114,7 @@ public class User extends AbstractAggregate implements UserDetails {
 
 	private Password password;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
 	@NotNull
 	private Set<Authority> authorities = new HashSet<Authority>();
 	
@@ -126,9 +129,9 @@ public class User extends AbstractAggregate implements UserDetails {
 
 	@Column(columnDefinition="TIMESTAMP")
 	private ZonedDateTime lastLoginFailure;
-	
-	private int failedLogins = 0;
 
+	private int failedLogins = 0;
+	
 	private User() {
 		super();
 	}
@@ -192,6 +195,11 @@ public class User extends AbstractAggregate implements UserDetails {
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj, "_authorities", "authorities");
+	}
+
+	@Override
 	public Set<GrantedAuthority> getAuthorities() {
 		return Collections.unmodifiableSet(_getAuthorities());
 	}
@@ -224,6 +232,11 @@ public class User extends AbstractAggregate implements UserDetails {
 	@Override
 	public String getUsername() {
 		return email.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this, "_authorities", "authorities");
 	}
 	
 	@Override

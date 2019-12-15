@@ -15,9 +15,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
@@ -37,7 +36,7 @@ import uk.me.jasonmarston.mvc.event.OnPasswordResetEvent;
 
 @Controller
 @Validated
-@SessionAttributes("token")
+//@SessionAttributes("token")
 public class UserPasswordResetController {
 	@Autowired
 	@Lazy
@@ -98,17 +97,16 @@ public class UserPasswordResetController {
 		return model;
 	}
 
-	@PostMapping("/user/password/reset/verification")
+	@PostMapping("/user/password/reset/{token}")
 	public ModelAndView verification(
-			@ModelAttribute("token") @NotNull @Valid final Token token,
+			@PathVariable("token") String tokenString,
 			@ModelAttribute("resetPasswordBean") 
 					@NotNull @Valid final ResetPasswordBean resetPasswordBean,
 			final ModelMap modelSession) {
-		modelSession.remove("token");
-
 		final ModelAndView model = new ModelAndView();
 		model.addObject("heading", "resetPassword.heading");
 
+		final Token token = new Token(tokenString);
 
 		final ResetToken resetToken = resetTokenService
 				.findByToken(token);
@@ -145,10 +143,10 @@ public class UserPasswordResetController {
 	    return model;
 	}
 
-	@GetMapping("/user/password/reset/verification")
+	@GetMapping("/user/password/reset/{token}")
 	public ModelAndView verification(
 			final WebRequest request, 
-			@RequestParam(value = "token") final String tokenString) {
+			@PathVariable("token") final String tokenString) {
 		final ModelAndView model = new ModelAndView();
 		model.addObject("heading", "resetPassword.heading");
 
@@ -164,7 +162,7 @@ public class UserPasswordResetController {
 			return expiredViewAndModel(model);
 		}
 
-		model.addObject("token", token);
+		//model.addObject("token", token);
 		model.addObject("strongPassword", STRONG_PASSWORD);
 		model.addObject("resetPasswordBean", new ResetPasswordBean());
 		
@@ -172,5 +170,4 @@ public class UserPasswordResetController {
 
 	    return model;
 	}
-
 }

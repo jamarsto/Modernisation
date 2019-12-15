@@ -36,12 +36,12 @@
 					</li>
   					<li class="nav-item dropdown" sec:authorize="!isAuthenticated()">
 				        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{menu.locale}"></a>
-       					<ul th:with="currentUrl=(${@currentUrlWithoutParam.apply('locale')})" class="dropdown-menu pull-right" aria-labelledby="navbarDropdown" role="menu">
-       						<li><a class="dropdown-item" th:href="@{${currentUrl}(locale=en_UK)}" th:text="#{menu.locale.en_UK}"></a></li>
-       						<li><a class="dropdown-item" th:href="@{${currentUrl}(locale=en_US)}" th:text="#{menu.locale.en_US}"></a></li>
-       						<li><a class="dropdown-item" th:href="@{${currentUrl}(locale=en_CA)}" th:text="#{menu.locale.en_CA}"></a></li>
-       						<li><a class="dropdown-item" th:href="@{${currentUrl}(locale=fr_FR)}" th:text="#{menu.locale.fr_FR}"></a></li>
-       						<li><a class="dropdown-item" th:href="@{${currentUrl}(locale=fr_CA)}" th:text="#{menu.locale.fr_CA}"></a></li>
+       					<ul class="dropdown-menu pull-right" aria-labelledby="navbarDropdown" role="menu">
+       						<li><a class="dropdown-item" th:href="@{?locale=en_UK}" th:text="#{menu.locale.en_UK}"></a></li>
+       						<li><a class="dropdown-item" th:href="@{?locale=en_US}" th:text="#{menu.locale.en_US}"></a></li>
+       						<li><a class="dropdown-item" th:href="@{?locale=en_CA}" th:text="#{menu.locale.en_CA}"></a></li>
+       						<li><a class="dropdown-item" th:href="@{?locale=fr_FR}" th:text="#{menu.locale.fr_FR}"></a></li>
+       						<li><a class="dropdown-item" th:href="@{?locale=fr_CA}" th:text="#{menu.locale.fr_CA}"></a></li>
        					</ul>
   					</li>
 				</ul>

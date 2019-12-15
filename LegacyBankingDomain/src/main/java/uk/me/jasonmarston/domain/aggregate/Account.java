@@ -6,10 +6,13 @@ import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -67,7 +70,7 @@ public class Account extends AbstractAggregate {
 	private Balance balance;
 
 	@JsonIgnore
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "account", fetch = FetchType.EAGER)
 	@NotNull
 	private List<@NotNull Transaction> transactions = 
 			new ArrayList<Transaction>();
@@ -98,6 +101,11 @@ public class Account extends AbstractAggregate {
 		return transaction;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj, "transactions");
+	}
+
 	public Balance getBalance() {
 		return balance;
 	}
@@ -122,6 +130,11 @@ public class Account extends AbstractAggregate {
 			.filter(transaction -> 
 				TransactionType.WITHDRAWAL.equals(transaction.getType()))
 			.collect(Collectors.toList());
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this, "transactions");
 	}
 
 	public Transaction withdrawFunds(final Amount amount) {
