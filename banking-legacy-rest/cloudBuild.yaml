@@ -1,6 +1,6 @@
 steps:
 - name: 'gcr.io/cloud-builders/gradle'
-  args: ['artifactoryPublish']
+  args: ['bootWar', 'artifactoryPublish']
   env:
   - 'artifactory_contextUrl=${_ARTIFACTORY_URL}'
   - 'artifactory_password=${_ARTIFACTORY_PASSWORD}'
