@@ -51,7 +51,7 @@ dependencies {
 	implementation 'com.h2database:h2:1.4.200'
 	
 	// bespoke application dependencies
-	implementation 'uk.me.jasonmarston.framework:authentication-firebase:1.0.0-SNAPSHOT'
+	implementation 'uk.me.jasonmarston.framework:firebase-authentication:1.0.0-SNAPSHOT'
 	implementation 'uk.me.jasonmarston.domain:banking-domain:1.0.0-SNAPSHOT'
 }
 
@@ -81,13 +81,4 @@ gretty {
 	servletContainer = 'jetty9.4'
 	jetty94Version = '9.4.9.v20180320'
 	contextPath = '/'
-}
-
-war {
-    archiveName 'ROOT.war'
-}
-
-bootWar {
-    archiveBaseName = 'ROOT'
-    archiveName 'ROOT.war'
 }
