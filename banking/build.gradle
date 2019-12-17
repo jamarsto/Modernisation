@@ -24,7 +24,7 @@ apply plugin: 'com.jfrog.artifactory'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-group = 'uk.me.jasonmarston.framework'
+group = 'uk.me.jasonmarston.domain'
 version = '1.0.0-SNAPSHOT'
 
 // this is needed for the eclipse gradle plugin
@@ -40,6 +40,10 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.0.5.RELEASE'
+	implementation 'org.springframework.boot:spring-boot-starter-security:2.0.5.RELEASE'
+	implementation 'org.springframework.boot:spring-boot-starter-validation:2.0.5.RELEASE'
+	implementation 'org.springframework.boot:spring-boot-starter-aop:2.0.5.RELEASE'
+	api 'uk.me.jasonmarston.framework:domain-driven-design:1.0.0-SNAPSHOT'
 }
 
 artifactory {

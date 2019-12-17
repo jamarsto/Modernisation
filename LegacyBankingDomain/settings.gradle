@@ -1,4 +1,0 @@
-rootProject.name = 'LegacyBankingDomain'
-
-include 'FrameworkDDD'
-project(':FrameworkDDD').projectDir = new File(settingsDir, "../FrameworkDDD");

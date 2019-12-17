@@ -17,14 +17,18 @@ plugins {
 	id 'maven'
 	id 'com.jfrog.artifactory' version '4.11.0'
     id 'java-library'
+    id 'war'
+    id 'org.gretty' version '2.3.1'
+    id 'org.springframework.boot' version '2.0.5.RELEASE'
 }
 
+apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.jfrog.artifactory'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-group = 'uk.me.jasonmarston.framework'
+group = 'uk.me.jasonmarston.application'
 version = '1.0.0-SNAPSHOT'
 
 // this is needed for the eclipse gradle plugin
@@ -39,7 +43,16 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.0.5.RELEASE'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// used for in memory database.  Replace in a real application with the correct jdbc support
+	implementation 'com.h2database:h2:1.4.200'
+	
+	// bespoke application dependencies
+	implementation 'uk.me.jasonmarston.framework:authentication-firebase:1.0.0-SNAPSHOT'
+	implementation 'uk.me.jasonmarston.domain:banking:1.0.0-SNAPSHOT'
 }
 
 artifactory {
@@ -62,4 +75,19 @@ artifactory {
 			password = "$System.env.artifactory_password"
 		}
 	}
+}
+
+gretty {
+	servletContainer = 'jetty9.4'
+	jetty94Version = '9.4.9.v20180320'
+	contextPath = '/'
+}
+
+war {
+    archiveName 'ROOT.war'
+}
+
+bootWar {
+    archiveBaseName = 'ROOT'
+    archiveName 'ROOT.war'
 }
