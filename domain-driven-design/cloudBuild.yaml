@@ -5,3 +5,4 @@ steps:
   - 'artifactory_contextUrl=${_ARTIFACTORY_URL}'
   - 'artifactory_password=${_ARTIFACTORY_PASSWORD}'
   - 'artifactory_user=${_ARTIFACTORY_USER}'
+  dir: 'domain-driven-design'
