@@ -7,4 +7,4 @@ steps:
   - 'artifactory_user=${_ARTIFACTORY_USER}'
   dir: 'domain-driven-design'
 - name: 'debian'
-  args: ['bash', './myscript.bash']
+  args: ['bash', './domain-driven-design/myscript.bash']
