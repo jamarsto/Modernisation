@@ -6,5 +6,5 @@ steps:
   - 'artifactory_password=${_ARTIFACTORY_PASSWORD}'
   - 'artifactory_user=${_ARTIFACTORY_USER}'
   dir: 'domain-driven-design'
-- name: 'debian'
-  args: ['bash', './domain-driven-design/myscript.bash']
+- name: gcr.io/cloud-builders/gcloud
+  args: ['config', 'list']
