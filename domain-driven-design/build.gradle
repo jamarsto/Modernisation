@@ -69,3 +69,5 @@ artifactory {
 		}
 	}
 }
+
+artifactoryPublish.dependsOn build
