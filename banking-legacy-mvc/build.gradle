@@ -58,7 +58,7 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 	
 	// bespoke application dependencies
-	implementation 'uk.me.jasonmarston.domain:banking:1.0.0-SNAPSHOT'
+	implementation 'uk.me.jasonmarston.domain:banking-domain:1.0.0-SNAPSHOT'
 }
 
 artifactory {
